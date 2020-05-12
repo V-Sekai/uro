@@ -17,6 +17,12 @@ defmodule UroWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    get "/sign-in", UserController, :sign_in
+    post "/sign-in", UserController, :create_session
+
+    get "/sign-up", UserController, :sign_up
+    post "/sign-up", UserController, :create_user
   end
 
   # Other scopes may use custom stacks.
