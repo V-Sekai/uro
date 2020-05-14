@@ -18,7 +18,7 @@ defmodule UroWeb.SessionController do
         |> put_flash(:info, "Signed in successfully.")
         |> redirect(to: Routes.page_path(conn, :index))
       {:error, _} ->
-        render(conn, "sign_up.html")
+        render(conn, "sign_in.html")
     end
   end
 
