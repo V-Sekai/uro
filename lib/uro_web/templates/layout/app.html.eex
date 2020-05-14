@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title><%= assigns[:page_title] || "Uro · Phoenix Framework" %></title>
+    <title><%= assigns[:page_title] || "Uro" %></title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <%= csrf_meta_tag() %>
   </head>
@@ -13,7 +13,18 @@
       <section class="container">
         <nav role="navigation">
           <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
+            <li>
+              <%= link "Home", to: Routes.path(@conn, "/") %>
+              <ul>
+              <%= if UroWeb.Helpers.Auth.signed_in?(@conn) do %>
+                <%= "Signed in as " <> UroWeb.Helpers.Auth.session_display_name(@conn) %>
+                <%= link "Sign Out", to: Routes.session_path(@conn, :delete), method: :delete %>
+              <% else %>
+                <%= link "Sign In", to: Routes.path(@conn, "/sign-in") %>
+                <%= link "Sign Up", to: Routes.path(@conn, "/sign-up") %>
+              <% end %>
+              </ul>
+            </li>
           </ul>
         </nav>
         <a href="https://phoenixframework.org/" class="phx-logo">

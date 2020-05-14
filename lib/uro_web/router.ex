@@ -9,6 +9,14 @@ defmodule UroWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :protected do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -18,11 +26,12 @@ defmodule UroWeb.Router do
 
     get "/", PageController, :index
 
-    get "/sign-in", UserController, :sign_in
-    post "/sign-in", UserController, :create_session
+    get "/sign-in", SessionController, :new
+    post "/sign-in", SessionController, :create
+    delete "/sign-out", SessionController, :delete
 
-    get "/sign-up", UserController, :sign_up
-    post "/sign-up", UserController, :create_user
+    get "/sign-up", UserController, :new
+    post "/sign-up", UserController, :create
   end
 
   # Other scopes may use custom stacks.

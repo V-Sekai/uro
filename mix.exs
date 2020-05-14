@@ -20,7 +20,7 @@ defmodule Uro.MixProject do
   def application do
     [
       mod: {Uro.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :email_checker]
     ]
   end
 
@@ -44,7 +44,10 @@ defmodule Uro.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:comeonin, "~> 5.3"},
-      {:bcrypt_elixir, "~> 2.2"}
+      {:bcrypt_elixir, "~> 2.2"},
+      {:pow, "~> 1.0.20"},
+      {:email_checker, "~> 0.1.3"},
+      {:burnex, "~> 1.1"},
     ]
   end
 

@@ -5,16 +5,13 @@
     </div>
   <% end %>
 
-  <%= label f, :username %>
-  <%= text_input f, :username %>
+  <%= text_input f, :username, placeholder: "Username" %>
   <%= error_tag f, :username %>
 
-  <%= label f, :password %>
-  <%= password_input f, :password %>
+  <%= password_input f, :password, placeholder: "Password" %>
   <%= error_tag f, :password %>
 
-  <%= label f, :email %>
-  <%= text_input f, :email %>
+  <%= text_input f, :email, placeholder: "Email" %>
   <%= error_tag f, :email %>
 
   <div>

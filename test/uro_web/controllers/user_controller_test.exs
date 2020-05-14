@@ -3,9 +3,9 @@ defmodule UroWeb.UserControllerTest do
 
   alias Uro.Accounts
 
-  @create_attrs %{hashed_password: "some hashed_password", username: "some username"}
-  @update_attrs %{hashed_password: "some updated hashed_password", username: "some updated username"}
-  @invalid_attrs %{hashed_password: nil, username: nil}
+  @create_attrs %{password_hash: "some password_hash", username: "some username"}
+  @update_attrs %{password_hash: "some updated password_hash", username: "some updated username"}
+  @invalid_attrs %{password_hash: nil, username: nil}
 
   def fixture(:user) do
     {:ok, user} = Accounts.create_user(@create_attrs)
@@ -60,7 +60,7 @@ defmodule UroWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.user_path(conn, :show, user)
 
       conn = get(conn, Routes.user_path(conn, :show, user))
-      assert html_response(conn, 200) =~ "some updated hashed_password"
+      assert html_response(conn, 200) =~ "some updated password_hash"
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do

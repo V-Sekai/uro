@@ -18,6 +18,13 @@ config :uro, UroWeb.Endpoint,
   pubsub: [name: Uro.PubSub, adapter: Phoenix.PubSub.PG2],
   live_view: [signing_salt: "0dBPUwA2"]
 
+config :email_checker,
+  default_dns: :system,
+  also_dns: [],
+  validations: [EmailChecker.Check.Format],
+  smtp_retries: 2,
+  timeout_milliseconds: :infinity
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

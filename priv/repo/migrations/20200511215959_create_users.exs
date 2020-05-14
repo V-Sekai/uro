@@ -5,7 +5,9 @@ defmodule Uro.Repo.Migrations.CreateUsers do
     create table(:users) do
       add :email, :string
       add :username, :string
-      add :hashed_password, :string
+      add :password_hash, :string
+
+      add :display_name, :string
 
       timestamps()
     end
