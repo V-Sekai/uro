@@ -4,6 +4,8 @@ defmodule Uro.Accounts.User do
   import EmailChecker
   import Burnex
 
+  alias Uro.Accounts
+
   schema "users" do
     field :email, :string
     field :username, :string
@@ -24,11 +26,11 @@ defmodule Uro.Accounts.User do
     |> validate_required([:email, :username, :password])
     |> validate_length(:password, min: 8)
     |> validate_length(:username, max: 128)
-    |> validate_username(:username)
-    |> validate_email(:email)
     |> put_display_name
     |> downcase_email
     |> downcase_username
+    |> validate_username(:username)
+    |> validate_email(:email)
     |> unique_constraint(:email)
     |> unique_constraint(:username)
     |> put_pass_hash
@@ -36,7 +38,7 @@ defmodule Uro.Accounts.User do
 
   def validate_username(changeset, field) when is_atom(field) do
     validate_change(changeset, field, fn (current_field, value) ->
-      if EmailChecker.valid?(value) do
+      if EmailChecker.valid?(value) or Accounts.get_by_email(value) do
         [{field, " is not valid!"}]
       else
         []
@@ -46,7 +48,7 @@ defmodule Uro.Accounts.User do
 
   def validate_email(changeset, field) when is_atom(field) do
     validate_change(changeset, field, fn (current_field, value) ->
-      if !EmailChecker.valid?(value) do
+      if !EmailChecker.valid?(value) or Accounts.get_by_username(value) do
         [{field, " is not valid!"}]
       else
         []
