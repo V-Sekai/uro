@@ -24,6 +24,7 @@ defmodule Uro.Accounts.User do
     |> validate_required([:email, :username, :password])
     |> validate_length(:password, min: 8)
     |> validate_length(:username, max: 128)
+    |> validate_username(:username)
     |> validate_email(:email)
     |> put_display_name
     |> downcase_email
@@ -31,6 +32,16 @@ defmodule Uro.Accounts.User do
     |> unique_constraint(:email)
     |> unique_constraint(:username)
     |> put_pass_hash
+  end
+
+  def validate_username(changeset, field) when is_atom(field) do
+    validate_change(changeset, field, fn (current_field, value) ->
+      if EmailChecker.valid?(value) do
+        [{field, " is not valid!"}]
+      else
+        []
+      end
+    end)
   end
 
   def validate_email(changeset, field) when is_atom(field) do
