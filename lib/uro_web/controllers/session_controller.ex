@@ -1,31 +1,45 @@
 defmodule UroWeb.SessionController do
   use UroWeb, :controller
 
-  alias Uro.Accounts
-  alias Uro.Accounts.User
+  def invalid_login(conn) do
+    changeset = Pow.Plug.change_user(conn, conn.params["user"])
 
-  def new(conn, _params) do
-    render(conn, "sign_in.html")
+    conn
+    |> put_flash(:info, "Invalid email or password")
+    |> render("new.html", changeset: changeset)
   end
 
-  def create(conn, %{"session" => auth_params} = _params) do
-    user = Accounts.get_by_username_or_email(auth_params["username_or_email"])
+  def new(conn, _params) do
+    changeset = Pow.Plug.change_user(conn)
 
-    case Bcrypt.check_pass(user, auth_params["password"]) do
-      {:ok, user} ->
-        conn
-        |> put_session(:current_user_id, user.id)
-        |> put_flash(:info, "Signed in successfully.")
-        |> redirect(to: Routes.page_path(conn, :index))
-      {:error, _} ->
-        render(conn, "sign_in.html")
+    render(conn, "new.html", changeset: changeset)
+  end
+
+  def create(conn, %{"user" => user_params}) do
+    user = Uro.Accounts.get_by_username_or_email(user_params["username_or_email"] |> String.downcase)
+
+    if user do
+      final_params = %{"email" => user.email, "password" => user_params["password"]}
+
+      conn
+      |> Pow.Plug.authenticate_user(final_params)
+      |> case do
+        {:ok, conn} ->
+          conn
+          |> put_flash(:info, "Welcome back!")
+          |> redirect(to: Routes.page_path(conn, :index))
+
+        {:error, conn} ->
+          invalid_login(conn)
+      end
+    else
+      invalid_login(conn)
     end
   end
 
   def delete(conn, _params) do
-      conn
-      |> delete_session(:current_user_id)
-      |> put_flash(:info, "Signed out successfully.")
-      |> redirect(to: Routes.page_path(conn, :index))
+    conn
+    |> Pow.Plug.delete()
+    |> redirect(to: Routes.page_path(conn, :index))
   end
 end

@@ -1,59 +1,29 @@
 defmodule Uro.Accounts.User do
   use Ecto.Schema
+  use Pow.Ecto.Schema,
+    password_hash_methods: {&Bcrypt.hash_pwd_salt/1, &Bcrypt.verify_pass/2}
   import Ecto.Changeset
   import EmailChecker
   import Burnex
 
-  alias Uro.Accounts
-
   schema "users" do
-    field :email, :string
     field :username, :string
-    field :password_hash, :string
-
     field :display_name, :string
 
-    # Do not store in database
-    field :password, :string, virtual: true
+    pow_user_fields()
 
     timestamps()
   end
 
-  @doc false
-  def changeset(user, attrs) do
-    user
-    |> cast(attrs, [:email, :username, :password])
-    |> validate_required([:email, :username, :password])
-    |> validate_length(:password, min: 8)
-    |> validate_length(:username, max: 128)
+  def changeset(user_or_changeset, attrs) do
+    user_or_changeset
+    |> pow_changeset(attrs)
+    |> cast(attrs, [:username])
     |> put_display_name
-    |> downcase_email
     |> downcase_username
     |> validate_username(:username)
     |> validate_email(:email)
-    |> unique_constraint(:email)
     |> unique_constraint(:username)
-    |> put_pass_hash
-  end
-
-  def validate_username(changeset, field) when is_atom(field) do
-    validate_change(changeset, field, fn (current_field, value) ->
-      if EmailChecker.valid?(value) or Accounts.get_by_email(value) do
-        [{field, " is not valid!"}]
-      else
-        []
-      end
-    end)
-  end
-
-  def validate_email(changeset, field) when is_atom(field) do
-    validate_change(changeset, field, fn (current_field, value) ->
-      if !EmailChecker.valid?(value) or Accounts.get_by_username(value) do
-        [{field, " is not valid!"}]
-      else
-        []
-      end
-    end)
   end
 
   defp put_display_name(%Ecto.Changeset{valid?: true, changes: %{username: username}} = changeset) do
@@ -68,15 +38,23 @@ defmodule Uro.Accounts.User do
 
   def downcase_username(changeset), do: changeset
 
-  def downcase_email(%{valid?: true, changes: %{email: email}}=changeset) do
-    put_change(changeset, :email, email |> String.downcase)
+  def validate_username(changeset, field) when is_atom(field) do
+    validate_change(changeset, field, fn (current_field, value) ->
+      if EmailChecker.valid?(value) or Uro.Accounts.get_by_email(value) do
+        [{field, " is not valid!"}]
+      else
+        []
+      end
+    end)
   end
 
-  def downcase_email(changeset), do: changeset
-
-  defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
-    put_change(changeset, :password_hash, Bcrypt.hash_pwd_salt(password))
+  def validate_email(changeset, field) when is_atom(field) do
+    validate_change(changeset, field, fn (current_field, value) ->
+      if !EmailChecker.valid?(value) or Uro.Accounts.get_by_username(value) do
+        [{field, " is not valid!"}]
+      else
+        []
+      end
+    end)
   end
-
-  defp put_pass_hash(changeset), do: changeset
 end

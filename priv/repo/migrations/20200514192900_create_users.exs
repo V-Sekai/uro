@@ -3,10 +3,10 @@ defmodule Uro.Repo.Migrations.CreateUsers do
 
   def change do
     create table(:users) do
-      add :email, :string
-      add :username, :string
+      add :email, :string, null: false
       add :password_hash, :string
 
+      add :username, :string
       add :display_name, :string
 
       timestamps()

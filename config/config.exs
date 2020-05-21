@@ -25,6 +25,11 @@ config :email_checker,
   smtp_retries: 2,
   timeout_milliseconds: :infinity
 
+  config :uro, :pow,
+  user: Uro.Accounts.User,
+  repo: Uro.Repo,
+  web_module: UroWeb
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
