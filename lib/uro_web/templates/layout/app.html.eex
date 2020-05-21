@@ -14,7 +14,6 @@
         <nav role="navigation">
           <ul>
             <li>
-              <%= link "Home", to: Routes.path(@conn, "/") %>
               <ul>
               <%= if UroWeb.Helpers.Auth.signed_in?(@conn) do %>
                 <%= "Signed in as " <> UroWeb.Helpers.Auth.session_display_name(@conn) %>
@@ -26,8 +25,8 @@
             </li>
           </ul>
         </nav>
-        <a href="https://phoenixframework.org/" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
+        <a href=<%=Routes.page_path(@conn, :index)%> class="phx-logo">
+          <img src="<%= Routes.static_path(@conn, "/images/v-sekai.png") %>" alt="V-SEKAI Logo"/>
         </a>
       </section>
     </header>
