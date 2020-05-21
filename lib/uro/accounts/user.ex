@@ -2,9 +2,8 @@ defmodule Uro.Accounts.User do
   use Ecto.Schema
   use Pow.Ecto.Schema,
     password_hash_methods: {&Bcrypt.hash_pwd_salt/1, &Bcrypt.verify_pass/2}
+  use PowAssent.Ecto.Schema
   import Ecto.Changeset
-  import EmailChecker
-  import Burnex
 
   schema "users" do
     field :username, :string
@@ -39,7 +38,7 @@ defmodule Uro.Accounts.User do
   def downcase_username(changeset), do: changeset
 
   def validate_username(changeset, field) when is_atom(field) do
-    validate_change(changeset, field, fn (current_field, value) ->
+    validate_change(changeset, field, fn (_current_field, value) ->
       if EmailChecker.valid?(value) or Uro.Accounts.get_by_email(value) do
         [{field, " is not valid!"}]
       else
@@ -49,7 +48,7 @@ defmodule Uro.Accounts.User do
   end
 
   def validate_email(changeset, field) when is_atom(field) do
-    validate_change(changeset, field, fn (current_field, value) ->
+    validate_change(changeset, field, fn (_current_field, value) ->
       if !EmailChecker.valid?(value) or Uro.Accounts.get_by_username(value) do
         [{field, " is not valid!"}]
       else

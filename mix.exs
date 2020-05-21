@@ -48,6 +48,9 @@ defmodule Uro.MixProject do
       {:pow, "~> 1.0.20"},
       {:email_checker, "~> 0.1.3"},
       {:burnex, "~> 1.1"},
+      {:pow_assent, "~> 0.4.8"},
+      {:certifi, "~> 2.4"},
+      {:ssl_verify_fun, "~> 1.1"},
     ]
   end
 

@@ -30,6 +30,15 @@ config :email_checker,
   repo: Uro.Repo,
   web_module: UroWeb
 
+  config :uro, :pow_assent,
+  providers: [
+    google: [
+      client_id: "REPLACE_WITH_CLIENT_ID",
+      client_secret: "REPLACE_WITH_CLIENT_SECRET",
+      strategy: Assent.Strategy.Google
+    ]
+  ]
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

@@ -11,7 +11,7 @@ defmodule UroWeb.RegistrationController do
     conn
     |> Pow.Plug.create_user(user_params)
     |> case do
-      {:ok, user, conn} ->
+      {:ok,_user, conn} ->
         conn
         |> put_flash(:info, "Welcome!")
         |> redirect(to: Routes.page_path(conn, :index))
