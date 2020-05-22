@@ -30,6 +30,27 @@ defmodule UroWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug UroWeb.APIAuthPlug, otp_app: :uro
+  end
+
+  pipeline :api_protected do
+    plug Pow.Plug.RequireAuthenticated, error_handler: UroWeb.APIAuthErrorHandler
+  end
+
+  scope "/api/v1", UroWeb.API.V1, as: :api_v1 do
+    pipe_through :api
+
+    get "/sign-in", SessionController, :new, as: :signin
+    post "/sign-in", SessionController, :create, as: :signin
+
+    get "/sign-up", RegistrationController, :new, as: :signup
+    post "/sign-up", RegistrationController, :create, as: :signup
+  end
+
+  scope "/api/v1", UroWeb.API.V1, as: :api_v1 do
+    pipe_through [:api, :api_protected]
+
+    # Your protected API endpoints here
   end
 
   scope "/", UroWeb do
