@@ -9,6 +9,8 @@ defmodule Uro.Repo.Migrations.CreateUsers do
       add :username, :string
       add :display_name, :string
 
+      add :email_notifications, :bool, default: false
+
       timestamps()
     end
 

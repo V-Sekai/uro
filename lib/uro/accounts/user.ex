@@ -8,6 +8,7 @@ defmodule Uro.Accounts.User do
   schema "users" do
     field :username, :string
     field :display_name, :string
+    field :email_notifications, :boolean
 
     pow_user_fields()
 
@@ -17,7 +18,7 @@ defmodule Uro.Accounts.User do
   def changeset(user_or_changeset, attrs) do
     user_or_changeset
     |> pow_changeset(attrs)
-    |> cast(attrs, [:username])
+    |> cast(attrs, [:username, :email_notifications])
     |> put_display_name
     |> downcase_username
     |> validate_username(:username)
