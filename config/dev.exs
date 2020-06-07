@@ -6,7 +6,7 @@ config :uro, Uro.Repo,
   username: "root",
   password: "",
   port: "26257",
-  database: "uroboros_dev",
+  database: "uro_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
