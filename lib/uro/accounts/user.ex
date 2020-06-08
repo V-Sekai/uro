@@ -1,10 +1,14 @@
 defmodule Uro.Accounts.User do
   use Ecto.Schema
   use Pow.Ecto.Schema,
+    user_id_field: :email,
     password_hash_methods: {&Bcrypt.hash_pwd_salt/1, &Bcrypt.verify_pass/2}
   use PowAssent.Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
+  @derive {Phoenix.Param, key: :id}
   schema "users" do
     field :username, :string
     field :display_name, :string
