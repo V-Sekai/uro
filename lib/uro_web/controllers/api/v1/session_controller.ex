@@ -10,21 +10,30 @@ defmodule UroWeb.API.V1.SessionController do
     |> json(%{error: %{status: 401, message: "Invalid email or password"}})
   end
 
+  def validate_user_params(user_params) do
+    required_keys = ["username_or_email", "password"]
+    |> Enum.all?(&(Map.has_key?(user_params, &1)))
+  end
+
   @spec create(Conn.t(), map()) :: Conn.t()
   def create(conn, %{"user" => user_params}) do
-    user = Uro.Accounts.get_by_username_or_email(user_params["username_or_email"] |> String.downcase)
+    if validate_user_params(user_params) do
+      user = Uro.Accounts.get_by_username_or_email(user_params["username_or_email"] |> String.downcase)
 
-    if user do
-      final_params = %{"email" => user.email, "password" => user_params["password"]}
+      if user do
+        final_params = %{"email" => user.email, "password" => user_params["password"]}
 
-      conn
-      |> Pow.Plug.authenticate_user(final_params)
-      |> case do
-        {:ok, conn} ->
-          json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token]}})
+        conn
+        |> Pow.Plug.authenticate_user(final_params)
+        |> case do
+          {:ok, conn} ->
+            json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token]}})
 
-        {:error, conn} ->
-          invalid_login(conn)
+          {:error, conn} ->
+            invalid_login(conn)
+        end
+      else
+        invalid_login(conn)
       end
     else
       invalid_login(conn)
