@@ -23,6 +23,10 @@ defmodule UroWeb.Router do
       error_handler: UroWeb.AuthErrorHandler
   end
 
+  pipeline :protected_admin do
+    plug Uro.Plug.RequireAdmin
+  end
+
   pipeline :not_authenticated do
     plug Pow.Plug.RequireNotAuthenticated,
       error_handler: UroWeb.AuthErrorHandler
@@ -74,6 +78,16 @@ defmodule UroWeb.Router do
     delete "/profile", RegistrationController, :delete
   end
 
+  scope "/admin", UroWeb do
+    pipe_through [:browser, :protected_admin]
+
+    resources "/avatars", AvatarController
+    resources "/maps", MapController
+    resources "/props", PropController
+    resources "/shards", ShardController
+    resources "/events", EventController
+  end
+
   scope "/", UroWeb do
     pipe_through :browser
 
@@ -90,9 +104,4 @@ defmodule UroWeb.Router do
     pipe_through [:browser]
     pow_assent_routes()
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", UroWeb do
-  #   pipe_through :api
-  # end
 end

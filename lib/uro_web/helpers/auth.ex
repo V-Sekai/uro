@@ -1,8 +1,21 @@
 defmodule UroWeb.Helpers.Auth do
-
   def validate_user_params(user_params) do
-    required_keys = ["username_or_email", "password"]
-    |> Enum.all?(&(Map.has_key?(user_params, &1)))
+    Enum.all?(["username_or_email", "password"], fn x -> Map.has_key?(user_params, x) end)
+  end
+
+  def validate_login(conn, user_params) do
+    if validate_user_params(user_params) do
+      user = Uro.Accounts.get_by_username_or_email(user_params["username_or_email"] |> String.downcase)
+
+      if user do
+        conn
+        |> Pow.Plug.authenticate_user(%{"email" => user.email, "password" => user_params["password"]})
+      else
+        {:error, conn}
+      end
+    else
+      {:error, conn}
+    end
   end
 
   def signed_in?(conn) do
@@ -35,5 +48,13 @@ defmodule UroWeb.Helpers.Auth do
           "[NULL]"
         end
       end
+  end
+
+  @doc false
+  defmacro __using__(_config) do
+    quote do
+      import unquote(__MODULE__), only: [validate_login: 2]
+      @behaviour unquote(__MODULE__)
+    end
   end
 end

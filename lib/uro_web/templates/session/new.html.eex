@@ -19,8 +19,8 @@
     <%= submit "Sign in" %>
   </div>
 
-  <%= for link <- PowAssent.Phoenix.ViewHelpers.provider_links(@conn),
-    do: content_tag(:span, link) %>
+    <%= for link <- PowAssent.Phoenix.ViewHelpers.provider_links(@conn),
+        do: content_tag(:div, content_tag(:span, link)) %>
 <% end %>
 
 <span><%= link "Register", to: Routes.signup_path(@conn, :new) %></span>

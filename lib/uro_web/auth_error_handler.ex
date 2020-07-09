@@ -15,4 +15,10 @@ defmodule UroWeb.AuthErrorHandler do
     |> put_flash(:error, "You're already authenticated")
     |> redirect(to: Routes.page_path(conn, :index))
   end
+
+  def call(conn, :insufficent_permission) do
+    conn
+    |> put_flash(:error, "You're already authenticated")
+    |> redirect(to: Routes.page_path(conn, :index))
+  end
 end

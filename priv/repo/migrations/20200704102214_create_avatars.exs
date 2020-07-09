@@ -1,0 +1,14 @@
+defmodule Uro.Repo.Migrations.CreateAvatars do
+  use Ecto.Migration
+
+  def change do
+    create table(:avatars) do
+      add :name, :string
+      add :description, :text
+      add :url, :string
+
+      timestamps()
+    end
+
+  end
+end

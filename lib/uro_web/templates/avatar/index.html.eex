@@ -1,0 +1,30 @@
+<h1>Listing Avatars</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Url</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for avatar <- @avatars do %>
+    <tr>
+      <td><%= avatar.name %></td>
+      <td><%= avatar.description %></td>
+      <td><%= avatar.url %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.avatar_path(@conn, :show, avatar) %></span>
+        <span><%= link "Edit", to: Routes.avatar_path(@conn, :edit, avatar) %></span>
+        <span><%= link "Delete", to: Routes.avatar_path(@conn, :delete, avatar), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Avatar", to: Routes.avatar_path(@conn, :new) %></span>

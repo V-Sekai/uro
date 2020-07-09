@@ -1,0 +1,23 @@
+<h1>Show Prop</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @prop.name %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @prop.description %>
+  </li>
+
+  <li>
+    <strong>Url:</strong>
+    <%= @prop.url %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.prop_path(@conn, :edit, @prop) %></span>
+<span><%= link "Back", to: Routes.prop_path(@conn, :index) %></span>

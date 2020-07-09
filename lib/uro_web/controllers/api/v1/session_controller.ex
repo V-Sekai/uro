@@ -1,42 +1,28 @@
 defmodule UroWeb.API.V1.SessionController do
   use UroWeb, :controller
-
+  use UroWeb.Helpers.Auth
   alias UroWeb.APIAuthPlug
   alias Plug.Conn
 
-  def invalid_login(conn) do
+  @doc false
+  defp login_valid(conn) do
+    conn
+    |> json(%{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token]}})
+  end
+
+  @doc false
+  defp login_invalid(conn) do
     conn
     |> put_status(401)
     |> json(%{error: %{status: 401, message: "Invalid email or password"}})
   end
 
-  def validate_user_params(user_params) do
-    required_keys = ["username_or_email", "password"]
-    |> Enum.all?(&(Map.has_key?(user_params, &1)))
-  end
-
-  @spec create(Conn.t(), map()) :: Conn.t()
   def create(conn, %{"user" => user_params}) do
-    if validate_user_params(user_params) do
-      user = Uro.Accounts.get_by_username_or_email(user_params["username_or_email"] |> String.downcase)
-
-      if user do
-        final_params = %{"email" => user.email, "password" => user_params["password"]}
-
-        conn
-        |> Pow.Plug.authenticate_user(final_params)
-        |> case do
-          {:ok, conn} ->
-            json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token]}})
-
-          {:error, conn} ->
-            invalid_login(conn)
-        end
-      else
-        invalid_login(conn)
-      end
-    else
-      invalid_login(conn)
+    conn
+    |> validate_login(user_params)
+    |> case do
+      {:ok, conn} -> login_valid(conn)
+      {:error, conn} -> login_invalid(conn)
     end
   end
 

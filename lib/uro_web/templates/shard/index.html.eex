@@ -1,0 +1,30 @@
+<h1>Listing Shards</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Host</th>
+      <th>Map</th>
+      <th>Max Users</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for shard <- @shards do %>
+    <tr>
+      <td><%= shard.host %></td>
+      <td><%= shard.map %></td>
+      <td><%= shard.max_users %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.shard_path(@conn, :show, shard) %></span>
+        <span><%= link "Edit", to: Routes.shard_path(@conn, :edit, shard) %></span>
+        <span><%= link "Delete", to: Routes.shard_path(@conn, :delete, shard), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Shard", to: Routes.shard_path(@conn, :new) %></span>

@@ -12,6 +12,9 @@ defmodule Uro.Repo.Migrations.CreateUsers do
 
       add :email_notifications, :bool, default: false
 
+      add :profile_picture, :string
+      add :is_admin, :boolean
+
       timestamps()
     end
 

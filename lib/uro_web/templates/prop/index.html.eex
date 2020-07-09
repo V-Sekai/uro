@@ -1,0 +1,30 @@
+<h1>Listing Props</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Url</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for prop <- @props do %>
+    <tr>
+      <td><%= prop.name %></td>
+      <td><%= prop.description %></td>
+      <td><%= prop.url %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.prop_path(@conn, :show, prop) %></span>
+        <span><%= link "Edit", to: Routes.prop_path(@conn, :edit, prop) %></span>
+        <span><%= link "Delete", to: Routes.prop_path(@conn, :delete, prop), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Prop", to: Routes.prop_path(@conn, :new) %></span>

@@ -1,0 +1,5 @@
+<h1>Edit Shard</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.shard_path(@conn, :update, @shard)) %>
+
+<span><%= link "Back", to: Routes.shard_path(@conn, :index) %></span>

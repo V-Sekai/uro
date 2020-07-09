@@ -14,6 +14,13 @@ defmodule Uro.Accounts.User do
     field :display_name, :string
     field :email_notifications, :boolean
 
+    field :profile_picture, :string
+    field :is_admin, :boolean, default: false
+
+    many_to_many :friendships, Uro.UserRelations.Friendship,
+      join_through: "friendships",
+      join_keys: [from_user_id: :id, to_user_id: :id]
+
     pow_user_fields()
 
     timestamps()
