@@ -49,6 +49,9 @@ defmodule UroWeb.Router do
 
     get "/sign-up", RegistrationController, :new, as: :signup
     post "/sign-up", RegistrationController, :create, as: :signup
+
+    resources "/shards", ShardController, only: [:index, :create, :update, :delete]
+
   end
 
   scope "/api/v1", UroWeb.API.V1, as: :api_v1 do
@@ -78,14 +81,16 @@ defmodule UroWeb.Router do
     delete "/profile", RegistrationController, :delete
   end
 
-  scope "/admin", UroWeb do
+  scope "/admin", UroWeb, as: :admin do
     pipe_through [:browser, :protected_admin]
 
-    resources "/avatars", AvatarController
-    resources "/maps", MapController
-    resources "/props", PropController
-    resources "/shards", ShardController
-    resources "/events", EventController
+    get "/", Admin.PageController, :index
+
+    resources "/avatars", Admin.AvatarController, as: :avatar
+    resources "/maps", Admin.MapController, as: :map
+    resources "/props", Admin.PropController, as: :prop
+    resources "/shards", Admin.ShardController, as: :shard
+    resources "/events", Admin.EventController, as: :event
   end
 
   scope "/", UroWeb do

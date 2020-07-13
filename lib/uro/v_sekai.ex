@@ -101,4 +101,13 @@ defmodule Uro.VSekai do
   def change_shard(%Shard{} = shard) do
     Shard.changeset(shard, %{})
   end
+
+
+  def get_shard_by_address(address) when is_nil(address) do
+    nil
+  end
+  def get_shard_by_address(address) do
+    Repo.get_by(Shard, address: address)
+  end
+
 end

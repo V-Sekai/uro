@@ -1,0 +1,5 @@
+<h1>Edit Prop</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.admin_prop_path(@conn, :update, @prop)) %>
+
+<span><%= link "Back", to: Routes.admin_prop_path(@conn, :index) %></span>

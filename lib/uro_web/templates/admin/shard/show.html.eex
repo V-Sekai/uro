@@ -1,0 +1,27 @@
+<h1>Show Shard</h1>
+
+<ul>
+  <li>
+    <strong>Address:</strong>
+    <%= @shard.address %>
+  </li>
+
+  <li>
+    <strong>Port:</strong>
+    <%= @shard.port %>
+  </li>
+
+  <li>
+    <strong>Map:</strong>
+    <%= @shard.map %>
+  </li>
+
+  <li>
+    <strong>Max Users:</strong>
+    <%= @shard.max_users %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.admin_shard_path(@conn, :edit, @shard) %></span>
+<span><%= link "Back", to: Routes.admin_shard_path(@conn, :index) %></span>

@@ -1,0 +1,23 @@
+<h1>Show Avatar</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @avatar.name %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @avatar.description %>
+  </li>
+
+  <li>
+    <strong>Url:</strong>
+    <%= @avatar.url %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.admin_avatar_path(@conn, :edit, @avatar) %></span>
+<span><%= link "Back", to: Routes.admin_avatar_path(@conn, :index) %></span>

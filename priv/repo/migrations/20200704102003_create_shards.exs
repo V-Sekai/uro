@@ -3,9 +3,11 @@ defmodule Uro.Repo.Migrations.CreateShards do
 
   def change do
     create table(:shards) do
-      add :host, :string
+      add :address, :string
+      add :port, :integer
       add :map, :string
 
+      add :current_users, :integer
       add :max_users, :integer
 
       timestamps()
