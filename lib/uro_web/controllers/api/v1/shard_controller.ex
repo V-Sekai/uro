@@ -28,14 +28,27 @@ defmodule UroWeb.API.V1.ShardController do
   def create(conn, %{"shard" => shard_params}) do
     shard_params = Map.put(shard_params, "address", to_string(:inet_parse.ntoa(conn.remote_ip)))
 
-    case VSekai.create_shard(shard_params) do
-      {:ok, shard} ->
-        conn
-        |> put_status(200)
-        |> json(%{data: %{id: shard.id}})
-      {:error, %Ecto.Changeset{} = changeset} ->
-        conn
-        |> json_error(400, changeset.errors)
+    shard = Uro.VSekai.get_shard_by_address(Map.get(shard_params, "address"))
+    if shard do
+      case VSekai.update_shard(shard, shard_params) do
+        {:ok, shard} ->
+          conn
+          |> put_status(200)
+          |> json(%{data: %{id: shard.id}})
+        {:error, %Ecto.Changeset{}} ->
+          conn
+          |> json_error(400)
+      end
+    else
+      case VSekai.create_shard(shard_params) do
+        {:ok, shard} ->
+          conn
+          |> put_status(200)
+          |> json(%{data: %{id: shard.id}})
+        {:error, %Ecto.Changeset{}} ->
+          conn
+          |> json_error(400)
+      end
     end
   end
 
@@ -47,7 +60,7 @@ defmodule UroWeb.API.V1.ShardController do
           conn
           |> put_status(200)
           |> json(%{data: %{id: shard.id}})
-        {:error, %Ecto.Changeset{}}
+        {:error, %Ecto.Changeset{}} ->
           conn
           |> json_error(400)
       end
@@ -65,7 +78,7 @@ defmodule UroWeb.API.V1.ShardController do
           conn
           |> put_status(200)
           |> json(%{data: %{id: shard.id}})
-        {:error, %Ecto.Changeset{}}
+        {:error, %Ecto.Changeset{}} ->
           conn
           |> json_error(400)
       end
