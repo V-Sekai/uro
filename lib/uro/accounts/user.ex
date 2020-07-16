@@ -21,6 +21,10 @@ defmodule Uro.Accounts.User do
       join_through: "friendships",
       join_keys: [from_user_id: :id, to_user_id: :id]
 
+    has_many :uploaded_avatars, Uro.UserContent.Avatar
+    has_many :uploaded_maps, Uro.UserContent.Map
+    has_many :uploaded_props, Uro.UserContent.Prop
+
     pow_user_fields()
 
     timestamps()

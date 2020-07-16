@@ -50,6 +50,7 @@ defmodule UroWeb.Router do
     get "/sign-up", RegistrationController, :new, as: :signup
     post "/sign-up", RegistrationController, :create, as: :signup
 
+    resources "/avatars", AvatarController, only: [:show]
     resources "/shards", ShardController, only: [:index, :create, :update, :delete]
 
   end

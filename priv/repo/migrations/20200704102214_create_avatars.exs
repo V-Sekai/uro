@@ -6,6 +6,7 @@ defmodule Uro.Repo.Migrations.CreateAvatars do
       add :name, :string
       add :description, :text
       add :url, :string
+      add :uploader_id, references(:users, type: :uuid)
 
       timestamps()
     end

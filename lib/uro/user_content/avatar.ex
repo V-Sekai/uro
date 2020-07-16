@@ -2,6 +2,7 @@ defmodule Uro.UserContent.Avatar do
   import Ecto.Changeset
   use Ecto.Schema
   use Uro.UserContent.UserContent
+  @derive {Jason.Encoder, only: [:description, :name, :url, :uploader]}
 
   schema "avatars" do
     user_content_fields()

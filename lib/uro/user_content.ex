@@ -18,7 +18,9 @@ defmodule Uro.UserContent do
 
   """
   def list_avatars do
-    Repo.all(Avatar)
+    Avatar
+    |> Repo.all
+    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
@@ -35,7 +37,11 @@ defmodule Uro.UserContent do
       ** (Ecto.NoResultsError)
 
   """
-  def get_avatar!(id), do: Repo.get!(Avatar, id)
+  def get_avatar!(id) do
+    Avatar
+    |> Repo.get!(id)
+    |> Repo.preload(uploader: [:uploader])
+  end
 
   @doc """
   Creates a avatar.
@@ -53,6 +59,7 @@ defmodule Uro.UserContent do
     %Avatar{}
     |> Avatar.changeset(attrs)
     |> Repo.insert()
+    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
@@ -71,6 +78,7 @@ defmodule Uro.UserContent do
     avatar
     |> Avatar.changeset(attrs)
     |> Repo.update()
+    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
@@ -114,7 +122,9 @@ defmodule Uro.UserContent do
 
   """
   def list_maps do
-    Repo.all(Map)
+    Map
+    |> Repo.all
+    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
@@ -131,7 +141,11 @@ defmodule Uro.UserContent do
       ** (Ecto.NoResultsError)
 
   """
-  def get_map!(id), do: Repo.get!(Map, id)
+  def get_map!(id) do
+    Map
+    |> Repo.get!(id)
+    |> Repo.preload(uploader: [:uploader])
+  end
 
   @doc """
   Creates a map.
@@ -149,6 +163,7 @@ defmodule Uro.UserContent do
     %Map{}
     |> Map.changeset(attrs)
     |> Repo.insert()
+    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
@@ -210,7 +225,9 @@ defmodule Uro.UserContent do
 
   """
   def list_props do
-    Repo.all(Prop)
+    Prop
+    |> Repo.all
+    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
@@ -227,7 +244,11 @@ defmodule Uro.UserContent do
       ** (Ecto.NoResultsError)
 
   """
-  def get_prop!(id), do: Repo.get!(Prop, id)
+  def get_prop!(id) do
+    Prop
+    |> Repo.get!(id)
+    |> Repo.preload(uploader: [:uploader])
+  end
 
   @doc """
   Creates a prop.
@@ -245,6 +266,7 @@ defmodule Uro.UserContent do
     %Prop{}
     |> Prop.changeset(attrs)
     |> Repo.insert()
+    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
@@ -263,6 +285,7 @@ defmodule Uro.UserContent do
     prop
     |> Prop.changeset(attrs)
     |> Repo.update()
+    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
