@@ -110,4 +110,13 @@ defmodule UroWeb.Router do
     pipe_through [:browser]
     pow_assent_routes()
   end
+
+  def swagger_info do
+    %{
+      info: %{
+        version: "0.1",
+        title: "Uro"
+      }
+    }
+  end
 end

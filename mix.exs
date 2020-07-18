@@ -7,7 +7,7 @@ defmodule Uro.MixProject do
       version: "0.1.0",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers ++ [:phoenix_swagger],
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -51,6 +51,8 @@ defmodule Uro.MixProject do
       {:pow_assent, "~> 0.4.8"},
       {:certifi, "~> 2.4"},
       {:ssl_verify_fun, "~> 1.1"},
+      {:phoenix_swagger, "~> 0.8.2"},
+      {:ex_json_schema, "~> 0.5"},
     ]
   end
 

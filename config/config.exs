@@ -44,6 +44,16 @@ config :email_checker,
     ]
   ]
 
+  config :uro, :phoenix_swagger,
+  swagger_files: %{
+    "priv/static/swagger.json" => [
+      router: UroWeb.Router,
+      endpoint: UroWeb.Endpoint
+    ]
+  }
+
+  config :phoenix_swagger, json_library: Jason
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
