@@ -3,7 +3,7 @@ defmodule UroWeb.API.V1.ShardController do
   alias Uro.VSekai
 
   def validate_ip(conn, shard) do
-    shard[:id] == conn.remote_ip
+    shard.id == conn.remote_ip
   end
 
   def json_error(conn, status, errors) do
@@ -34,7 +34,7 @@ defmodule UroWeb.API.V1.ShardController do
         {:ok, shard} ->
           conn
           |> put_status(200)
-          |> json(%{data: %{id: shard.id}})
+          |> json(%{data: %{id: to_string(shard.id)}})
         {:error, %Ecto.Changeset{}} ->
           conn
           |> json_error(400)
@@ -44,7 +44,7 @@ defmodule UroWeb.API.V1.ShardController do
         {:ok, shard} ->
           conn
           |> put_status(200)
-          |> json(%{data: %{id: shard.id}})
+          |> json(%{data: %{id: to_string(shard.id)}})
         {:error, %Ecto.Changeset{}} ->
           conn
           |> json_error(400)
@@ -54,12 +54,12 @@ defmodule UroWeb.API.V1.ShardController do
 
   def update(conn, %{"id" => id, "shard" => shard_params}) do
     shard = VSekai.get_shard!(id)
-    if shard[:address] == to_string(:inet_parse.ntoa(conn.remote_ip)) do
+    if shard.address == to_string(:inet_parse.ntoa(conn.remote_ip)) do
       case VSekai.update_shard(shard, shard_params) do
         {:ok, shard} ->
           conn
           |> put_status(200)
-          |> json(%{data: %{id: shard.id}})
+          |> json(%{data: %{id: to_string(shard.id)}})
         {:error, %Ecto.Changeset{}} ->
           conn
           |> json_error(400)
@@ -72,12 +72,12 @@ defmodule UroWeb.API.V1.ShardController do
 
   def delete(conn, %{"id" => id}) do
     shard = VSekai.get_shard!(id)
-    if shard[:address] == to_string(:inet_parse.ntoa(conn.remote_ip)) do
+    if shard.address == to_string(:inet_parse.ntoa(conn.remote_ip)) do
       case VSekai.delete_shard(shard) do
         {:ok, shard} ->
           conn
           |> put_status(200)
-          |> json(%{data: %{id: shard.id}})
+          |> json(%{data: %{id: to_string(shard.id)}})
         {:error, %Ecto.Changeset{}} ->
           conn
           |> json_error(400)

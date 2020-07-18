@@ -78,7 +78,6 @@ defmodule Uro.UserContent do
     avatar
     |> Avatar.changeset(attrs)
     |> Repo.update()
-    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
@@ -285,7 +284,6 @@ defmodule Uro.UserContent do
     prop
     |> Prop.changeset(attrs)
     |> Repo.update()
-    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
