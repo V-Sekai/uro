@@ -9,4 +9,6 @@
   <%= link "Shards", to: Routes.admin_shard_path(@conn, :index) %>
   |
   <%= link "Events", to: Routes.admin_event_path(@conn, :index) %>
+  |
+  <%= link "Users", to: Routes.admin_user_path(@conn, :index) %>
 </section>

@@ -1,0 +1,36 @@
+<h1>Show User</h1>
+
+<ul>
+  <li>
+    <strong>Email:</strong>
+    <%= @user.email %>
+  </li>
+  <li>
+    <strong>Username:</strong>
+    <%= @user.username %>
+  </li>
+
+  <li>
+    <strong>Display Name:</strong>
+    <%= @user.display_name %>
+  </li>
+
+  <li>
+    <strong>Email Notifications:</strong>
+    <%= @user.email_notifications %>
+  </li>
+
+  <li>
+    <strong>Profile Picture:</strong>
+    <%= @user.profile_picture %>
+  </li>
+
+  <li>
+    <strong>Is Admin:</strong>
+    <%= @user.is_admin %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.admin_user_path(@conn, :edit, @user) %></span>
+<span><%= link "Back", to: Routes.admin_user_path(@conn, :index) %></span>

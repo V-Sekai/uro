@@ -25,20 +25,36 @@ defmodule Uro.Accounts.User do
     has_many :uploaded_maps, Uro.UserContent.Map
     has_many :uploaded_props, Uro.UserContent.Prop
 
+    has_one :user_identity, Uro.UserIdentities.UserIdentity
+
     pow_user_fields()
 
     timestamps()
   end
 
-  def changeset(user_or_changeset, attrs) do
+  def user_custom_changeset(user_or_changeset, attrs) do
     user_or_changeset
-    |> pow_changeset(attrs)
     |> cast(attrs, [:username, :email_notifications])
     |> put_display_name
     |> downcase_username
     |> validate_username(:username)
     |> validate_email(:email)
     |> unique_constraint(:username)
+  end
+
+  def changeset(user_or_changeset, attrs) do
+    user_or_changeset
+    |> pow_changeset(attrs)
+    |> user_custom_changeset(attrs)
+  end
+
+  def changeset_admin(user_or_changeset, attrs) do
+    user_or_changeset
+    |> pow_user_id_field_changeset(attrs)
+    |> pow_password_changeset(attrs)
+    |> user_custom_changeset(attrs)
+    |> cast(attrs, [:is_admin, :display_name])
+    |> validate_required([:is_admin, :display_name])
   end
 
   defp put_display_name(%Ecto.Changeset{valid?: true, changes: %{username: username}} = changeset) do

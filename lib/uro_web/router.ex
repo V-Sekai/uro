@@ -92,6 +92,7 @@ defmodule UroWeb.Router do
     resources "/props", Admin.PropController, as: :prop
     resources "/shards", Admin.ShardController, as: :shard
     resources "/events", Admin.EventController, as: :event
+    resources "/users", Admin.UserController, as: :user
   end
 
   scope "/", UroWeb do
