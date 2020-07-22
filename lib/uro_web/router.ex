@@ -3,6 +3,10 @@ defmodule UroWeb.Router do
   use Pow.Phoenix.Router
   use PowAssent.Phoenix.Router
 
+  pipeline :remote_ip do
+    plug RemoteIp
+  end
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -38,11 +42,12 @@ defmodule UroWeb.Router do
   end
 
   pipeline :api_protected do
-    plug Pow.Plug.RequireAuthenticated, error_handler: UroWeb.APIAuthErrorHandler
+    plug Pow.Plug.RequireAuthenticated,
+      error_handler: UroWeb.APIAuthErrorHandler
   end
 
   scope "/api/v1", UroWeb.API.V1, as: :api_v1 do
-    pipe_through :api
+    pipe_through [:remote_ip, :api]
 
     get "/sign-in", SessionController, :new, as: :signin
     post "/sign-in", SessionController, :create, as: :signin
@@ -56,7 +61,7 @@ defmodule UroWeb.Router do
   end
 
   scope "/api/v1", UroWeb.API.V1, as: :api_v1 do
-    pipe_through [:api, :api_protected]
+    pipe_through [:remote_ip, :api, :api_protected]
 
     # Your protected API endpoints here
   end

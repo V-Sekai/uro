@@ -2,10 +2,6 @@ defmodule UroWeb.API.V1.ShardController do
   use UroWeb, :controller
   alias Uro.VSekai
 
-  def validate_ip(conn, shard) do
-    shard.id == conn.remote_ip
-  end
-
   def json_error(conn, status, errors) do
     conn
     |> put_status(status)
