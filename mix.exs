@@ -53,6 +53,7 @@ defmodule Uro.MixProject do
       {:ssl_verify_fun, "~> 1.1"},
       {:phoenix_swagger, "~> 0.8.2"},
       {:ex_json_schema, "~> 0.5"},
+      {:remote_ip, "~> 0.2.0"},
     ]
   end
 
