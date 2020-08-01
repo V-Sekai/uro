@@ -89,7 +89,7 @@ defmodule Uro.VSekai do
   def update_shard(%Shard{} = shard, attrs) do
     shard
     |> Shard.changeset(attrs)
-    |> Repo.update()
+    |> Repo.update(force: true)
   end
 
   @doc """
