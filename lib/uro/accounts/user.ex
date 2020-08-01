@@ -25,8 +25,6 @@ defmodule Uro.Accounts.User do
     has_many :uploaded_maps, Uro.UserContent.Map
     has_many :uploaded_props, Uro.UserContent.Prop
 
-    has_one :user_identity, Uro.UserIdentities.UserIdentity
-
     pow_user_fields()
 
     timestamps()

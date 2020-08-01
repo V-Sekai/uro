@@ -53,6 +53,7 @@ defmodule UroWeb.Admin.UserController do
 
   def delete(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
+    IO.inspect(user)
     {:ok, _user} = Accounts.delete_user(user)
 
     conn

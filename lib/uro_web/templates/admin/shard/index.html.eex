@@ -6,8 +6,8 @@
       <th>Address</th>
       <th>Port</th>
       <th>Map</th>
+      <th>Current Users</th>
       <th>Max Users</th>
-
       <th></th>
     </tr>
   </thead>
@@ -17,6 +17,7 @@
       <td><%= shard.address %></td>
       <td><%= shard.port %></td>
       <td><%= shard.map %></td>
+      <td><%= shard.current_users %></td>
       <td><%= shard.max_users %></td>
 
       <td>

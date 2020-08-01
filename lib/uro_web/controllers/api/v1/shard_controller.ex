@@ -1,50 +1,28 @@
 defmodule UroWeb.API.V1.ShardController do
   use UroWeb, :controller
+  use UroWeb.Helpers.API
   alias Uro.VSekai
 
-  def json_error(conn, status, errors) do
-    conn
-    |> put_status(status)
-    |> json(errors: errors)
-  end
-
-  def json_error(conn, status) do
-    conn
-    |> put_status(status)
-    |> json(%{errors: ""})
-  end
-
   def index(conn, _params) do
-    shards = VSekai.list_shards()
+    shards = VSekai.list_fresh_shards()
     conn
     |> put_status(200)
     |> json(%{data: %{shards: shards}})
   end
 
   def create(conn, %{"shard" => shard_params}) do
-    shard_params = Map.put(shard_params, "address", to_string(:inet_parse.ntoa(conn.remote_ip)))
+    if !Map.has_key?(shard_params, "address") do
+      shard_params = Map.put(shard_params, "address", to_string(:inet_parse.ntoa(conn.remote_ip)))
+    end
 
-    shard = Uro.VSekai.get_shard_by_address(Map.get(shard_params, "address"))
-    if shard do
-      case VSekai.update_shard(shard, shard_params) do
-        {:ok, shard} ->
-          conn
-          |> put_status(200)
-          |> json(%{data: %{id: to_string(shard.id)}})
-        {:error, %Ecto.Changeset{}} ->
-          conn
-          |> json_error(400)
-      end
-    else
-      case VSekai.create_shard(shard_params) do
-        {:ok, shard} ->
-          conn
-          |> put_status(200)
-          |> json(%{data: %{id: to_string(shard.id)}})
-        {:error, %Ecto.Changeset{}} ->
-          conn
-          |> json_error(400)
-      end
+    case VSekai.create_shard(shard_params) do
+      {:ok, shard} ->
+        conn
+        |> put_status(200)
+        |> json(%{data: %{id: to_string(shard.id)}})
+      {:error, %Ecto.Changeset{}} ->
+        conn
+        |> json_error(400)
     end
   end
 

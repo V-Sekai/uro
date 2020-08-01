@@ -9,6 +9,11 @@ defmodule Uro.VSekai do
   alias Uro.VSekai.Shard
 
   @doc """
+  Returns the time in seconds a shard before is considered stale.
+  """
+  def shard_freshness_time_in_seconds, do: 30
+
+  @doc """
   Returns the list of shards.
 
   ## Examples
@@ -19,6 +24,20 @@ defmodule Uro.VSekai do
   """
   def list_shards do
     Repo.all(Shard)
+  end
+
+  @doc """
+  Returns a list of shards last modified within the shard freshness time.
+
+  ## Examples
+
+      iex> list_fresh_shards()
+      [%Shard{}, ...]
+
+  """
+  def list_fresh_shards do
+    stale_timestamp = DateTime.add(DateTime.utc_now(), -shard_freshness_time_in_seconds(), :second)
+    Repo.all(from m in Shard, where: m.updated_at > ^stale_timestamp)
   end
 
   @doc """

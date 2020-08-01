@@ -17,6 +17,16 @@
   </li>
 
   <li>
+    <strong>Name:</strong>
+    <%= @shard.name %>
+  </li>
+
+  <li>
+    <strong>Current Users:</strong>
+    <%= @shard.current_users %>
+  </li>
+
+  <li>
     <strong>Max Users:</strong>
     <%= @shard.max_users %>
   </li>

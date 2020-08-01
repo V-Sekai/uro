@@ -36,7 +36,9 @@ defmodule Uro.Accounts do
     Repo.all(User)
   end
 
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    Repo.get!(User, id)
+  end
 
   def create_user(attrs \\ %{}) do
     %User{}
