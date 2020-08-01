@@ -1,4 +1,4 @@
-FROM docker.io/groupsinfra/elixir-uro-base:v1.0
+FROM docker.io/groupsinfra/elixir-uro-base:v1.0.1
 
 ENV PORT 4000
 
