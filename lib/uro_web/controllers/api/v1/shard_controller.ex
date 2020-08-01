@@ -3,6 +3,14 @@ defmodule UroWeb.API.V1.ShardController do
   use UroWeb.Helpers.API
   alias Uro.VSekai
 
+  def ensure_has_address(conn, params) do
+    if !Map.has_key?(params, "address") do
+      Map.put(params, "address", to_string(:inet_parse.ntoa(conn.remote_ip)))
+    else
+      params
+    end
+  end
+
   def index(conn, _params) do
     shards = VSekai.list_fresh_shards()
     conn
@@ -11,10 +19,7 @@ defmodule UroWeb.API.V1.ShardController do
   end
 
   def create(conn, %{"shard" => shard_params}) do
-    if !Map.has_key?(shard_params, "address") do
-      shard_params = Map.put(shard_params, "address", to_string(:inet_parse.ntoa(conn.remote_ip)))
-    end
-
+    shard_params = ensure_has_address(conn, shard_params)
     case VSekai.create_shard(shard_params) do
       {:ok, shard} ->
         conn
@@ -42,6 +47,11 @@ defmodule UroWeb.API.V1.ShardController do
       conn
       |> json_error(400)
     end
+  end
+
+
+  def update(conn, %{"id" => id}) do
+    update(conn, %{"id" => id, "shard" => %{}})
   end
 
   def delete(conn, %{"id" => id}) do
