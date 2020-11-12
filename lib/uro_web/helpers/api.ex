@@ -12,7 +12,6 @@ defmodule UroWeb.Helpers.API do
   defmacro __using__(_config) do
     quote do
       import unquote(__MODULE__), only: [json_error: 2]
-      @behaviour unquote(__MODULE__)
     end
   end
 end
