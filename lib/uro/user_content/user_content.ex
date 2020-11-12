@@ -4,7 +4,8 @@ defmodule Uro.UserContent.UserContent do
   @doc false
   defmacro __using__(_config) do
     quote do
-      @behaviour unquote(__MODULE__)
+      use Ecto.Schema
+      @derive {Jason.Encoder, only: [:description, :name, :url, :uploader]}
       import unquote(__MODULE__), only: [user_content_fields: 0]
 
       @spec user_content_changeset(Ecto.Schema.t() | Changeset.t(), map()) :: Changeset.t()
@@ -13,8 +14,6 @@ defmodule Uro.UserContent.UserContent do
         |> cast(attrs, [:name, :description, :url])
         |> validate_required([:name, :description, :url])
       end
-
-      @behaviour unquote(__MODULE__)
     end
   end
 

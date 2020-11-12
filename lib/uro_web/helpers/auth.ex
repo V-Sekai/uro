@@ -54,7 +54,6 @@ defmodule UroWeb.Helpers.Auth do
   defmacro __using__(_config) do
     quote do
       import unquote(__MODULE__), only: [validate_login: 2]
-      @behaviour unquote(__MODULE__)
     end
   end
 end
