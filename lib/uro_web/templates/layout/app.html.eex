@@ -19,8 +19,8 @@
               <ul>
               <%# TODO: these probably should not be links! %>
               <%= if UroWeb.Helpers.Auth.signed_in?(@conn) do %>
-                <%= "Signed in as " <> UroWeb.Helpers.Auth.session_display_name(@conn) %>
-                <%= link "Sign Out", to: Routes.signin_path(@conn, :delete), method: :delete %>
+				<%= "Signed in as " <> UroWeb.Helpers.Auth.session_display_name(@conn) %>
+                <%= link "Sign Out", to: Routes.signout_path(@conn, :delete), method: :post %>
               <% else %>
                 <%= link "Sign In", to: Routes.signin_path(@conn, :new) %>
               <% end %>

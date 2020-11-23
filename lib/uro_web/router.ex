@@ -79,7 +79,8 @@ defmodule UroWeb.Router do
   scope "/", UroWeb do
     pipe_through [:browser, :protected]
 
-    delete "/sign-out", SessionController, :delete, as: :signin
+    delete "/", SessionController, :delete, as: :signin
+    post "/sign-out", SessionController, :delete, as: :signout
 
     get "/profile/edit", RegistrationController, :edit
     patch "/profile", RegistrationController, :update
