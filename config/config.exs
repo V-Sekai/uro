@@ -32,16 +32,6 @@ config :email_checker,
 
   config :uro, :pow_assent,
   providers: [
-    google: [
-      client_id: "REPLACE_WITH_CLIENT_ID",
-      client_secret: "REPLACE_WITH_CLIENT_SECRET",
-      strategy: Assent.Strategy.Google
-    ],
-    discord: [
-      client_id: "REPLACE_WITH_CLIENT_ID",
-      client_secret: "REPLACE_WITH_CLIENT_SECRET",
-      strategy: Assent.Strategy.Discord
-    ]
   ]
 
   config :uro, :phoenix_swagger,
