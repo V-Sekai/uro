@@ -2,36 +2,30 @@
 
 <ul>
   <li>
-    <strong>Address:</strong>
-    <%= @shard.address %>
+    <strong><%=gettext("Address")%>: </strong><%= @shard.address %>
   </li>
 
   <li>
-    <strong>Port:</strong>
-    <%= @shard.port %>
+    <strong><%=gettext("Port")%>: </strong><%= @shard.port %>
   </li>
 
   <li>
-    <strong>Map:</strong>
-    <%= @shard.map %>
+    <strong><%=gettext("Map")%>: </strong><%= @shard.map %>
   </li>
 
   <li>
-    <strong>Name:</strong>
-    <%= @shard.name %>
+    <strong><%=gettext("Name")%>: </strong><%= @shard.name %>
   </li>
 
   <li>
-    <strong>Current Users:</strong>
-    <%= @shard.current_users %>
+    <strong><%=gettext("Current Users")%>: </strong><%= @shard.current_users %>
   </li>
 
   <li>
-    <strong>Max Users:</strong>
-    <%= @shard.max_users %>
+    <strong><%=gettext("Max Users")%>: </strong><%= @shard.max_users %>
   </li>
 
 </ul>
 
-<span><%= link "Edit", to: Routes.admin_shard_path(@conn, :edit, @shard) %></span>
-<span><%= link "Back", to: Routes.admin_shard_path(@conn, :index) %></span>
+<span><%= link gettext("Edit"), to: Routes.admin_shard_path(@conn, :edit, @shard) %></span>
+<span><%= link gettext("Back"), to: Routes.admin_shard_path(@conn, :index) %></span>

@@ -82,10 +82,11 @@ defmodule UroWeb.Router do
     delete "/", SessionController, :delete, as: :signin
     post "/sign-out", SessionController, :delete, as: :signout
 
-    get "/profile/edit", RegistrationController, :edit
-    patch "/profile", RegistrationController, :update
-    put "/profile", RegistrationController, :update
-    delete "/profile", RegistrationController, :delete
+    get "/profile", RegistrationController, :show, as: :profile
+    get "/profile/edit", RegistrationController, :edit, as: :profile
+    patch "/profile", RegistrationController, :update, as: :profile
+    put "/profile", RegistrationController, :update, as: :profile
+    delete "/profile", RegistrationController, :delete, as: :profile
   end
 
   scope "/admin", UroWeb, as: :admin do

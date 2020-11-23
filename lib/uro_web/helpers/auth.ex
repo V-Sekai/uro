@@ -24,12 +24,12 @@ defmodule UroWeb.Helpers.Auth do
     end
   end
 
-  def get_user(conn) do
+  def get_current_user(conn) do
     Pow.Plug.current_user(conn)
   end
 
   def session_username(conn) do
-    user = get_user(conn)
+    user = get_current_user(conn)
     if user do
       if user.username do
         user.username
@@ -40,7 +40,7 @@ defmodule UroWeb.Helpers.Auth do
   end
 
     def session_display_name(conn) do
-      user = get_user(conn)
+      user = get_current_user(conn)
       if user do
         if user.display_name do
           user.display_name

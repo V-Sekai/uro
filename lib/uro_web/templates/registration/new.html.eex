@@ -3,43 +3,43 @@
 <%= form_for @changeset, Routes.signup_path(@conn, :create), fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+      <p><%= gettext("Oops, something went wrong! Please check the errors below.")%></p>
     </div>
   <% end %>
   
   <ul>
   <span>
-  <%= label f, :username %>
+  <%= label f, gettext("Username") %>
   <%= text_input f, :username %>
   <%= error_tag f, :username %>
   </span>
 
   <span>
-  <%= label f, :email %>
+  <%= label f, gettext("Email") %>
   <%= email_input f, :email %>
   <%= error_tag f, :email %>
   </span>
 
   <span>
-  <%= label f, :password %>
+  <%= label f, gettext("Password") %>
   <%= password_input f, :password %>
   <%= error_tag f, :password %>
   </span>
 
   <span>
-  <%= label f, :password_confirmation %>
+  <%= label f, gettext("Password Confirmation") %>
   <%= password_input f, :password_confirmation %>
   <%= error_tag f, :password_confirmation %>
   </span>
   
   <span>
-  <%= label f, "Receive email notifications" %>
+  <%= label f, gettext("Receive email notifications") %>
   <%= checkbox f, :email_notifications %>
   <%= error_tag f, :email_notifications %>
   </span>
   </ul>
 
-  <%= submit "Register" %>
+  <%= submit gettext("Register") %>
 <% end %>
 
-<span><%= link "Sign in", to: Routes.signin_path(@conn, :new) %></span>
+<span><%= link gettext("Sign in"), to: Routes.signin_path(@conn, :new) %></span>

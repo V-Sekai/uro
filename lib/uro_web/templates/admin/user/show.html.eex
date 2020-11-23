@@ -2,35 +2,29 @@
 
 <ul>
   <li>
-    <strong>Email:</strong>
-    <%= @user.email %>
+    <strong><%=gettext("Email")%>: </strong><%= @user.email %>
   </li>
   <li>
-    <strong>Username:</strong>
-    <%= @user.username %>
+    <strong><%=gettext("Username")%>: </strong><%= @user.username %>
   </li>
 
   <li>
-    <strong>Display Name:</strong>
-    <%= @user.display_name %>
+    <strong><%=gettext("Display Name")%>: </strong><%= @user.display_name %>
   </li>
 
   <li>
-    <strong>Email Notifications:</strong>
-    <%= @user.email_notifications %>
+    <strong><%=gettext("Email Notifications")%>: </strong><%= @user.email_notifications %>
   </li>
 
   <li>
-    <strong>Profile Picture:</strong>
-    <%= @user.profile_picture %>
+    <strong><%=gettext("Profile Picture")%>: </strong><%= @user.profile_picture %>
   </li>
 
   <li>
-    <strong>Is Admin:</strong>
-    <%= @user.is_admin %>
+    <strong><%=gettext("Is Admin")%>: </strong><%= @user.is_admin %>
   </li>
 
 </ul>
 
-<span><%= link "Edit", to: Routes.admin_user_path(@conn, :edit, @user) %></span>
-<span><%= link "Back", to: Routes.admin_user_path(@conn, :index) %></span>
+<span><%= link gettext("Edit"), to: Routes.admin_user_path(@conn, :edit, @user) %></span>
+<span><%= link gettext("Back"), to: Routes.admin_user_path(@conn, :index) %></span>

@@ -3,28 +3,28 @@
 <%= form_for @changeset, Routes.signup_path(@conn, :create), fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+      <p><%= gettext("Oops, something went wrong! Please check the errors below.")%></p>
     </div>
   <% end %>
 
-  <%= label f, :username %>
+  <%= label f, gettext("Username") %>
   <%= text_input f, :username %>
   <%= error_tag f, :username %>
 
-  <%= label f, :current_password %>
+  <%= label f, gettext("Current Password") %>
   <%= password_input f, :current_password %>
   <%= error_tag f, :current_password %>
 
-  <%= label f, :password %>
+  <%= label f, gettext("Password") %>
   <%= password_input f, :password %>
   <%= error_tag f, :password %>
 
-  <%= label f, :password_confirmation %>
+  <%= label f, gettext("Password Confirmation") %>
   <%= password_input f, :password_confirmation %>
   <%= error_tag f, :password_confirmation %>
 
   <div>
-    <%= submit "Update" %>
+    <%= submit gettext("Update") %>
   </div>
 <% end %>
 

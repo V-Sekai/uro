@@ -3,21 +3,18 @@
 <ul>
 
   <li>
-    <strong>Name:</strong>
-    <%= @map.name %>
+    <strong><%=gettext("Name")%>: </strong><%= @map.name %>
   </li>
 
   <li>
-    <strong>Description:</strong>
-    <%= @map.description %>
+    <strong><%=gettext("Description")%>: </strong><%= @map.description %>
   </li>
 
   <li>
-    <strong>Url:</strong>
-    <%= @map.url %>
+    <strong><%=gettext("URL")%>: </strong><%= @map.url %>
   </li>
 
 </ul>
 
-<span><%= link "Edit", to: Routes.admin_map_path(@conn, :edit, @map) %></span>
-<span><%= link "Back", to: Routes.admin_map_path(@conn, :index) %></span>
+<span><%= link gettext("Edit"), to: Routes.admin_map_path(@conn, :edit, @map) %></span>
+<span><%= link gettext("Back"), to: Routes.admin_map_path(@conn, :index) %></span>

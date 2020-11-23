@@ -3,24 +3,24 @@
 <%= form_for @changeset, Routes.signin_path(@conn, :create), fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+      <p><%= gettext("Oops, something went wrong! Please check the errors below.")%></p>
     </div>
   <% end %>
 
-  <%= label f, :username_or_email %>
+  <%= label f, gettext("Username or Email") %>
   <%= text_input f, :username_or_email %>
   <%= error_tag f, :username_or_email %>
 
-  <%= label f, :password %>
+  <%= label f, gettext("Password") %>
   <%= password_input f, :password %>
   <%= error_tag f, :password %>
 
   <div>
-    <%= submit "Sign in" %>
+    <%= submit gettext("Sign in") %>
   </div>
 
     <%= for link <- PowAssent.Phoenix.ViewHelpers.provider_links(@conn),
         do: content_tag(:div, content_tag(:span, link)) %>
 <% end %>
 
-<span><%= link "Register", to: Routes.signup_path(@conn, :new) %></span>
+<span><%= link gettext("Register"), to: Routes.signup_path(@conn, :new) %></span>

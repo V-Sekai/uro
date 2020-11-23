@@ -17,13 +17,13 @@
           <ul>
             <li>
               <ul>
-              <%# TODO: these probably should not be links! %>
-              <%= if UroWeb.Helpers.Auth.signed_in?(@conn) do %>
-		            <%= "Signed in as " <> UroWeb.Helpers.Auth.session_display_name(@conn) %>
-                <%= link "Sign Out", to: Routes.signout_path(@conn, :delete), method: :post %>
-              <% else %>
-                <%= link "Sign In", to: Routes.signin_path(@conn, :new) %>
-              <% end %>
+                <%# TODO: these probably should not be links! %>
+                <%= if UroWeb.Helpers.Auth.signed_in?(@conn) do %>
+                <li><%= gettext("Signed in as %{username}", username: safe_to_string(link(UroWeb.Helpers.Auth.session_display_name(@conn), to: Routes.profile_path(@conn, :show)))) |> raw() %></li>
+                <li><%= link gettext("Sign Out"), to: Routes.signout_path(@conn, :delete), method: :post %></li>
+                <% else %>
+                <li><%= link gettext("Sign In"), to: Routes.signin_path(@conn, :new) %></li>
+                <% end %>
               </ul>
             </li>
           </ul>

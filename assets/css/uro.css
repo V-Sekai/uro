@@ -1,0 +1,5 @@
+@import "./phoenix.css";
+
+header nav a {
+  display: inline;
+}

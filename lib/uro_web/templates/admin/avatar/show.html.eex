@@ -3,21 +3,18 @@
 <ul>
 
   <li>
-    <strong>Name:</strong>
-    <%= @avatar.name %>
+    <strong><%=gettext("Name")%>: </strong><%= @avatar.name %>
   </li>
 
   <li>
-    <strong>Description:</strong>
-    <%= @avatar.description %>
+    <strong><%=gettext("Description")%>: </strong><%= @avatar.description %>
   </li>
 
   <li>
-    <strong>Url:</strong>
-    <%= @avatar.url %>
+    <strong><%=gettext("URL")%>: </strong><%= @avatar.url %>
   </li>
 
 </ul>
 
-<span><%= link "Edit", to: Routes.admin_avatar_path(@conn, :edit, @avatar) %></span>
-<span><%= link "Back", to: Routes.admin_avatar_path(@conn, :index) %></span>
+<span><%= link gettext("Edit"), to: Routes.admin_avatar_path(@conn, :edit, @avatar) %></span>
+<span><%= link gettext("Back"), to: Routes.admin_avatar_path(@conn, :index) %></span>

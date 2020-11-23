@@ -1,10 +1,29 @@
 defmodule UroWeb.RegistrationController do
   use UroWeb, :controller
+  use UroWeb.Helpers.Auth
+
+  def show(conn, _params) do
+    conn
+    |> UroWeb.Helpers.Auth.get_current_user
+    |> case do
+      user ->
+        conn
+        |> render("show.html", user: user)
+      nil ->
+        conn
+        |> put_flash(:error, gettext("Could not get current user!"))
+        |> redirect(to: Routes.page_path(conn, :index))
+    end
+  end
 
   def new(conn, _params) do
-    changeset = Pow.Plug.change_user(conn)
-
-    render(conn, "new.html", changeset: changeset)
+    conn
+    |> Pow.Plug.change_user
+    |> case do
+      changeset ->
+        conn
+        |> render("new.html", changeset: changeset)
+    end
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -13,7 +32,7 @@ defmodule UroWeb.RegistrationController do
     |> case do
       {:ok,_user, conn} ->
         conn
-        |> put_flash(:info, "Welcome!")
+        |> put_flash(:info, gettext("Welcome!"))
         |> redirect(to: Routes.page_path(conn, :index))
 
       {:error, changeset, conn} ->
@@ -23,7 +42,7 @@ defmodule UroWeb.RegistrationController do
 
   def edit(conn, _params) do
     conn
-    |> put_flash(:error, "Profile editing is not currently available.")
+    |> put_flash(:error, gettext("Profile editing is not currently available."))
     |> redirect(to: Routes.page_path(conn, :index))
   end
 end
