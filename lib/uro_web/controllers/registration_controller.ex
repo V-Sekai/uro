@@ -9,10 +9,6 @@ defmodule UroWeb.RegistrationController do
       user ->
         conn
         |> render("show.html", user: user)
-      nil ->
-        conn
-        |> put_flash(:error, gettext("Could not get current user!"))
-        |> redirect(to: Routes.page_path(conn, :index))
     end
   end
 
