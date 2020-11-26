@@ -1,7 +1,7 @@
 <%= form_for @changeset, @action, fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+      <p><%= gettext("Oops, something went wrong! Please check the errors below.")%></p>
     </div>
   <% end %>
 
@@ -29,15 +29,7 @@
   <%= checkbox f, :email_notifications %>
   <%= error_tag f, :email_notifications %>
 
-  <%= label f, :profile_picture %>
-  <%= text_input f, :profile_picture %>
-  <%= error_tag f, :profile_picture %>
-
-  <%= label f, :is_admin %>
-  <%= checkbox f, :is_admin %>
-  <%= error_tag f, :is_admin %>
-
   <div>
-    <%= submit "Save" %>
+    <%= submit gettext("Save") %>
   </div>
 <% end %>

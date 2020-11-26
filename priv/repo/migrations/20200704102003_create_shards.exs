@@ -5,7 +5,6 @@ defmodule Uro.Repo.Migrations.CreateShards do
     create table(:shards) do
       add :address, :string
       add :port, :integer
-      add :map, :string
       add :name, :string
 
       add :current_users, :integer

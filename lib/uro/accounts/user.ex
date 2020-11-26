@@ -17,13 +17,15 @@ defmodule Uro.Accounts.User do
     field :profile_picture, :string
     field :is_admin, :boolean, default: false
 
+    has_one :user_privilege_ruleset, Uro.Accounts.UserPrivilegeRuleset, foreign_key: :user_id
+
     many_to_many :friendships, Uro.UserRelations.Friendship,
       join_through: "friendships",
       join_keys: [from_user_id: :id, to_user_id: :id]
 
-    has_many :uploaded_avatars, Uro.UserContent.Avatar, foreign_key: :uploader
-    has_many :uploaded_maps, Uro.UserContent.Map, foreign_key: :uploader
-    has_many :uploaded_props, Uro.UserContent.Prop, foreign_key: :uploader
+    has_many :uploaded_avatars, Uro.UserContent.Avatar, foreign_key: :uploader_id
+    has_many :uploaded_maps, Uro.UserContent.Map, foreign_key: :uploader_id
+    has_many :uploaded_props, Uro.UserContent.Prop, foreign_key: :uploader_id
 
     pow_user_fields()
 

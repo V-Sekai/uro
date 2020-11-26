@@ -33,7 +33,7 @@ defmodule UroWeb.SessionController do
 
   def delete(conn, _params) do
     conn
-    |> Pow.Plug.delete()
+    |> Pow.Plug.delete
     |> redirect(to: Routes.page_path(conn, :index))
   end
 end

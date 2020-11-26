@@ -3,7 +3,7 @@ defmodule Uro.Repo.Migrations.ShardSchemaAddMapField do
 
   def change do
     alter table(:shards) do
-      add :name, :string
+      add :map, :string
     end
   end
 

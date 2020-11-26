@@ -7,19 +7,9 @@ defmodule Uro.Plug.RequireAdmin do
   @doc false
   @spec call(Conn.t(), atom()) :: Conn.t()
   def call(conn, handler) do
-    conn.assigns[:current_user]
-    |> is_admin
+    conn
+    |> UroWeb.Helpers.Admin.is_session_admin?
     |> maybe_halt(conn, handler)
-  end
-
-  @doc false
-  defp is_admin(%{is_admin: true}) do
-    true
-  end
-
-  @doc false
-  defp is_admin(_) do
-    false
   end
 
   @doc false

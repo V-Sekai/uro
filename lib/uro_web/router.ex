@@ -92,7 +92,7 @@ defmodule UroWeb.Router do
   scope "/admin", UroWeb, as: :admin do
     pipe_through [:browser, :protected_admin]
 
-    get "/", Admin.PageController, :index
+    get "/", Admin.PageController, :index, as: :root
 
     resources "/avatars", Admin.AvatarController, as: :avatar
     resources "/maps", Admin.MapController, as: :map

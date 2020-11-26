@@ -1,4 +1,4 @@
-<h1>Show User</h1>
+<h1><%= gettext("Show User") %></h1>
 
 <ul>
   <li>
@@ -7,23 +7,12 @@
   <li>
     <strong><%=gettext("Username")%>: </strong><%= @user.username %>
   </li>
-
   <li>
     <strong><%=gettext("Display Name")%>: </strong><%= @user.display_name %>
   </li>
-
   <li>
     <strong><%=gettext("Email Notifications")%>: </strong><%= @user.email_notifications %>
   </li>
-
-  <li>
-    <strong><%=gettext("Profile Picture")%>: </strong><%= @user.profile_picture %>
-  </li>
-
-  <li>
-    <strong><%=gettext("Is Admin")%>: </strong><%= @user.is_admin %>
-  </li>
-
 </ul>
 
 <span><%= link gettext("Edit"), to: Routes.admin_user_path(@conn, :edit, @user) %></span>

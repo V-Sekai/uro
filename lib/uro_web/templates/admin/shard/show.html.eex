@@ -1,4 +1,4 @@
-<h1>Show Shard</h1>
+<h1><%= gettext("Show Shard") %></h1>
 
 <ul>
   <li>
