@@ -1,6 +1,6 @@
 <section class="phx-hero">
   <h1><%= gettext("V-Sekai") %></h1>
-  <h2><%= gettext("The universal VR platform")%></h2>
+  <h2><%= gettext("The universal VR platform") %></h2>
 
     <%= gettext("We are a community of enthusiasts building a next-generation social and gaming VR platform powered by the %{godot_engine}. Please sign up to receive updates on future beta participation", godot_engine: safe_to_string(link(gettext("Godot Engine"), to: "https://godotengine.org/"))) |> raw() %>
 </section>

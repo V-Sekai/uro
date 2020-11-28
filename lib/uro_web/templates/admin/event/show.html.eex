@@ -3,11 +3,11 @@
 <ul>
 
   <li>
-    <strong><%=gettext("Name")%>: </strong><%= @event.name %>
+    <strong><%=gettext("Name") %>: </strong><%= @event.name %>
   </li>
 
   <li>
-    <strong><%=gettext("Description")%>: </strong><%= @event.description %>
+    <strong><%=gettext("Description") %>: </strong><%= @event.description %>
   </li>
 
 </ul>

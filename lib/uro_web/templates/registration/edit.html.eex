@@ -1,4 +1,4 @@
-<h1><%= gettext("Edit profile")%></h1>
+<h1><%= gettext("Edit profile") %></h1>
 
 <%= form_for @changeset, Routes.signup_path(@conn, :create), fn f -> %>
   <%= render UroWeb.LayoutView, "error.html", changeset: @changeset%>

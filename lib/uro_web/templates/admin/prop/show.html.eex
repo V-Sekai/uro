@@ -3,15 +3,15 @@
 <ul>
 
   <li>
-    <strong><%=gettext("Name")%>: </strong><%= @prop.name %>
+    <strong><%=gettext("Name") %>: </strong><%= @prop.name %>
   </li>
 
   <li>
-    <strong><%=gettext("Description")%>: </strong><%= @prop.description %>
+    <strong><%=gettext("Description") %>: </strong><%= @prop.description %>
   </li>
 
   <li>
-    <strong><%=gettext("URL")%>: </strong><%= @prop.url %>
+    <strong><%=gettext("URL") %>: </strong><%= @prop.url %>
   </li>
 
 </ul>

@@ -31,7 +31,7 @@
             </li>
           </ul>
         </nav>
-        <a href=<%=Routes.page_path(@conn, :index)%> class="phx-logo">
+        <a href=<%=Routes.page_path(@conn, :index) %> class="phx-logo">
           <img src="<%= Routes.static_path(@conn, "/images/v-sekai.png") %>" alt="V-SEKAI Logo"/>
         </a>
       </section>

@@ -1,16 +1,16 @@
-<h1><%= gettext("Profile")%></h1>
+<h1><%= gettext("Profile") %></h1>
 
 <ul>
   <li>
-    <strong><%=gettext("Email")%>: </strong><%= @user.email %>
+    <strong><%=gettext("Email") %>: </strong><%= @user.email %>
   </li>
   <li>
-    <strong><%=gettext("Username")%>: </strong><%= @user.username %>
+    <strong><%=gettext("Username") %>: </strong><%= @user.username %>
   </li>
   <li>
-    <strong><%=gettext("Display Name")%>: </strong><%= @user.display_name %>
+    <strong><%=gettext("Display Name") %>: </strong><%= @user.display_name %>
   </li>
   <li>
-    <strong><%=gettext("Email Notifications")%>: </strong> <%= @user.email_notifications %>
+    <strong><%=gettext("Email Notifications") %>: </strong> <%= @user.email_notifications %>
   </li>
 </ul>

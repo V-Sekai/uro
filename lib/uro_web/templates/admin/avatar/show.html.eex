@@ -3,15 +3,15 @@
 <ul>
 
   <li>
-    <strong><%=gettext("Name")%>: </strong><%= @avatar.name %>
+    <strong><%=gettext("Name") %>: </strong><%= @avatar.name %>
   </li>
 
   <li>
-    <strong><%=gettext("Description")%>: </strong><%= @avatar.description %>
+    <strong><%=gettext("Description") %>: </strong><%= @avatar.description %>
   </li>
 
   <li>
-    <strong><%=gettext("URL")%>: </strong><%= @avatar.url %>
+    <strong><%=gettext("URL") %>: </strong><%= @avatar.url %>
   </li>
 
 </ul>
