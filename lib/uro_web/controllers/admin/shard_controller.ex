@@ -18,7 +18,7 @@ defmodule UroWeb.Admin.ShardController do
     case VSekai.create_shard(shard_params) do
       {:ok, shard} ->
         conn
-        |> put_flash(:info, "Shard created successfully.")
+        |> put_flash(:info, gettext("Shard created successfully."))
         |> redirect(to: Routes.admin_shard_path(conn, :show, shard))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -43,7 +43,7 @@ defmodule UroWeb.Admin.ShardController do
     case VSekai.update_shard(shard, shard_params) do
       {:ok, shard} ->
         conn
-        |> put_flash(:info, "Shard updated successfully.")
+        |> put_flash(:info, gettext("Shard updated successfully."))
         |> redirect(to: Routes.admin_shard_path(conn, :show, shard))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -56,7 +56,7 @@ defmodule UroWeb.Admin.ShardController do
     {:ok, _shard} = VSekai.delete_shard(shard)
 
     conn
-    |> put_flash(:info, "Shard deleted successfully.")
+    |> put_flash(:info, gettext("Shard deleted successfully."))
     |> redirect(to: Routes.admin_shard_path(conn, :index))
   end
 end

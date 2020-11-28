@@ -18,7 +18,7 @@ defmodule UroWeb.Admin.EventController do
     case Events.create_event(event_params) do
       {:ok, event} ->
         conn
-        |> put_flash(:info, "Event created successfully.")
+        |> put_flash(:info, gettext("Event created successfully."))
         |> redirect(to: Routes.admin_event_path(conn, :show, event))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -43,7 +43,7 @@ defmodule UroWeb.Admin.EventController do
     case Events.update_event(event, event_params) do
       {:ok, event} ->
         conn
-        |> put_flash(:info, "Event updated successfully.")
+        |> put_flash(:info, gettext("Event updated successfully."))
         |> redirect(to: Routes.admin_event_path(conn, :show, event))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -56,7 +56,7 @@ defmodule UroWeb.Admin.EventController do
     {:ok, _event} = Events.delete_event(event)
 
     conn
-    |> put_flash(:info, "Event deleted successfully.")
+    |> put_flash(:info, gettext("Event deleted successfully."))
     |> redirect(to: Routes.admin_event_path(conn, :index))
   end
 end

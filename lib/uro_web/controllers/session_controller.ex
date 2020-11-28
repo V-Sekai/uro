@@ -5,14 +5,14 @@ defmodule UroWeb.SessionController do
   @doc false
   defp login_valid(conn) do
     conn
-    |> put_flash(:info, "Welcome back!")
+    |> put_flash(:info, gettext("Welcome back!"))
     |> redirect(to: Routes.page_path(conn, :index))
   end
 
   @doc false
   defp login_invalid(conn) do
     conn
-    |> put_flash(:info, "Invalid email or password")
+    |> put_flash(:info, gettext("Invalid email or password"))
     |> render("new.html", changeset: Pow.Plug.change_user(conn, conn.params["user"]))
   end
 

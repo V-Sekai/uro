@@ -18,7 +18,7 @@ defmodule UroWeb.Admin.PropController do
     case UserContent.create_prop(prop_params) do
       {:ok, prop} ->
         conn
-        |> put_flash(:info, "Prop created successfully.")
+        |> put_flash(:info, gettext("Prop created successfully."))
         |> redirect(to: Routes.admin_prop_path(conn, :show, prop))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -43,7 +43,7 @@ defmodule UroWeb.Admin.PropController do
     case UserContent.update_prop(prop, prop_params) do
       {:ok, prop} ->
         conn
-        |> put_flash(:info, "Prop updated successfully.")
+        |> put_flash(:info, gettext("Prop updated successfully."))
         |> redirect(to: Routes.admin_prop_path(conn, :show, prop))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -56,7 +56,7 @@ defmodule UroWeb.Admin.PropController do
     {:ok, _prop} = UserContent.delete_prop(prop)
 
     conn
-    |> put_flash(:info, "Prop deleted successfully.")
+    |> put_flash(:info, gettext("Prop deleted successfully."))
     |> redirect(to: Routes.admin_prop_path(conn, :index))
   end
 end

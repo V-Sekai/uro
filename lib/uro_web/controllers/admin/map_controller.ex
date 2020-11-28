@@ -18,7 +18,7 @@ defmodule UroWeb.Admin.MapController do
     case UserContent.create_map(map_params) do
       {:ok, map} ->
         conn
-        |> put_flash(:info, "Map created successfully.")
+        |> put_flash(:info, gettext("Map created successfully."))
         |> redirect(to: Routes.admin_map_path(conn, :show, map))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -43,7 +43,7 @@ defmodule UroWeb.Admin.MapController do
     case UserContent.update_map(map, map_params) do
       {:ok, map} ->
         conn
-        |> put_flash(:info, "Map updated successfully.")
+        |> put_flash(:info, gettext("Map updated successfully."))
         |> redirect(to: Routes.admin_map_path(conn, :show, map))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -56,7 +56,7 @@ defmodule UroWeb.Admin.MapController do
     {:ok, _map} = UserContent.delete_map(map)
 
     conn
-    |> put_flash(:info, "Map deleted successfully.")
+    |> put_flash(:info, gettext("Map deleted successfully."))
     |> redirect(to: Routes.admin_map_path(conn, :index))
   end
 end

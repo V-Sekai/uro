@@ -18,7 +18,7 @@ defmodule UroWeb.Admin.AvatarController do
     case UserContent.create_avatar(avatar_params) do
       {:ok, avatar} ->
         conn
-        |> put_flash(:info, "Avatar created successfully.")
+        |> put_flash(:info, gettext("Avatar created successfully."))
         |> redirect(to: Routes.admin_avatar_path(conn, :show, avatar))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -43,7 +43,7 @@ defmodule UroWeb.Admin.AvatarController do
     case UserContent.update_avatar(avatar, avatar_params) do
       {:ok, avatar} ->
         conn
-        |> put_flash(:info, "Avatar updated successfully.")
+        |> put_flash(:info, gettext("Avatar updated successfully."))
         |> redirect(to: Routes.admin_avatar_path(conn, :show, avatar))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -56,7 +56,7 @@ defmodule UroWeb.Admin.AvatarController do
     {:ok, _avatar} = UserContent.delete_avatar(avatar)
 
     conn
-    |> put_flash(:info, "Avatar deleted successfully.")
+    |> put_flash(:info, gettext("Avatar deleted successfully."))
     |> redirect(to: Routes.admin_avatar_path(conn, :index))
   end
 end

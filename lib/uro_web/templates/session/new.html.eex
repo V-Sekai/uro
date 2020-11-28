@@ -1,11 +1,7 @@
-<h1>Sign in</h1>
+<h1><%= gettext("Sign in")%></h1>
 
 <%= form_for @changeset, Routes.signin_path(@conn, :create), fn f -> %>
-  <%= if @changeset.action do %>
-    <div class="alert alert-danger">
-      <p><%= gettext("Oops, something went wrong! Please check the errors below.")%></p>
-    </div>
-  <% end %>
+  <%= render UroWeb.LayoutView, "error.html", changeset: @changeset%>
 
   <%= label f, gettext("Username or Email") %>
   <%= text_input f, :username_or_email %>

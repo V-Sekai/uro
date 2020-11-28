@@ -34,7 +34,7 @@ defmodule UroWeb.Admin.UserController do
     case Accounts.update_user(user, user_params) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "User updated successfully.")
+        |> put_flash(:info, gettext("User updated successfully."))
         |> redirect(to: Routes.admin_user_path(conn, :show, user))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -48,7 +48,7 @@ defmodule UroWeb.Admin.UserController do
     {:ok, _user} = Accounts.delete_user(user)
 
     conn
-    |> put_flash(:info, "User deleted successfully.")
+    |> put_flash(:info, gettext("User deleted successfully."))
     |> redirect(to: Routes.admin_user_path(conn, :index))
   end
 end
