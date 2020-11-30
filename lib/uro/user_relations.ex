@@ -7,6 +7,7 @@ defmodule Uro.UserRelations do
   alias Uro.Repo
 
   alias Uro.UserRelations.Friendship
+  alias Uro.UserRelations.Token
 
   @doc """
   Returns the list of friendships.
@@ -100,5 +101,23 @@ defmodule Uro.UserRelations do
   """
   def change_friendship(%Friendship{} = friendship) do
     Friendship.changeset(friendship, %{})
+  end
+
+  @doc """
+  Creates a token.
+
+  ## Examples
+
+      iex> create_token(%{field: value})
+      {:ok, %Token{}}
+
+      iex> create_token(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_token(for_user, to_user) do
+    %Token{}
+    |> Token.changeset(%{for_user: for_user, to_user: to_user})
+    |> Repo.insert()
   end
 end

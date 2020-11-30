@@ -27,6 +27,8 @@ defmodule Uro.Accounts.User do
     has_many :uploaded_maps, Uro.UserContent.Map, foreign_key: :uploader_id
     has_many :uploaded_props, Uro.UserContent.Prop, foreign_key: :uploader_id
 
+    has_many :hosted_shards, Uro.VSekai.Shard, foreign_key: :user_id
+
     pow_user_fields()
 
     timestamps()

@@ -1,9 +1,11 @@
 defmodule Uro.VSekai.Shard do
-  @derive {Jason.Encoder, only: [:address, :port, :map, :name, :current_users, :max_users]}
+  @derive {Jason.Encoder, only: [:user, :address, :port, :map, :name, :current_users, :max_users]}
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "shards" do
+    belongs_to :user, Uro.Accounts.User, foreign_key: :user_id, type: :binary_id
+
     field :address, :string
     field :port, :integer
     field :map, :string
@@ -19,6 +21,7 @@ defmodule Uro.VSekai.Shard do
   def changeset(shard, attrs) do
     shard
     |> cast(attrs, [:address, :port, :map, :name, :current_users, :max_users])
+    |> cast_assoc(:user)
     |> validate_required([:address, :port, :map, :name])
   end
 end

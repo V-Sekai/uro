@@ -23,7 +23,9 @@ defmodule Uro.VSekai do
 
   """
   def list_shards do
-    Repo.all(Shard)
+    Shard
+    |> Repo.all
+    |> Repo.preload(user: [:user])
   end
 
   @doc """
@@ -37,7 +39,7 @@ defmodule Uro.VSekai do
   """
   def list_fresh_shards do
     stale_timestamp = DateTime.add(DateTime.utc_now(), -shard_freshness_time_in_seconds(), :second)
-    Repo.all(from m in Shard, where: m.updated_at > ^stale_timestamp)
+    Repo.all(from m in Shard, where: m.updated_at > ^stale_timestamp, preload: [:user])
   end
 
   @doc """
@@ -54,7 +56,10 @@ defmodule Uro.VSekai do
       ** (Ecto.NoResultsError)
 
   """
-  def get_shard!(id), do: Repo.get!(Shard, id)
+  def get_shard!(id) do
+    Shard
+    |> Repo.get!(id)
+    |> Repo.preload(user: [:user])  end
 
   @doc """
   Creates a shard.
