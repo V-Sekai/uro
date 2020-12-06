@@ -30,8 +30,8 @@ defmodule Uro.Accounts.User do
 
     has_many :hosted_shards, Uro.VSekai.Shard, foreign_key: :user_id
 
-    has_many :identity_proofs_from, Uro.UserRelations.IdentityProof, foreign_key: :user_from_id, type: :binary_id
-    has_many :identity_proofs_to, Uro.UserRelations.IdentityProof, foreign_key: :user_to_id, type: :binary_id
+    has_many :identity_proofs_from, Uro.UserRelations.IdentityProof, foreign_key: :user_from_id
+    has_many :identity_proofs_to, Uro.UserRelations.IdentityProof, foreign_key: :user_to_id
 
     pow_user_fields()
 
