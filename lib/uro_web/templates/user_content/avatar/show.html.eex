@@ -1,0 +1,20 @@
+<h1>Show Avatar</h1>
+
+<ul>
+
+  <li>
+    <strong><%=gettext("Name") %>: </strong><%= @avatar.name %>
+  </li>
+
+  <li>
+    <strong><%=gettext("Description") %>: </strong><%= @avatar.description %>
+  </li>
+
+  <li>
+    <strong><%=gettext("URL") %>: </strong><%= @avatar.url %>
+  </li>
+
+</ul>
+
+<span><%= link gettext("Edit"), to: Routes.admin_avatar_path(@conn, :edit, @avatar) %></span>
+<span><%= link gettext("Back"), to: Routes.admin_avatar_path(@conn, :index) %></span>

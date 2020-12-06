@@ -52,7 +52,7 @@ defmodule Uro.Accounts do
   def create_user_privilege_ruleset_for_user(user, attrs \\ %{}) do
     user
     |> Ecto.build_assoc(:user_privilege_ruleset, attrs)
-    |> Repo.insert
+    |> Repo.insert()
   end
 
   def create_user(conn, attrs) do

@@ -14,9 +14,6 @@ defmodule UroWeb.Admin.UserController do
     render(conn, "new.html", changeset: changeset)
   end
 
-  def create(conn, %{"user" => user_params}) do
-  end
-
   def show(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
     render(conn, "show.html", user: user)
@@ -44,7 +41,6 @@ defmodule UroWeb.Admin.UserController do
 
   def delete(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
-    IO.inspect(user)
     {:ok, _user} = Accounts.delete_user(user)
 
     conn

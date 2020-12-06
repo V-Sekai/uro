@@ -24,6 +24,22 @@ defmodule Uro.UserContent do
   end
 
   @doc """
+  Returns the list of avatars uploaded by a user.
+
+  ## Examples
+
+      iex> list_avatars_uploaded_by(user)
+      [%Avatar{}, ...]
+
+  """
+  def list_avatars_uploaded_by(user) do
+    Avatar
+    |> where(uploader_id: ^user.id)
+    |> Repo.all
+    |> Repo.preload(uploader: [:uploader])
+  end
+
+  @doc """
   Gets a single avatar.
 
   Raises `Ecto.NoResultsError` if the Avatar does not exist.
@@ -59,7 +75,6 @@ defmodule Uro.UserContent do
     %Avatar{}
     |> Avatar.changeset(attrs)
     |> Repo.insert()
-    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
@@ -127,6 +142,22 @@ defmodule Uro.UserContent do
   end
 
   @doc """
+  Returns the list of maps uploaded by a user.
+
+  ## Examples
+
+      iex> list_maps_uploaded_by(user)
+      [%Map{}, ...]
+
+  """
+  def list_maps_uploaded_by(user) do
+    Map
+    |> where(uploader_id: ^user.id)
+    |> Repo.all
+    |> Repo.preload(uploader: [:uploader])
+  end
+
+  @doc """
   Gets a single map.
 
   Raises `Ecto.NoResultsError` if the Map does not exist.
@@ -162,7 +193,6 @@ defmodule Uro.UserContent do
     %Map{}
     |> Map.changeset(attrs)
     |> Repo.insert()
-    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """
@@ -229,6 +259,22 @@ defmodule Uro.UserContent do
     |> Repo.preload(uploader: [:uploader])
   end
 
+    @doc """
+  Returns the list of props uploaded by a user.
+
+  ## Examples
+
+      iex> list_props_uploaded_by(user)
+      [%Prop{}, ...]
+
+  """
+  def list_props_uploaded_by(user) do
+    Prop
+    |> where(uploader_id: ^user.id)
+    |> Repo.all
+    |> Repo.preload(uploader: [:uploader])
+  end
+
   @doc """
   Gets a single prop.
 
@@ -265,7 +311,6 @@ defmodule Uro.UserContent do
     %Prop{}
     |> Prop.changeset(attrs)
     |> Repo.insert()
-    |> Repo.preload(uploader: [:uploader])
   end
 
   @doc """

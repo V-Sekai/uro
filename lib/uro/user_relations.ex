@@ -7,7 +7,7 @@ defmodule Uro.UserRelations do
   alias Uro.Repo
 
   alias Uro.UserRelations.Friendship
-  alias Uro.UserRelations.Token
+  alias Uro.UserRelations.IdentityProof
 
   @doc """
   Returns the list of friendships.
@@ -104,20 +104,52 @@ defmodule Uro.UserRelations do
   end
 
   @doc """
-  Creates a token.
+  Gets a single identity proof.
+
+  Raises `Ecto.NoResultsError` if the IdentityProof does not exist.
 
   ## Examples
 
-      iex> create_token(%{field: value})
-      {:ok, %Token{}}
+      iex> get_identity_proof!(123)
+      %IdentityProof{}
 
-      iex> create_token(%{field: bad_value})
+      iex> get_identity_proof!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_identity_proof_as!(id, requester) do
+    IdentityProof
+    |> Repo.get!(id)
+    |> Repo.preload([:user_from, :user_to])
+    |> case do
+      nil ->
+        nil
+      identity_proof ->
+        if identity_proof.user_from == requester or identity_proof.user_to == requester do
+          identity_proof
+        else
+          nil
+        end
+    end
+  end
+
+  @doc """
+  Creates an identity token.
+
+  ## Examples
+
+      iex> create_identity_proof(%{field: value})
+      {:ok, %IdentityProof{}}
+
+      iex> create_identity_proof(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_token(for_user, to_user) do
-    %Token{}
-    |> Token.changeset(%{for_user: for_user, to_user: to_user})
+  def create_identity_proof(user_from, user_to) do
+    user_from_id = user_from.id
+    user_to_id = user_to.id
+    %IdentityProof{}
+    |> IdentityProof.changeset(%{user_from_id: user_from_id, user_to_id: user_to_id})
     |> Repo.insert()
   end
 end

@@ -6,11 +6,11 @@ defmodule UroWeb.API.V1.AvatarController do
     id
     |> UserContent.get_avatar!
     |> case do
-      avatar ->
+      {:ok, avatar} ->
         conn
         |> put_status(200)
         |> json(%{data: %{avatar: avatar}})
-      nil ->
+      {:error, %Ecto.Changeset{} = changeset} ->
         conn
         |> put_status(400)
     end

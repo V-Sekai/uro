@@ -14,35 +14,35 @@ defmodule Uro.ContentTest do
       {:ok, avatar} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Content.create_avatar()
+        |> UserContent.create_avatar()
 
       avatar
     end
 
     test "list_avatars/0 returns all avatars" do
       avatar = avatar_fixture()
-      assert Content.list_avatars() == [avatar]
+      assert UserContent.list_avatars() == [avatar]
     end
 
     test "get_avatar!/1 returns the avatar with given id" do
       avatar = avatar_fixture()
-      assert Content.get_avatar!(avatar.id) == avatar
+      assert UserContent.get_avatar!(avatar.id) == avatar
     end
 
     test "create_avatar/1 with valid data creates a avatar" do
-      assert {:ok, %Avatar{} = avatar} = Content.create_avatar(@valid_attrs)
+      assert {:ok, %Avatar{} = avatar} = UserContent.create_avatar(@valid_attrs)
       assert avatar.description == "some description"
       assert avatar.name == "some name"
       assert avatar.url == "some url"
     end
 
     test "create_avatar/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Content.create_avatar(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = UserContent.create_avatar(@invalid_attrs)
     end
 
     test "update_avatar/2 with valid data updates the avatar" do
       avatar = avatar_fixture()
-      assert {:ok, %Avatar{} = avatar} = Content.update_avatar(avatar, @update_attrs)
+      assert {:ok, %Avatar{} = avatar} = UserContent.update_avatar(avatar, @update_attrs)
       assert avatar.description == "some updated description"
       assert avatar.name == "some updated name"
       assert avatar.url == "some updated url"
@@ -50,19 +50,19 @@ defmodule Uro.ContentTest do
 
     test "update_avatar/2 with invalid data returns error changeset" do
       avatar = avatar_fixture()
-      assert {:error, %Ecto.Changeset{}} = Content.update_avatar(avatar, @invalid_attrs)
-      assert avatar == Content.get_avatar!(avatar.id)
+      assert {:error, %Ecto.Changeset{}} = UserContent.update_avatar(avatar, @invalid_attrs)
+      assert avatar == UserContent.get_avatar!(avatar.id)
     end
 
     test "delete_avatar/1 deletes the avatar" do
       avatar = avatar_fixture()
-      assert {:ok, %Avatar{}} = Content.delete_avatar(avatar)
-      assert_raise Ecto.NoResultsError, fn -> Content.get_avatar!(avatar.id) end
+      assert {:ok, %Avatar{}} = UserContent.delete_avatar(avatar)
+      assert_raise Ecto.NoResultsError, fn -> UserContent.get_avatar!(avatar.id) end
     end
 
     test "change_avatar/1 returns a avatar changeset" do
       avatar = avatar_fixture()
-      assert %Ecto.Changeset{} = Content.change_avatar(avatar)
+      assert %Ecto.Changeset{} = UserContent.change_avatar(avatar)
     end
   end
 
@@ -77,35 +77,35 @@ defmodule Uro.ContentTest do
       {:ok, map} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Content.create_map()
+        |> UserContent.create_map()
 
       map
     end
 
     test "list_maps/0 returns all maps" do
       map = map_fixture()
-      assert Content.list_maps() == [map]
+      assert UserContent.list_maps() == [map]
     end
 
     test "get_map!/1 returns the map with given id" do
       map = map_fixture()
-      assert Content.get_map!(map.id) == map
+      assert UserContent.get_map!(map.id) == map
     end
 
     test "create_map/1 with valid data creates a map" do
-      assert {:ok, %Map{} = map} = Content.create_map(@valid_attrs)
+      assert {:ok, %Map{} = map} = UserContent.create_map(@valid_attrs)
       assert map.description == "some description"
       assert map.name == "some name"
       assert map.url == "some url"
     end
 
     test "create_map/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Content.create_map(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = UserContent.create_map(@invalid_attrs)
     end
 
     test "update_map/2 with valid data updates the map" do
       map = map_fixture()
-      assert {:ok, %Map{} = map} = Content.update_map(map, @update_attrs)
+      assert {:ok, %Map{} = map} = UserContent.update_map(map, @update_attrs)
       assert map.description == "some updated description"
       assert map.name == "some updated name"
       assert map.url == "some updated url"
@@ -113,19 +113,19 @@ defmodule Uro.ContentTest do
 
     test "update_map/2 with invalid data returns error changeset" do
       map = map_fixture()
-      assert {:error, %Ecto.Changeset{}} = Content.update_map(map, @invalid_attrs)
-      assert map == Content.get_map!(map.id)
+      assert {:error, %Ecto.Changeset{}} = UserContent.update_map(map, @invalid_attrs)
+      assert map == UserContent.get_map!(map.id)
     end
 
     test "delete_map/1 deletes the map" do
       map = map_fixture()
-      assert {:ok, %Map{}} = Content.delete_map(map)
-      assert_raise Ecto.NoResultsError, fn -> Content.get_map!(map.id) end
+      assert {:ok, %Map{}} = UserContent.delete_map(map)
+      assert_raise Ecto.NoResultsError, fn -> UserContent.get_map!(map.id) end
     end
 
     test "change_map/1 returns a map changeset" do
       map = map_fixture()
-      assert %Ecto.Changeset{} = Content.change_map(map)
+      assert %Ecto.Changeset{} = UserContent.change_map(map)
     end
   end
 

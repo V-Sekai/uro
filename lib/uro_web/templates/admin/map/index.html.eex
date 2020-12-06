@@ -20,7 +20,7 @@
       <td>
         <span><%= link "Show", to: Routes.admin_map_path(@conn, :show, map) %></span>
         <span><%= link "Edit", to: Routes.admin_map_path(@conn, :edit, map) %></span>
-        <span><%= link "Delete", to: Routes.admin_map_path(@conn, :delete, map), method: :delete, data: [confirm: "Are you sure?"] %></span>
+        <span><%= link "Delete", to: Routes.admin_map_path(@conn, :delete, map), method: :delete, data: [confirm: gettext("Are you sure?")] %></span>
       </td>
     </tr>
 <% end %>

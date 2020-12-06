@@ -1,4 +1,5 @@
 defmodule Uro.Accounts.User do
+  @derive {Jason.Encoder, only: [:id, :username, :display_name]}
   use Ecto.Schema
   use Pow.Ecto.Schema,
     user_id_field: :email,
@@ -28,6 +29,9 @@ defmodule Uro.Accounts.User do
     has_many :uploaded_props, Uro.UserContent.Prop, foreign_key: :uploader_id
 
     has_many :hosted_shards, Uro.VSekai.Shard, foreign_key: :user_id
+
+    has_many :identity_proofs_from, Uro.UserRelations.IdentityProof, foreign_key: :user_from_id, type: :binary_id
+    has_many :identity_proofs_to, Uro.UserRelations.IdentityProof, foreign_key: :user_to_id, type: :binary_id
 
     pow_user_fields()
 

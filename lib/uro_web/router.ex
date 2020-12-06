@@ -49,11 +49,9 @@ defmodule UroWeb.Router do
   scope "/api/v1", UroWeb.API.V1, as: :api_v1 do
     pipe_through [:remote_ip, :api]
 
-    get "/sign-in", SessionController, :new, as: :signin
-    post "/sign-in", SessionController, :create, as: :signin
-
-    get "/sign-up", RegistrationController, :new, as: :signup
-    post "/sign-up", RegistrationController, :create, as: :signup
+    resources "/registration", RegistrationController, singleton: true, only: [:create]
+    resources "/session", SessionController, singleton: true, only: [:create, :delete]
+    post "/session/renew", SessionController, :renew
 
     resources "/avatars", AvatarController, only: [:show]
     resources "/shards", ShardController, only: [:index, :create, :update, :delete]
@@ -64,6 +62,8 @@ defmodule UroWeb.Router do
     pipe_through [:remote_ip, :api, :api_protected]
 
     # Your protected API endpoints here
+    resources "/registration", RegistrationController, singleton: true, only: [:show]
+    resources "/identity_proofs", IdentityProofController, as: :identity_proof, only: [:show, :create]
   end
 
   scope "/", UroWeb do
@@ -87,6 +87,8 @@ defmodule UroWeb.Router do
     patch "/profile", RegistrationController, :update, as: :profile
     put "/profile", RegistrationController, :update, as: :profile
     delete "/profile", RegistrationController, :delete, as: :profile
+
+    resources "/avatars", UserContent.AvatarController, as: :avatar
   end
 
   scope "/admin", UroWeb, as: :admin do
