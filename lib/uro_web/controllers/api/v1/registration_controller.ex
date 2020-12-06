@@ -9,10 +9,10 @@ defmodule UroWeb.API.V1.RegistrationController do
     conn
     |> UroWeb.Helpers.Auth.get_current_user
     |> case do
-      user ->
+      {:ok, user} ->
         conn
         |> json(%{data: %{user: user}})
-      nil ->
+      {:error, _changeset} ->
         conn
         |> put_status(500)
         |> json(%{error: %{status: 500, message: "Couldn't get current user"}})

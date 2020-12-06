@@ -37,13 +37,13 @@ defmodule UroWeb.API.V1.IdentityProofController do
     id
     |> Uro.UserRelations.get_identity_proof_as!(conn.assigns[:current_user])
     |> case do
+      nil ->
+        conn
+        |> put_status(400)
       identity_proof ->
         conn
         |> put_status(200)
         |> json(%{data: %{identity_proof: identity_proof}})
-      nil ->
-        conn
-        |> put_status(400)
     end
   end
 

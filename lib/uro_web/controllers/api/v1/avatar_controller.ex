@@ -10,7 +10,7 @@ defmodule UroWeb.API.V1.AvatarController do
         conn
         |> put_status(200)
         |> json(%{data: %{avatar: avatar}})
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, %Ecto.Changeset{} = _changeset} ->
         conn
         |> put_status(400)
     end
