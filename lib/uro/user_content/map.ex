@@ -2,6 +2,9 @@ defmodule Uro.UserContent.Map do
   import Ecto.Changeset
   use Uro.UserContent.UserContent
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
+  @derive {Phoenix.Param, key: :id}
   schema "maps" do
     user_content_fields()
 

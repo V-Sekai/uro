@@ -22,7 +22,7 @@ defmodule Uro.Accounts.User do
 
     many_to_many :friendships, Uro.UserRelations.Friendship,
       join_through: "friendships",
-      join_keys: [from_user_id: :id, to_user_id: :id]
+      join_keys: [user: :id, friend: :id]
 
     has_many :uploaded_avatars, Uro.UserContent.Avatar, foreign_key: :uploader_id
     has_many :uploaded_maps, Uro.UserContent.Map, foreign_key: :uploader_id
@@ -41,6 +41,7 @@ defmodule Uro.Accounts.User do
   def user_custom_changeset(user_or_changeset, attrs) do
     user_or_changeset
     |> cast(attrs, [:username, :email_notifications])
+    |> validate_required([:username])
     |> put_display_name
     |> downcase_username
     |> validate_username(:username)
@@ -52,15 +53,6 @@ defmodule Uro.Accounts.User do
     user_or_changeset
     |> pow_changeset(attrs)
     |> user_custom_changeset(attrs)
-  end
-
-  def changeset_admin(user_or_changeset, attrs) do
-    user_or_changeset
-    |> pow_user_id_field_changeset(attrs)
-    |> pow_password_changeset(attrs)
-    |> user_custom_changeset(attrs)
-    |> cast(attrs, [:is_admin, :display_name])
-    |> validate_required([:is_admin, :display_name])
   end
 
   defp put_display_name(%Ecto.Changeset{valid?: true, changes: %{username: username}} = changeset) do
