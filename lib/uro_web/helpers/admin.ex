@@ -10,7 +10,10 @@ defmodule UroWeb.Helpers.Admin do
         user
         |> Uro.Repo.preload([:user_privilege_ruleset])
         |> Map.get(:user_privilege_ruleset)
-        |> check_admin_field
+        |> case do
+          user_privilege_ruleset -> check_admin_field(user_privilege_ruleset)
+          nil -> false
+        end
       false -> false
     end
   end
