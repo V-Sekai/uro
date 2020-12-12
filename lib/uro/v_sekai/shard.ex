@@ -20,8 +20,7 @@ defmodule Uro.VSekai.Shard do
   @doc false
   def changeset(shard, attrs) do
     shard
-    |> cast(attrs, [:address, :port, :map, :name, :current_users, :max_users])
-    |> cast_assoc(:user)
+    |> cast(attrs, [:user_id, :address, :port, :map, :name, :current_users, :max_users])
     |> validate_required([:address, :port, :map, :name])
   end
 end

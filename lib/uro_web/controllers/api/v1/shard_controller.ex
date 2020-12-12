@@ -12,7 +12,7 @@ defmodule UroWeb.API.V1.ShardController do
   end
 
   def ensure_user_is_current_user(conn, params) do
-    Map.put(params, "user", conn.assigns[:current_user])
+    Map.put(params, "user_id", conn.assigns[:current_user].id)
   end
 
   def can_connection_modify_shard(conn, shard) do
@@ -35,9 +35,11 @@ defmodule UroWeb.API.V1.ShardController do
   end
 
   def create(conn, %{"shard" => shard_params}) do
-    shard_params = ensure_has_address(conn, shard_params)
-    shard_params = ensure_user_is_current_user(conn, shard_params)
-    case VSekai.create_shard(shard_params) do
+    conn
+    |> ensure_has_address(shard_params)
+    |> ensure_user_is_current_user(shard_params)
+    |> VSekai.create_shard
+    |> case do
       {:ok, shard} ->
         conn
         |> put_status(200)

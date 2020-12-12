@@ -46,6 +46,10 @@ defmodule UroWeb.Router do
       error_handler: UroWeb.APIAuthErrorHandler
   end
 
+  pipeline :dashboard do
+    #plug :put_layout, {UroWeb.LayoutView, "dashboard.html"}
+  end
+
   scope "/api/v1", UroWeb.API.V1, as: :api_v1 do
     pipe_through [:remote_ip, :api]
 
@@ -53,7 +57,6 @@ defmodule UroWeb.Router do
     resources "/session", SessionController, singleton: true, only: [:create, :delete]
     post "/session/renew", SessionController, :renew
 
-    resources "/avatars", AvatarController, only: [:show]
     resources "/shards", ShardController, only: [:index, :create, :update, :delete]
 
   end
@@ -87,7 +90,12 @@ defmodule UroWeb.Router do
     patch "/profile", RegistrationController, :update, as: :profile
     put "/profile", RegistrationController, :update, as: :profile
     delete "/profile", RegistrationController, :delete, as: :profile
+  end
 
+  scope "/dashboard", UroWeb, as: :dashboard do
+    pipe_through [:browser, :protected, :dashboard]
+
+    get "/", DashboardController, :index, as: :root
     resources "/avatars", UserContent.AvatarController, as: :avatar
   end
 

@@ -41,19 +41,19 @@ defmodule Uro.MixProject do
       {:phoenix_html, "~> 2.14.2 "},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
       {:gettext, "~> 0.18.2 "},
+      {:hackney, "~> 1.16"},
       {:jason, "~> 1.2.2 "},
       {:plug_cowboy, "~> 2.4.1"},
       {:comeonin, "~> 5.3.1"},
       {:bcrypt_elixir, "~> 2.2"},
       {:pow, "~> 1.0.21"},
       {:email_checker, "~> 0.1.3"},
-      {:burnex, "~> 2.2.0"},
       {:pow_assent, "~> 0.4.9"},
-      {:certifi, "~> 2.5.2"},
       {:ssl_verify_fun, "~> 1.1.6"},
       {:phoenix_swagger, "~> 0.8.2"},
       {:ex_json_schema, "~> 0.7.4"},
       {:remote_ip, "~> 0.2.1"},
+      {:arc, "~> 0.11.0"},
     ]
   end
 

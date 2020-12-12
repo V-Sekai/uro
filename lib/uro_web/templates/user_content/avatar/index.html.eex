@@ -16,13 +16,13 @@
       <td><%= avatar.url %></td>
 
       <td>
-        <span><%= link "Show", to: Routes.admin_avatar_path(@conn, :show, avatar) %></span>
-        <span><%= link "Edit", to: Routes.admin_avatar_path(@conn, :edit, avatar) %></span>
-        <span><%= link "Delete", to: Routes.admin_avatar_path(@conn, :delete, avatar), method: :delete, data: [confirm: gettext("Are you sure?")] %></span>
+        <span><%= link "Show", to: Routes.dashboard_avatar_path(@conn, :show, avatar) %></span>
+        <span><%= link "Edit", to: Routes.dashboard_avatar_path(@conn, :edit, avatar) %></span>
+        <span><%= link "Delete", to: Routes.dashboard_avatar_path(@conn, :delete, avatar), method: :delete, data: [confirm: gettext("Are you sure?")] %></span>
       </td>
     </tr>
 <% end %>
   </tbody>
 </table>
 
-<span><%= link "New Avatar", to: Routes.admin_avatar_path(@conn, :new) %></span>
+<span><%= link "New Avatar", to: Routes.dashboard_avatar_path(@conn, :new) %></span>

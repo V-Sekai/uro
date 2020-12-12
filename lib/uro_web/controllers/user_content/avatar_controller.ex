@@ -4,6 +4,8 @@ defmodule UroWeb.UserContent.AvatarController do
   alias Uro.UserContent
   alias Uro.UserContent.Avatar
 
+  @user_content_param_name "avatar_file"
+
   def index(conn, _params) do
     avatars = UserContent.list_avatars_uploaded_by(conn.assigns[:current_user])
     render(conn, "index.html", avatars: avatars)
@@ -15,11 +17,12 @@ defmodule UroWeb.UserContent.AvatarController do
   end
 
   def create(conn, %{"avatar" => avatar_params}) do
-    case UserContent.create_avatar(avatar_params) do
+    case UserContent.create_avatar(
+      UroWeb.Helpers.UserContentHelper.get_correct_user_content_params(conn, avatar_params, @user_content_param_name)) do
       {:ok, avatar} ->
         conn
         |> put_flash(:info, gettext("Avatar created successfully."))
-        |> redirect(to: Routes.admin_avatar_path(conn, :show, avatar))
+        |> redirect(to: Routes.dashboard_avatar_path(conn, :show, avatar))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
@@ -44,7 +47,7 @@ defmodule UroWeb.UserContent.AvatarController do
       {:ok, avatar} ->
         conn
         |> put_flash(:info, gettext("Avatar updated successfully."))
-        |> redirect(to: Routes.admin_avatar_path(conn, :show, avatar))
+        |> redirect(to: Routes.dashboard_avatar_path(conn, :show, avatar))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", avatar: avatar, changeset: changeset)
@@ -53,10 +56,11 @@ defmodule UroWeb.UserContent.AvatarController do
 
   def delete(conn, %{"id" => id}) do
     avatar = UserContent.get_avatar!(id)
+    avatar
     {:ok, _avatar} = UserContent.delete_avatar(avatar)
 
     conn
     |> put_flash(:info, gettext("Avatar deleted successfully."))
-    |> redirect(to: Routes.admin_avatar_path(conn, :index))
+    |> redirect(to: Routes.dashboard_avatar_path(conn, :index))
   end
 end

@@ -31,6 +31,7 @@ config :email_checker,
   web_module: UroWeb
 
   config :uro, :pow_assent,
+  user_identities_context: Uro.UserIdentities,
   providers: [
   ]
 
@@ -48,6 +49,9 @@ config :email_checker,
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+config :arc,
+  storage: Arc.Storage.Local
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason

@@ -20,7 +20,7 @@ defmodule Uro.UserContent do
   def list_avatars do
     Avatar
     |> Repo.all
-    |> Repo.preload(uploader: [:uploader])
+    |> Repo.preload([:uploader])
   end
 
   @doc """
@@ -36,7 +36,7 @@ defmodule Uro.UserContent do
     Avatar
     |> where(uploader_id: ^user.id)
     |> Repo.all
-    |> Repo.preload(uploader: [:uploader])
+    |> Repo.preload([:uploader])
   end
 
   @doc """
@@ -56,7 +56,7 @@ defmodule Uro.UserContent do
   def get_avatar!(id) do
     Avatar
     |> Repo.get!(id)
-    |> Repo.preload(uploader: [:uploader])
+    |> Repo.preload([:uploader])
   end
 
   @doc """
@@ -138,7 +138,7 @@ defmodule Uro.UserContent do
   def list_maps do
     Map
     |> Repo.all
-    |> Repo.preload(uploader: [:uploader])
+    |> Repo.preload([:uploader])
   end
 
   @doc """
@@ -154,7 +154,7 @@ defmodule Uro.UserContent do
     Map
     |> where(uploader_id: ^user.id)
     |> Repo.all
-    |> Repo.preload(uploader: [:uploader])
+    |> Repo.preload([:uploader])
   end
 
   @doc """
@@ -174,7 +174,7 @@ defmodule Uro.UserContent do
   def get_map!(id) do
     Map
     |> Repo.get!(id)
-    |> Repo.preload(uploader: [:uploader])
+    |> Repo.preload([:uploader])
   end
 
   @doc """
@@ -256,7 +256,7 @@ defmodule Uro.UserContent do
   def list_props do
     Prop
     |> Repo.all
-    |> Repo.preload(uploader: [:uploader])
+    |> Repo.preload([:uploader])
   end
 
     @doc """
@@ -272,7 +272,7 @@ defmodule Uro.UserContent do
     Prop
     |> where(uploader_id: ^user.id)
     |> Repo.all
-    |> Repo.preload(uploader: [:uploader])
+    |> Repo.preload([:uploader])
   end
 
   @doc """
@@ -292,7 +292,7 @@ defmodule Uro.UserContent do
   def get_prop!(id) do
     Prop
     |> Repo.get!(id)
-    |> Repo.preload(uploader: [:uploader])
+    |> Repo.preload([:uploader])
   end
 
   @doc """
