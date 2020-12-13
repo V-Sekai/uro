@@ -23,7 +23,7 @@ defmodule Uro.UserContent.UserContent do
       field :description, :string
       field :name, :string
       field :url, :string
-      belongs_to :uploader, Uro.Accounts.User, foreign_key: :uploader_id, type: :binary_id
+      belongs_to :uploader, Uro.UserContent.UploadSet, foreign_key: :uploader_id, type: :binary_id
     end
   end
 end

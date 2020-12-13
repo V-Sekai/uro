@@ -55,19 +55,28 @@ defmodule Uro.Accounts do
     |> Repo.insert()
   end
 
+  def create_upload_set_for_user(user, attrs \\ %{}) do
+    user
+    |> Ecto.build_assoc(:upload_set, attrs)
+    |> Repo.insert()
+  end
+
+  def create_associated_entries_for_user(user) do
+    user
+    |> create_user_privilege_ruleset_for_user
+    user
+    |> create_upload_set_for_user
+    user
+  end
+
   def create_user(conn, attrs) do
     conn
     |> Pow.Plug.create_user(attrs)
     |> case do
       {:ok, user, conn} ->
         user
-        |> create_user_privilege_ruleset_for_user
-        |> case do
-          {:ok, _user_privilege_ruleset} ->
-            {:ok, user, conn}
-          {:error, changeset} ->
-            {:error, changeset, conn}
-        end
+        |> create_associated_entries_for_user
+        {:ok, user, conn}
       {:error, changeset, conn} ->
         {:error, changeset, conn}
     end

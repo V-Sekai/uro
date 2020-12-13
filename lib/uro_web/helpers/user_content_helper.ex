@@ -12,12 +12,24 @@ defmodule UroWeb.Helpers.UserContentHelper do
     end
   end
 
+  def get_or_create_upload_set_for_user(user) do
+    user
+      |> Uro.Repo.preload(upload_set: [:upload_set])
+      |> case do
+        nil -> Uro.Accounts.create_upload_set_for_user(user)
+      end
+
+    user.upload_set
+  end
+
   def get_correct_user_content_params(conn, user_content_params, user_content_filename_param) do
+    upload_set = get_or_create_upload_set_for_user(conn.assigns[:current_user])
+
     %{
       "name" => Map.get(user_content_params, "name", ""),
       "description" => Map.get(user_content_params, "description", ""),
       "url" => store_upload(Map.get(user_content_params, user_content_filename_param)),
-      "uploader_id" => conn.assigns[:current_user].id
+      "uploader_id" => upload_set.id
     }
   end
 end
