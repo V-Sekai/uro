@@ -11,15 +11,22 @@ defmodule UroWeb.API.V1.ShardController do
     end
   end
 
-  def ensure_user_is_current_user(conn, params) do
-    Map.put(params, "user_id", conn.assigns[:current_user].id)
+  def ensure_user_is_current_user_or_nil(conn, params) do
+    if UroWeb.Helpers.Auth.signed_in?(conn) do
+      Map.put(params, "user_id", UroWeb.Helpers.Auth.get_current_user(conn).id)
+    else
+      Map.put(params, "user_id", nil)
+    end
   end
 
   def can_connection_modify_shard(conn, shard) do
-    if shard.user != nil and shard.user == conn.assigns[:current_user] do
+    if shard.user != nil
+    and UroWeb.Helpers.Auth.signed_in?(conn)
+    and shard.user == UroWeb.Helpers.Auth.get_current_user(conn) do
       true
     else
-      if shard.user == nil and shard.address == to_string(:inet_parse.ntoa(conn.remote_ip)) do
+      if shard.user == nil
+      and shard.address == to_string(:inet_parse.ntoa(conn.remote_ip)) do
         true
       else
         false
@@ -35,9 +42,11 @@ defmodule UroWeb.API.V1.ShardController do
   end
 
   def create(conn, %{"shard" => shard_params}) do
-    conn
+    shard_params = conn
     |> ensure_has_address(shard_params)
-    |> ensure_user_is_current_user(shard_params)
+
+    conn
+    |> ensure_user_is_current_user_or_nil(shard_params)
     |> VSekai.create_shard
     |> case do
       {:ok, shard} ->
