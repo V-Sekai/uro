@@ -25,7 +25,7 @@
                 <li><%= link gettext("Admin Panel"), to: Routes.admin_root_path(@conn, :index) %></li>
                 <% end %>
                 <% else %>
-                <li><%= link gettext("Sign In"), to: Routes.signin_path(@conn, :new) %></li>
+                <li><%= link gettext("Sign In"), to: Routes.signin_path(@conn, :new) %> | <%= link gettext("Register"), to: Routes.signup_path(@conn, :new)%></li>
                 <% end %>
               </ul>
             </li>
