@@ -56,7 +56,6 @@ defmodule UroWeb.UserContent.AvatarController do
 
   def delete(conn, %{"id" => id}) do
     avatar = UserContent.get_avatar!(id)
-    avatar
     {:ok, _avatar} = UserContent.delete_avatar(avatar)
 
     conn
