@@ -82,14 +82,14 @@ defmodule Uro.Accounts do
     end
   end
 
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
+  def update_current_user(conn, attrs) do
+    conn
+    |> Pow.Plug.update_user(attrs)
   end
 
-  def delete_user(%User{} = user) do
-    Repo.delete(user)
+  def delete_current_user(conn, attrs) do
+    conn
+    |> Pow.Plug.delete_user(attrs)
   end
 
   def change_user(%User{} = user) do

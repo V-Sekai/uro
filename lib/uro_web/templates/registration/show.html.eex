@@ -11,6 +11,8 @@
     <strong><%=gettext("Display Name") %>: </strong><%= @user.display_name %>
   </li>
   <li>
-    <strong><%=gettext("Email Notifications") %>: </strong> <%= @user.email_notifications %>
+    <strong><%=gettext("Receive Email Notifications") %>: </strong> <%= @user.email_notifications %>
   </li>
 </ul>
+
+<span><%= link gettext("Edit"), to: Routes.profile_path(@conn, :edit) %></span>

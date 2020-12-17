@@ -4,8 +4,8 @@
   <%= render UroWeb.LayoutView, "error.html", changeset: @changeset%>
 
   <%= label f, gettext("Username or Email") %>
-  <%= text_input f, :username_or_email %>
-  <%= error_tag f, :username_or_email %>
+  <%= text_input f, Pow.Ecto.Schema.user_id_field(@changeset) %>
+  <%= error_tag f, Pow.Ecto.Schema.user_id_field(@changeset) %>
 
   <%= label f, gettext("Password") %>
   <%= password_input f, :password %>

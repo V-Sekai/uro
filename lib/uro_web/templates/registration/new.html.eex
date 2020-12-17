@@ -5,15 +5,15 @@
   
   <ul>
   <span>
-  <%= label f, gettext("Username") %>
-  <%= text_input f, :username %>
-  <%= error_tag f, :username %>
+  <%= label f, Pow.Ecto.Schema.user_id_field(@changeset) %>
+  <%= text_input f, Pow.Ecto.Schema.user_id_field(@changeset) %>
+  <%= error_tag f, Pow.Ecto.Schema.user_id_field(@changeset) %>
   </span>
 
   <span>
-  <%= label f, gettext("Email") %>
-  <%= email_input f, :email %>
-  <%= error_tag f, :email %>
+  <%= label f, gettext("Username") %>
+  <%= text_input f, :username %>
+  <%= error_tag f, :username %>
   </span>
 
   <span>

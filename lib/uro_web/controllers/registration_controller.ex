@@ -38,7 +38,24 @@ defmodule UroWeb.RegistrationController do
 
   def edit(conn, _params) do
     conn
-    |> put_flash(:error, gettext("Profile editing is not currently available."))
-    |> redirect(to: Routes.page_path(conn, :index))
+    |> Pow.Plug.change_user
+    |> case do
+      changeset ->
+        render(conn, "edit.html", changeset: changeset)
+    end
+  end
+
+  def update(conn, %{"user" => user_params}) do
+    conn
+    |> Uro.Accounts.update_current_user(user_params)
+    |> case do
+      {:ok,_user,conn} ->
+        conn
+        |> put_flash(:info, gettext("Updated profile successfully!"))
+        |> redirect(to: Routes.page_path(conn, :index))
+
+      {:error, changeset, conn} ->
+        render(conn, "edit.html", changeset: changeset)
+    end
   end
 end

@@ -87,8 +87,7 @@ defmodule UroWeb.Router do
 
     get "/profile", RegistrationController, :show, as: :profile
     get "/profile/edit", RegistrationController, :edit, as: :profile
-    patch "/profile", RegistrationController, :update, as: :profile
-    put "/profile", RegistrationController, :update, as: :profile
+	put "/profile/edit", RegistrationController, :update, as: :profile
     delete "/profile", RegistrationController, :delete, as: :profile
   end
 
