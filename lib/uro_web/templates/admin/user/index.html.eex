@@ -1,16 +1,11 @@
 <h1><%= gettext("Listings Users") %></h1>
-
+<%= render UroWeb.LayoutView, "searchbar.html", conn: @conn, action: Routes.admin_user_path(@conn, :index)%>
 <table>
   <thead>
     <tr>
       <th><%= gettext("Username") %></th>
       <th><%= gettext("Email") %></th>
       <th><%= gettext("Display Name") %></th>
-      <th><%= gettext("Email Notifications") %></th>
-      <th><%= gettext("Is Admin") %></th>
-      <th><%= gettext("Can Upload Avatars") %></th>
-      <th><%= gettext("Can Upload Maps") %></th>
-      <th><%= gettext("Can Upload Props") %></th>
       <th></th>
     </tr>
   </thead>
@@ -20,12 +15,6 @@
       <td><%= user.username %></td>
       <td><%= user.email %></td>
       <td><%= user.display_name %></td>
-      <td><%= user.email_notifications %></td>
-      <td><%= user.user_privilege_ruleset.is_admin %></td>
-      <td><%= user.user_privilege_ruleset.can_upload_avatars %></td>
-      <td><%= user.user_privilege_ruleset.can_upload_maps %></td>
-      <td><%= user.user_privilege_ruleset.can_upload_props %></td>
-
       <td>
         <span><%= link gettext("Show"), to: Routes.admin_user_path(@conn, :show, user) %></span>
         <span><%= link gettext("Edit"), to: Routes.admin_user_path(@conn, :edit, user) %></span>

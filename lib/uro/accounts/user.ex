@@ -7,7 +7,7 @@ defmodule Uro.Accounts.User do
   use Pow.Extension.Ecto.Schema,
     extensions: [PowResetPassword, PowEmailConfirmation]
   use PowAssent.Ecto.Schema
-
+  import Ecto.Query, only: [from: 2]
   import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -87,5 +87,14 @@ defmodule Uro.Accounts.User do
         []
       end
     end)
+  end
+
+  def admin_search(query, search_term) do
+    wildcard_search = "%#{search_term}%"
+
+    from user in query,
+    where: ilike(user.username, ^wildcard_search),
+    or_where: ilike(user.display_name, ^wildcard_search),
+    or_where: ilike(user.email, ^wildcard_search)
   end
 end

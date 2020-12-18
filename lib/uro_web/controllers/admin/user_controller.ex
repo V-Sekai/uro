@@ -4,8 +4,8 @@ defmodule UroWeb.Admin.UserController do
   alias Uro.Accounts
   alias Uro.Accounts.User
 
-  def index(conn, _params) do
-    users = Accounts.list_users()
+  def index(conn, params) do
+    users = Accounts.list_users_admin(params)
     render(conn, "index.html", users: users)
   end
 

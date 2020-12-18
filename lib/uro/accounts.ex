@@ -8,13 +8,15 @@ defmodule Uro.Accounts do
 
   alias Uro.Accounts.User
 
+  @user_associated_schemas [:user_privilege_ruleset, :upload_set]
+
   def get_by_username(username) when is_nil(username) do
     nil
   end
   def get_by_username(username) do
     User
     |> Repo.get_by(username: username)
-    |> Repo.preload([:user_privilege_ruleset])
+    |> Repo.preload(@user_associated_schemas)
   end
 
   def get_by_email(email) when is_nil(email) do
@@ -23,7 +25,7 @@ defmodule Uro.Accounts do
   def get_by_email(email) do
     User
     |> Repo.get_by(email: email)
-    |> Repo.preload([:user_privilege_ruleset])
+    |> Repo.preload(@user_associated_schemas)
   end
 
   def get_by_username_or_email(username_or_email) when is_nil(username_or_email) do
@@ -34,19 +36,22 @@ defmodule Uro.Accounts do
     |> where(username: ^username_or_email)
     |> or_where(email: ^username_or_email)
     |> Repo.one
-    |> Repo.preload([:user_privilege_ruleset])
+    |> Repo.preload(@user_associated_schemas)
   end
 
-  def list_users do
+  def list_users_admin(params) do
+    search_term = get_in(params, ["query"])
+
     User
+    |> User.admin_search(search_term)
     |> Repo.all
-    |> Repo.preload([:user_privilege_ruleset])
+    |> Repo.preload(@user_associated_schemas)
   end
 
   def get_user!(id) do
     User
     |> Repo.get!(id)
-    |> Repo.preload([:user_privilege_ruleset])
+    |> Repo.preload(@user_associated_schemas)
   end
 
   def create_user_privilege_ruleset_for_user(user, attrs \\ %{}) do
