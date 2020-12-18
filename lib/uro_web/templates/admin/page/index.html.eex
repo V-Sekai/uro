@@ -1,4 +1,4 @@
-<section class="phx-hero">
+<section class="promo">
   <h1>Admin Panel</h1>
   <%= link "Avatars", to: Routes.admin_avatar_path(@conn, :index) %>
   |

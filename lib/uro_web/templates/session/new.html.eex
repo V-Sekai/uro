@@ -22,5 +22,3 @@
     <%= for link <- PowAssent.Phoenix.ViewHelpers.provider_links(@conn),
         do: content_tag(:div, content_tag(:span, link)) %>
 <% end %>
-
-<span><%= link gettext("Register"), to: Routes.signup_path(@conn, :new) %></span>

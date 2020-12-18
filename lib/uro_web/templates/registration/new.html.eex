@@ -37,5 +37,3 @@
 
   <%= submit gettext("Register") %>
 <% end %>
-
-<span><%= link gettext("Sign in"), to: Routes.signin_path(@conn, :new) %></span>

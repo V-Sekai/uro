@@ -1,4 +1,4 @@
-<section class="phx-hero">
+<section class="promo">
   <h1><%= gettext("V-Sekai") %></h1>
   <h2><%= gettext("The universal VR platform") %></h2>
 

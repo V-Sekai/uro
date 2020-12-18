@@ -119,6 +119,8 @@ defmodule UroWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/about", PageController, :about
+    get "/download", PageController, :download
   end
 
   scope "/" do
