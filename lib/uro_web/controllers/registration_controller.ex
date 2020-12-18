@@ -34,7 +34,7 @@ defmodule UroWeb.RegistrationController do
           conn
           |> put_flash(:info, gettext("Welcome!"))
           |> redirect(to: Routes.page_path(conn, :index))
-        {:failed, failed} ->
+        {:failed, conn} ->
           conn
           |> Pow.Plug.delete()
           |> put_flash(:info, gettext("An email has been sent to you to confirm your account!"))
