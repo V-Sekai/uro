@@ -3,11 +3,11 @@
 <%= form_for @changeset, Routes.signin_path(@conn, :create), fn f -> %>
   <%= render UroWeb.LayoutView, "error.html", changeset: @changeset%>
 
-  <%= label f, gettext("Username or Email") %>
+  <%= label f, :username_or_email, gettext("Username or Email") %>
   <%= text_input f, :username_or_email %>
   <%= error_tag f, :username_or_email %>
 
-  <%= label f, gettext("Password") %>
+  <%= label f, :password, gettext("Password") %>
   <%= password_input f, :password %>
   <%= error_tag f, :password %>
 

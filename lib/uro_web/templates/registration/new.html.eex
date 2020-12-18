@@ -11,26 +11,26 @@
   </span>
 
   <span>
-  <%= label f, gettext("Username") %>
+  <%= label f, :username, gettext("Username") %>
   <%= text_input f, :username %>
   <%= error_tag f, :username %>
   </span>
 
   <span>
-  <%= label f, gettext("Password") %>
+  <%= label f, :password, gettext("Password") %>
   <%= password_input f, :password %>
   <%= error_tag f, :password %>
   </span>
 
   <span>
-  <%= label f, gettext("Password Confirmation") %>
+  <%= label f, :password_confirmation, gettext("Password Confirmation") %>
   <%= password_input f, :password_confirmation %>
   <%= error_tag f, :password_confirmation %>
   </span>
   
   <span>
-  <%= label f, gettext("Receive email notifications") %>
-  <%= checkbox f, :email_notifications %>
+  <%= label f, :email_notifications, gettext("Receive updates about V-Sekai via email") %>
+  <%= checkbox f, :email_notifications, checked: true %>
   <%= error_tag f, :email_notifications %>
   </span>
   </ul>

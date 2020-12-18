@@ -3,24 +3,24 @@
 <%= form_for @changeset, Routes.profile_path(@conn, :edit), fn f -> %>
   <%= render UroWeb.LayoutView, "error.html", changeset: @changeset%>
 
-  <%= label f, gettext("Username") %>
+  <%= label f, :username, gettext("Username") %>
   <%= text_input f, :username %>
   <%= error_tag f, :username %>
 
-  <%= label f, gettext("Current Password") %>
+  <%= label f, :current_password, gettext("Current Password") %>
   <%= password_input f, :current_password %>
   <%= error_tag f, :current_password %>
 
-  <%= label f, gettext("New Password") %>
+  <%= label f, :password, gettext("New Password") %>
   <%= password_input f, :password %>
   <%= error_tag f, :password %>
 
-  <%= label f, gettext("New Password Confirmation") %>
+  <%= label f, :password_confirmation, gettext("New Password Confirmation") %>
   <%= password_input f, :password_confirmation %>
   <%= error_tag f, :password_confirmation %>
 
   <span>
-  <%= label f, gettext("Receive email notifications") %>
+  <%= label f, :email_notifications, gettext("Receive updates about V-Sekai via email") %>
   <%= checkbox f, :email_notifications %>
   <%= error_tag f, :email_notifications %>
   </span>
