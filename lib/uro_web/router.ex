@@ -1,6 +1,10 @@
 defmodule UroWeb.Router do
   use UroWeb, :router
   use Pow.Phoenix.Router
+  alias UroWeb.Router.Helpers, as: Routes
+
+  use Pow.Extension.Phoenix.Router,
+  extensions: [PowResetPassword, PowEmailConfirmation]
   use PowAssent.Phoenix.Router
 
   pipeline :remote_ip do
@@ -125,6 +129,8 @@ defmodule UroWeb.Router do
 
   scope "/" do
     pipe_through [:browser]
+
+    pow_extension_routes()
     pow_assent_routes()
   end
 

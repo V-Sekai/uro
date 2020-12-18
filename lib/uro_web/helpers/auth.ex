@@ -1,6 +1,22 @@
 defmodule UroWeb.Helpers.Auth do
+  require Pow.Phoenix.Router
+  require PowEmailConfirmation.Phoenix.Router
+
   def validate_user_params(user_params) do
     Enum.all?(["username_or_email", "password"], fn x -> Map.has_key?(user_params, x) end)
+  end
+
+  def verify_confirmed_or_send_confirmation_email(conn) do
+    conn
+    |> PowEmailConfirmation.Plug.email_unconfirmed?
+    |> case do
+      true ->
+        Pow.Plug.current_user(conn)
+        |> PowEmailConfirmation.Phoenix.ControllerCallbacks.send_confirmation_email(conn)
+        {:failed, conn}
+      false ->
+        {:ok, conn}
+    end
   end
 
   def validate_login(conn, user_params) do
@@ -39,15 +55,15 @@ defmodule UroWeb.Helpers.Auth do
     end
   end
 
-    def session_display_name(conn) do
-      user = get_current_user(conn)
-      if user do
-        if user.display_name do
-          user.display_name
-        else
-          "[NULL]"
-        end
+  def session_display_name(conn) do
+    user = get_current_user(conn)
+    if user do
+      if user.display_name do
+        user.display_name
+      else
+        "[NULL]"
       end
+    end
   end
 
   @doc false

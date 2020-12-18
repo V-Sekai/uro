@@ -28,8 +28,18 @@ defmodule UroWeb.RegistrationController do
     |> case do
       {:ok,_user,conn} ->
         conn
-        |> put_flash(:info, gettext("Welcome!"))
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email
+        |> case do
+        {:ok, conn} ->
+          conn
+          |> put_flash(:info, gettext("Welcome!"))
+          |> redirect(to: Routes.page_path(conn, :index))
+        {:failed, failed} ->
+          conn
+          |> Pow.Plug.delete()
+          |> put_flash(:info, gettext("An email has been sent to you to confirm your account!"))
+          |> redirect(to: Routes.signup_path(conn, :new))
+        end
 
       {:error, changeset, conn} ->
         render(conn, "new.html", changeset: changeset)

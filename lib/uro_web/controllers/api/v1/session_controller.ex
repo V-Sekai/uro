@@ -17,12 +17,27 @@ defmodule UroWeb.API.V1.SessionController do
     |> json(%{error: %{status: 401, message: "Invalid email or password"}})
   end
 
+  @doc false
+  defp email_unconfirmed(conn) do
+    conn
+    |> Pow.Plug.delete()
+    |> put_status(401)
+    |> json(%{error: %{status: 401, message: "Your e-mail address has not been confirmed"}})
+  end
+
   def create(conn, %{"user" => user_params}) do
     conn
     |> validate_login(user_params)
     |> case do
-      {:ok, conn} -> login_valid(conn)
-      {:error, conn} -> login_invalid(conn)
+      {:ok, conn} ->
+        conn
+        |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email
+        |> case do
+          {:ok, conn} -> login_valid(conn)
+          {:failed, conn} -> email_unconfirmed(conn)
+        end
+      {:error, conn} ->
+        login_invalid(conn)
     end
   end
 

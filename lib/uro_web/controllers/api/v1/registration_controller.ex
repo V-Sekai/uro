@@ -11,11 +11,21 @@ defmodule UroWeb.API.V1.RegistrationController do
     |> case do
       {:ok, user} ->
         conn
-        |> json(%{data: %{user: user}})
+        |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email
+        |> case do
+          {:ok, conn} ->
+            conn
+            |> Pow.Plug.delete()
+            |> json(%{data: %{user: user}})
+          {:failed, conn} ->
+            conn
+            |> Pow.Plug.delete()
+            |> json(%{data: %{user: user}})
+        end
       {:error, _changeset} ->
         conn
         |> put_status(500)
-        |> json(%{error: %{status: 500, message: "Couldn't get current user"}})
+        |> json(%{error: %{status: 500, message: gettext("Couldn't get current user")}})
     end
   end
 
@@ -32,7 +42,7 @@ defmodule UroWeb.API.V1.RegistrationController do
 
         conn
         |> put_status(500)
-        |> json(%{error: %{status: 500, message: "Couldn't create user", errors: errors}})
+        |> json(%{error: %{status: 500, message: gettext("Couldn't create user"), errors: errors}})
     end
   end
 end

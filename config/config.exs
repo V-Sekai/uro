@@ -7,6 +7,11 @@
 # General application configuration
 use Mix.Config
 
+config :hammer,
+  backend: {Hammer.Backend.ETS,
+            [expiry_ms: 60_000 * 60 * 4,
+             cleanup_interval_ms: 60_000 * 10]}
+
 config :uro,
   ecto_repos: [Uro.Repo]
 
@@ -18,6 +23,10 @@ config :uro, UroWeb.Endpoint,
   pubsub: [name: Uro.PubSub, adapter: Phoenix.PubSub.PG2],
   live_view: [signing_salt: "0dBPUwA2"]
 
+config :uro, UroWeb.Pow.Mailer,
+  adapter: Swoosh.Adapters.Sendgrid,
+  api_key: System.get_env("SENDGRID_API_KEY", "")
+
 config :email_checker,
   default_dns: :system,
   also_dns: [],
@@ -28,7 +37,12 @@ config :email_checker,
   config :uro, :pow,
   user: Uro.Accounts.User,
   repo: Uro.Repo,
-  web_module: UroWeb
+  web_module: UroWeb,
+  extensions: [PowResetPassword, PowEmailConfirmation],
+  controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks,
+  mailer_backend: UroWeb.Pow.Mailer,
+  routes_backend: UroWeb.Pow.Routes,
+  web_mailer_module: UroWeb
 
   config :uro, :pow_assent,
   user_identities_context: Uro.UserIdentities,

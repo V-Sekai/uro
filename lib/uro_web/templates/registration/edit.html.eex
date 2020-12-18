@@ -25,6 +25,12 @@
   <%= error_tag f, :email_notifications %>
   </span>
 
+  <%= if @changeset.data.unconfirmed_email do %>
+  <div>
+    <p>Click the link in the confirmation email to change your email to <%= content_tag(:span, @changeset.data.unconfirmed_email) %>.</p>
+  </div>
+  <% end %>
+
   <div>
     <%= submit gettext("Update") %>
   </div>

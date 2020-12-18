@@ -54,6 +54,8 @@ defmodule Uro.MixProject do
       {:ex_json_schema, "~> 0.7.4"},
       {:remote_ip, "~> 0.2.1"},
       {:arc, "~> 0.11.0"},
+      {:swoosh, "~> 1.1"},
+      {:hammer, "~> 6.0"}
     ]
   end
 

@@ -4,7 +4,10 @@ defmodule Uro.Accounts.User do
   use Pow.Ecto.Schema,
     user_id_field: :email,
     password_hash_methods: {&Bcrypt.hash_pwd_salt/1, &Bcrypt.verify_pass/2}
+  use Pow.Extension.Ecto.Schema,
+    extensions: [PowResetPassword, PowEmailConfirmation]
   use PowAssent.Ecto.Schema
+
   import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -50,6 +53,7 @@ defmodule Uro.Accounts.User do
   def changeset(user_or_changeset, attrs) do
     user_or_changeset
     |> pow_changeset(attrs)
+    |> pow_extension_changeset(attrs)
     |> user_custom_changeset(attrs)
   end
 
