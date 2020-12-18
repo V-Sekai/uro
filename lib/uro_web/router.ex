@@ -91,16 +91,16 @@ defmodule UroWeb.Router do
 
     get "/profile", RegistrationController, :show, as: :profile
     get "/profile/edit", RegistrationController, :edit, as: :profile
-	put "/profile/edit", RegistrationController, :update, as: :profile
+	  put "/profile/edit", RegistrationController, :update, as: :profile
     #delete "/profile", RegistrationController, :delete, as: :profile
   end
 
-  scope "/dashboard", UroWeb, as: :dashboard do
-    pipe_through [:browser, :protected, :dashboard]
+  #scope "/dashboard", UroWeb, as: :dashboard do
+  #  pipe_through [:browser, :protected, :dashboard]
 
-    get "/", DashboardController, :index, as: :root
-    resources "/avatars", UserContent.AvatarController, as: :avatar
-  end
+  #  get "/", DashboardController, :index, as: :root
+  #  resources "/avatars", UserContent.AvatarController, as: :avatar
+  #end
 
   scope "/admin", UroWeb, as: :admin do
     pipe_through [:browser, :protected_admin]
