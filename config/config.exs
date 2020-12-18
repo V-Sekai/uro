@@ -13,6 +13,7 @@ config :hammer,
              cleanup_interval_ms: 60_000 * 10]}
 
 config :uro,
+  title: "Uro",
   ecto_repos: [Uro.Repo]
 
 # Configures the endpoint
