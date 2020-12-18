@@ -20,7 +20,7 @@ config :uro, UroWeb.Endpoint,
     keyfile: System.get_env("APP_SSL_KEY_PATH"),
     certfile: System.get_env("APP_SSL_CERT_PATH"),
     transport_options: [socket_opts: [:inet6]]
-  ]
+  ],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
