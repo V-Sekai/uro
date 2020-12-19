@@ -2,5 +2,5 @@
   <h1><%= gettext("V-Sekai") %>:
   <span style="subtext"><%= gettext("The universal VR platform") %></span></h1>
 
-    <%= gettext("We are a community of enthusiasts building a next-generation social and gaming VR platform powered by the %{godot_engine}. Please <a href="/sign_up">sign up</a> to receive updates on future beta participation", godot_engine: safe_to_string(link(gettext("Godot Engine"), to: "https://godotengine.org/"))) |> raw() %>
+    <%= gettext("We are a community of enthusiasts building a next-generation social and gaming VR platform powered by the %{godot_engine}. Please %{sign_up} to receive updates on future beta participation", godot_engine: safe_to_string(link(gettext("Godot Engine"), to: "https://godotengine.org/")), sign_up: safe_to_string(link(gettext("sign up"), to: "/sign_up"))) |> raw() %>
 </section>
