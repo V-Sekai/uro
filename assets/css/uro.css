@@ -1,12 +1,28 @@
 @import "./phoenix.css";
 
-body{color:#000000; font-family:'Noto Serif JP';}
+body{
+  background-color: #ffffff;
+  color:#000000;
+}
+
+p {
+  margin-bottom: 1em; /* phoenix shit */
+}
 
 h1, h2, h3, h4, h5, h6 {
   background-color: #dc322f;
   color:white;
   padding:0.25em;
   font-weight:bold;
+  font-family:'Noto Serif JP';
+}
+
+.promo {
+  font-family:'Noto Serif JP';
+}
+
+.subtext {
+  font-size: smaller;
 }
 
 button {
@@ -127,4 +143,8 @@ a:focus,a:hover,a:focus,a:hover {
 
 .static_links a {
   display: inline;
+}
+ul.contact li {
+  list-style-position: outside;
+  margin-left: 2em;
 }
