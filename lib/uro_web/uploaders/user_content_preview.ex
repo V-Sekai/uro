@@ -1,11 +1,12 @@
-defmodule Uro.Uploaders.UserContent do
-  use Arc.Definition
+defmodule Uro.Uploaders.UserContentPreview do
+  use Waffle.Definition
+  use Waffle.Ecto.Definition
 
-  # Include ecto support (requires package arc_ecto installed):
-  # use Arc.Ecto.Definition
+  # Include ecto support (requires package waffle_ecto installed):
+  # use Waffle.Ecto.Definition
 
   @versions [:original]
-  @extension_whitelist ~w(.scn)
+  @extension_whitelist ~w(.jpg .jpeg .gif .png)
 
   # To add a thumbnail version:
   # @versions [:original, :thumb]
@@ -16,20 +17,20 @@ defmodule Uro.Uploaders.UserContent do
   # end
 
   # Whitelist file extensions:
-   def validate({file, _}) do
+  def validate({file, _}) do
     file_extension = file.file_name |> Path.extname() |> String.downcase()
     Enum.member?(@extension_whitelist, file_extension)
    end
 
   # Define a thumbnail transformation:
-  # def transform(:thumb, _) do
-  #   {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250 -format png", :png}
-  # end
+  def transform(:thumb, _) do
+    {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250 -format png", :png}
+  end
 
   # Override the persisted filenames:
-   def filename(version, _) do
-     version
-   end
+  # def filename(version, _) do
+  #   version
+  # end
 
   # Override the storage directory:
   # def storage_dir(version, {file, scope}) do

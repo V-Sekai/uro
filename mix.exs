@@ -53,7 +53,8 @@ defmodule Uro.MixProject do
       {:phoenix_swagger, "~> 0.8.2"},
       {:ex_json_schema, "~> 0.7.4"},
       {:remote_ip, "~> 0.2.1"},
-      {:arc, "~> 0.11.0"},
+      {:waffle, "~> 1.1"},
+      {:waffle_ecto, "~> 0.0.9"},
       {:swoosh, "~> 1.1"},
       {:hammer, "~> 6.0"}
     ]
