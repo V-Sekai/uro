@@ -11,12 +11,15 @@
   <%= password_input f, :password %>
   <%= error_tag f, :password %>
 
+  <%= label f, :persistent_session, gettext("Remember me") %>
+  <%= checkbox f, :persistent_session %>
+
   <div>
     <%= submit gettext("Sign in") %>
   </div>
 
   <div>
-    <%= link("Reset password", to: Routes.pow_reset_password_reset_password_path(@conn, :new)) %>
+    <%= link(gettext("Reset password"), to: Routes.pow_reset_password_reset_password_path(@conn, :new)) %>
   </div>
 
     <%= for link <- PowAssent.Phoenix.ViewHelpers.provider_links(@conn),
