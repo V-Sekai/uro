@@ -4,7 +4,8 @@ defmodule UroWeb.UserContent.AvatarController do
   alias Uro.UserContent
   alias Uro.UserContent.Avatar
 
-  @user_content_param_name "avatar_file"
+  @user_content_data_param_name "user_content_data"
+  @user_content_preview_param_name "user_content_preview"
 
   def index(conn, _params) do
     avatars = UserContent.list_avatars_uploaded_by(conn.assigns[:current_user])
@@ -18,7 +19,7 @@ defmodule UroWeb.UserContent.AvatarController do
 
   def create(conn, %{"avatar" => avatar_params}) do
     case UserContent.create_avatar(
-      UroWeb.Helpers.UserContentHelper.get_correct_user_content_params(conn, avatar_params, @user_content_param_name)) do
+      UroWeb.Helpers.UserContentHelper.get_correct_user_content_params(conn, avatar_params, @user_content_data_param_name, @user_content_preview_param_name)) do
       {:ok, avatar} ->
         conn
         |> put_flash(:info, gettext("Avatar created successfully."))

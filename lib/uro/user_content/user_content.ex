@@ -14,7 +14,8 @@ defmodule Uro.UserContent.UserContent do
         changeset
         |> cast(attrs, [:name, :description, :uploader_id])
         |> cast_attachments(attrs, [:user_content_data, :user_content_preview])
-        |> validate_required([:name, :description, :uploader_id, :user_content_data, :user_content_preview])
+        |> foreign_key_constraint(:uploader_id)
+        |> validate_required([:name, :uploader_id, :user_content_data])
       end
     end
   end

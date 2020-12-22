@@ -4,7 +4,7 @@ defmodule Uro.UserContent.UploadSet do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
-  schema "upload_set" do
+  schema "upload_sets" do
     has_many :uploaded_avatars, Uro.UserContent.Avatar, foreign_key: :uploader_id
     has_many :uploaded_maps, Uro.UserContent.Map, foreign_key: :uploader_id
     has_many :uploaded_props, Uro.UserContent.Prop, foreign_key: :uploader_id

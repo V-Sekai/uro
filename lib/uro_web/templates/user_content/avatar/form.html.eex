@@ -9,13 +9,13 @@
   <%= textarea f, :description %>
   <%= error_tag f, :description %>
 
-  <%= label f, :thumbnail_file, gettext("Thumbnail File") %>
-  <%= file_input f, :thumbnail_file %>
-  <%= error_tag f, :thumbnail_file %>
+  <%= label f, :user_content_data, gettext("Avatar File") %>
+  <%= file_input f, :user_content_data %>
+  <%= error_tag f, :user_content_data %>
 
-  <%= label f, :avatar_file, gettext("Avatar File") %>
-  <%= file_input f, :avatar_file %>
-  <%= error_tag f, :avatar_file %>
+  <%= label f, :user_content_preview, gettext("Thumbnail File") %>
+  <%= file_input f, :user_content_preview %>
+  <%= error_tag f, :user_content_preview %>
 
   <div>
     <%= submit "Save" %>

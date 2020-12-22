@@ -39,6 +39,12 @@ defmodule Uro.Accounts do
     |> Repo.preload(@user_associated_schemas)
   end
 
+  def list_users_admin do
+    User
+    |> Repo.all
+    |> Repo.preload(@user_associated_schemas)
+  end
+
   def list_users_admin(params) do
     search_term = get_in(params, ["query"])
 
