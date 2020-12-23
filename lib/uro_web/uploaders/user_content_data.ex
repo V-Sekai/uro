@@ -5,9 +5,6 @@ defmodule Uro.Uploaders.UserContentData do
   @versions [:original]
   @extension_whitelist ~w(.scn)
 
-  # To add a thumbnail version:
-  # @versions [:original, :thumb]
-
   # Override the bucket on a per definition basis:
   # def bucket do
   #   :custom_bucket_name
@@ -19,20 +16,22 @@ defmodule Uro.Uploaders.UserContentData do
     Enum.member?(@extension_whitelist, file_extension)
    end
 
-  # Define a thumbnail transformation:
-  # def transform(:thumb, _) do
-  #   {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250 -format png", :png}
-  # end
-
   # Override the persisted filenames:
-  def filename(version, _) do
-    version
+  def filename(_version, {_file, scope}) do
+    "#{scope.id}"
   end
 
   # Override the storage directory:
-  # def storage_dir(version, {file, scope}) do
-  #   "uploads/user/avatars/#{scope.id}"
-  # end
+  def storage_dir(_version, {_file, scope}) do
+    case scope do
+      %Uro.UserContent.Avatar{} ->
+        "uploads/user_content/#{scope.uploader_id}/avatars/"
+      %Uro.UserContent.Map{} ->
+        "uploads/user_content/#{scope.uploader_id}/maps/"
+      %Uro.UserContent.Prop{} ->
+        "uploads/user_content/#{scope.uploader_id}/props/"
+    end
+  end
 
   # Provide a default URL if there hasn't been a file uploaded
   # def default_url(version, scope) do

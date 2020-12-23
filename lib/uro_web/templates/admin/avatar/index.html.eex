@@ -5,7 +5,6 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
-      <th>Url</th>
 
       <th></th>
     </tr>
@@ -15,7 +14,6 @@
     <tr>
       <td><%= avatar.name %></td>
       <td><%= avatar.description %></td>
-      <td><%= avatar.url %></td>
 
       <td>
         <span><%= link "Show", to: Routes.admin_avatar_path(@conn, :show, avatar) %></span>
