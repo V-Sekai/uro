@@ -33,8 +33,10 @@ defmodule Uro.UserContent do
 
   """
   def list_avatars_uploaded_by(user) do
+    upload_set = UroWeb.Helpers.UserContentHelper.get_or_create_upload_set_for_user(user)
+
     Avatar
-    |> where(uploader_id: ^user.id)
+    |> where(uploader_id: ^upload_set.id)
     |> Repo.all
     |> Repo.preload([:uploader])
   end
@@ -151,8 +153,10 @@ defmodule Uro.UserContent do
 
   """
   def list_maps_uploaded_by(user) do
+    upload_set = UroWeb.Helpers.UserContentHelper.get_or_create_upload_set_for_user(user)
+
     Map
-    |> where(uploader_id: ^user.id)
+    |> where(uploader_id: ^upload_set.id)
     |> Repo.all
     |> Repo.preload([:uploader])
   end
@@ -269,8 +273,10 @@ defmodule Uro.UserContent do
 
   """
   def list_props_uploaded_by(user) do
+    upload_set = UroWeb.Helpers.UserContentHelper.get_or_create_upload_set_for_user(user)
+
     Prop
-    |> where(uploader_id: ^user.id)
+    |> where(uploader_id: ^upload_set.id)
     |> Repo.all
     |> Repo.preload([:uploader])
   end
