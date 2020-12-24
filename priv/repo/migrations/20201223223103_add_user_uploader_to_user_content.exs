@@ -1,4 +1,4 @@
-defmodule Uro.Repo.Migrations.CreateUploaderIds do
+defmodule Uro.Repo.Migrations.AddUserUploaderToUserContent do
   use Ecto.Migration
 
   def change do

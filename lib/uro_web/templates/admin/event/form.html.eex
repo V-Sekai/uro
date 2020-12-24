@@ -10,6 +10,6 @@
   <%= error_tag f, :description %>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit gettext("Save") %>
   </div>
 <% end %>

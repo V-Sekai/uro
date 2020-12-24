@@ -8,7 +8,7 @@ defmodule Uro.Accounts do
 
   alias Uro.Accounts.User
 
-  @user_associated_schemas [:user_privilege_ruleset, :upload_set]
+  @user_associated_schemas [:user_privilege_ruleset]
 
   def get_by_username(username) when is_nil(username) do
     nil
@@ -66,17 +66,9 @@ defmodule Uro.Accounts do
     |> Repo.insert()
   end
 
-  def create_upload_set_for_user(user, attrs \\ %{}) do
-    user
-    |> Ecto.build_assoc(:upload_set, attrs)
-    |> Repo.insert()
-  end
-
   def create_associated_entries_for_user(user) do
     user
     |> create_user_privilege_ruleset_for_user
-    user
-    |> create_upload_set_for_user
     user
   end
 

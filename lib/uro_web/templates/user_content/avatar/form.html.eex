@@ -1,23 +1,4 @@
 <%= form_for @changeset, @action, [multipart: true], fn f -> %>
   <%= render UroWeb.LayoutView, "error.html", changeset: @changeset%>
-
-  <%= label f, :name, gettext("Name") %>
-  <%= text_input f, :name %>
-  <%= error_tag f, :name %>
-
-  <%= label f, :description, gettext("Description") %>
-  <%= textarea f, :description %>
-  <%= error_tag f, :description %>
-
-  <%= label f, :user_content_data, gettext("Avatar File") %>
-  <%= file_input f, :user_content_data %>
-  <%= error_tag f, :user_content_data %>
-
-  <%= label f, :user_content_preview, gettext("Thumbnail File") %>
-  <%= file_input f, :user_content_preview %>
-  <%= error_tag f, :user_content_preview %>
-
-  <div>
-    <%= submit "Save" %>
-  </div>
+  <%= render UroWeb.LayoutView, "user_content_form.html", current_form: f %>
 <% end %>
