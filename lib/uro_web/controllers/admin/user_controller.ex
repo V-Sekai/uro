@@ -47,4 +47,19 @@ defmodule UroWeb.Admin.UserController do
     |> put_flash(:info, gettext("User deleted successfully."))
     |> redirect(to: Routes.admin_user_path(conn, :index))
   end
+
+  @spec lock(Conn.t(), map()) :: Conn.t()
+  def lock(%{assigns: %{user: user}} = conn, _params) do
+    case Uro.Accounts.lock(user) do
+      {:ok, _user} ->
+        conn
+        |> put_flash(:info, gettext("User has been locked."))
+        |> redirect(to: "/")
+
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:error, gettext("User couldn't be locked."))
+        |> redirect(to: "/")
+    end
+  end
 end

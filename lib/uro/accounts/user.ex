@@ -36,11 +36,34 @@ defmodule Uro.Accounts.User do
     has_many :identity_proofs_from, Uro.UserRelations.IdentityProof, foreign_key: :user_from_id
     has_many :identity_proofs_to, Uro.UserRelations.IdentityProof, foreign_key: :user_to_id
 
+    field :locked_at, :utc_datetime
+
     pow_user_fields()
 
     timestamps()
   end
 
+  @spec lock_changeset(Schema.t() | Changeset.t()) :: Changeset.t()
+  def lock_changeset(user_or_changeset) do
+    changeset = Changeset.change(user_or_changeset)
+    locked_at = DateTime.truncate(DateTime.utc_now(), :second)
+
+    case Changeset.get_field(changeset, :locked_at) do
+      nil  -> Changeset.change(changeset, locked_at: locked_at)
+      _any -> Changeset.add_error(changeset, :locked_at, "already set")
+    end
+  end
+
+  @spec unlock_changeset(Schema.t() | Changeset.t()) :: Changeset.t()
+  def unlock_changeset(user_or_changeset) do
+    changeset = Changeset.change(user_or_changeset)
+    case Changeset.get_field(changeset, :locked_at) do
+      _any  -> Changeset.change(changeset, locked_at: nil)
+      nil -> Changeset.add_error(changeset, :locked_at, "already set")
+    end
+  end
+
+  @spec user_custom_changeset(Schema.t() | Changeset.t(), Map) :: Changeset.t()
   def user_custom_changeset(user_or_changeset, attrs) do
     user_or_changeset
     |> cast(attrs, [:username, :email_notifications])
@@ -52,6 +75,7 @@ defmodule Uro.Accounts.User do
     |> unique_constraint(:username)
   end
 
+  @spec changeset(Schema.t() | Changeset.t(), Map) :: Changeset.t()
   def changeset(user_or_changeset, attrs) do
     user_or_changeset
     |> pow_changeset(attrs)
@@ -99,4 +123,5 @@ defmodule Uro.Accounts.User do
     or_where: ilike(user.display_name, ^wildcard_search),
     or_where: ilike(user.email, ^wildcard_search)
   end
+
 end

@@ -108,4 +108,18 @@ defmodule Uro.Accounts do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  @spec lock(map()) :: {:ok, map()} | {:error, map()}
+  def lock(user) do
+    user
+    |> User.lock_changeset()
+    |> Repo.update()
+  end
+
+  @spec unlock(map()) :: {:ok, map()} | {:error, map()}
+  def unlock(user) do
+    user
+    |> User.unlock_changeset()
+    |> Repo.update()
+  end
 end

@@ -1,7 +1,6 @@
 defmodule UroWeb.Router do
   use UroWeb, :router
   use Pow.Phoenix.Router
-  alias UroWeb.Router.Helpers, as: Routes
 
   use Pow.Extension.Phoenix.Router,
   extensions: [PowResetPassword, PowEmailConfirmation]
@@ -29,6 +28,8 @@ defmodule UroWeb.Router do
   pipeline :protected do
     plug Pow.Plug.RequireAuthenticated,
       error_handler: UroWeb.AuthErrorHandler
+    plug Uro.EnsureUserNotLockedPlug,
+      error_handler: UroWeb.AuthErrorHandler
   end
 
   pipeline :protected_admin do
@@ -37,6 +38,8 @@ defmodule UroWeb.Router do
 
   pipeline :not_authenticated do
     plug Pow.Plug.RequireNotAuthenticated,
+      error_handler: UroWeb.AuthErrorHandler
+    plug Uro.EnsureUserNotLockedPlug,
       error_handler: UroWeb.AuthErrorHandler
   end
 
@@ -47,6 +50,8 @@ defmodule UroWeb.Router do
 
   pipeline :api_protected do
     plug Pow.Plug.RequireAuthenticated,
+      error_handler: UroWeb.APIAuthErrorHandler
+    plug Uro.EnsureUserNotLockedPlug,
       error_handler: UroWeb.APIAuthErrorHandler
   end
 
@@ -113,6 +118,7 @@ defmodule UroWeb.Router do
     resources "/shards", Admin.ShardController, as: :shard
     resources "/events", Admin.EventController, as: :event
     resources "/users", Admin.UserController, as: :user
+    post "/users/:id/lock", Admin.UserController, :lock
   end
 
   scope "/", UroWeb do

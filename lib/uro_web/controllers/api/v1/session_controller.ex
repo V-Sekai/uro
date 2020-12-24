@@ -31,6 +31,7 @@ defmodule UroWeb.API.V1.SessionController do
     |> case do
       {:ok, conn} ->
         conn
+        |> Uro.EnsureUserNotLockedPlug.call(UroWeb.APIAuthErrorHandler)
         |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email
         |> case do
           {:ok, conn} -> login_valid(conn)
