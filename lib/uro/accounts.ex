@@ -91,6 +91,12 @@ defmodule Uro.Accounts do
     |> Repo.update()
   end
 
+  def update_user_as_admin(%User{} = user, attrs) do
+    user
+    |> User.admin_changeset(attrs)
+    |> Repo.update()
+  end
+
   def delete_user(%User{} = user) do
     Repo.delete(user)
   end
