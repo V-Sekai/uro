@@ -1,4 +1,4 @@
-defmodule UroWeb.API.V1.UserContent.AvatarController do
+defmodule UroWeb.API.V1.UserContent.MapController do
   use UroWeb, :controller
   use UroWeb.Helpers.API
 
@@ -6,13 +6,13 @@ defmodule UroWeb.API.V1.UserContent.AvatarController do
 
   def show(conn, %{"id" => id}) do
     id
-    |> UserContent.get_avatar!
+    |> UserContent.get_map!
     |> case do
-      avatar ->
+      map ->
         conn
         |> put_status(200)
-        |> json(%{data: %{avatar: UroWeb.Helpers.UserContentHelper.get_api_user_content(avatar)}})
-     _ ->
+        |> json(%{data: %{map: UroWeb.Helpers.UserContentHelper.get_api_user_content(map)}})
+      _ ->
         conn
         |> put_status(400)
     end

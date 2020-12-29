@@ -85,6 +85,9 @@ defmodule UroWeb.Router do
     resources "/session", SessionController, singleton: true, only: [:create, :delete]
     post "/session/renew", SessionController, :renew
 
+    resources "/avatars", UserContent.AvatarController, only: [:index, :show]
+    resources "/maps", UserContent.MapController, only: [:index, :show]
+
     resources "/shards", ShardController, only: [:index, :create, :update, :delete]
 
   end
@@ -95,6 +98,25 @@ defmodule UroWeb.Router do
     # Your protected API endpoints here
     resources "/registration", RegistrationController, singleton: true, only: [:show]
     resources "/identity_proofs", IdentityProofController, as: :identity_proof, only: [:show, :create]
+  end
+
+  scope "/api/v1/dashboard", UroWeb.API.V1, as: :api_v1_dashboard do
+    pipe_through [:remote_ip, :api, :api_protected, :protected_avatar_upload]
+
+    resources "/avatars", Dashboard.UserContent.AvatarController, as: :avatar, only: @modify_commands
+  end
+
+  scope "/api/v1/dashboard", UroWeb.API.V1, as: :api_v1_dashboard do
+    pipe_through [:remote_ip, :api, :api_protected, :protected_map_upload]
+
+    resources "/maps", Dashboard.UserContent.MapController, as: :map, only: @modify_commands
+  end
+
+  scope "/api/v1/dashboard", UroWeb.API.V1, as: :api_v1_dashboard do
+    pipe_through [:api, :api_protected, :dashboard]
+
+    resources "/avatars", Dashboard.UserContent.AvatarController, as: :avatar, only: @view_commands
+    resources "/maps", Dashboard.UserContent.MapController, as: :map, only: @view_commands
   end
 
   ########################
@@ -130,21 +152,21 @@ defmodule UroWeb.Router do
   scope "/dashboard", UroWeb, as: :dashboard do
     pipe_through [:browser, :protected, :dashboard, :protected_avatar_upload]
 
-    resources "/avatars", UserContent.AvatarController, as: :avatar, only: @modify_commands
+    resources "/avatars", Dashboard.UserContent.AvatarController, as: :avatar, only: @modify_commands
   end
 
   scope "/dashboard", UroWeb, as: :dashboard do
     pipe_through [:browser, :protected, :dashboard, :protected_map_upload]
 
-    resources "/maps", UserContent.MapController, as: :map, only: @modify_commands
+    resources "/maps", Dashboard.UserContent.MapController, as: :map, only: @modify_commands
   end
 
   scope "/dashboard", UroWeb, as: :dashboard do
     pipe_through [:browser, :protected, :dashboard]
 
     get "/", DashboardController, :index, as: :root
-    resources "/avatars", UserContent.AvatarController, as: :avatar, only: @view_commands
-    resources "/maps", UserContent.MapController, as: :map, only: @view_commands
+    resources "/avatars", Dashboard.UserContent.AvatarController, as: :avatar, only: @view_commands
+    resources "/maps", Dashboard.UserContent.MapController, as: :map, only: @view_commands
   end
 
   #########

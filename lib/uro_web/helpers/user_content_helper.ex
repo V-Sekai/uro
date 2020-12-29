@@ -1,6 +1,23 @@
 defmodule UroWeb.Helpers.UserContentHelper do
 
   @doc false
+  def get_api_user_content(user_content) do
+    %{
+      id: to_string(user_content.id),
+      name: to_string(user_content.name),
+      description: to_string(user_content.description),
+      user_content_data: to_string(Uro.Uploaders.UserContentData.url({user_content.user_content_data, user_content})),
+      user_content_preview: to_string(Uro.Uploaders.UserContentPreview.url({user_content.user_content_preview, user_content})),
+      uploader_id: to_string(user_content.uploader_id)
+    }
+  end
+
+  @doc false
+  def get_api_user_content_list(user_content_list) do
+    Enum.map(user_content_list, fn(x) -> get_api_user_content(x) end)
+  end
+
+  @doc false
   defp check_can_upload_avatars_field(%{can_upload_avatars: true}) do
     true
   end

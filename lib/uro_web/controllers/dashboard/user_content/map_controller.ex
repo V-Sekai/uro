@@ -1,4 +1,4 @@
-defmodule UroWeb.UserContent.MapController do
+defmodule UroWeb.Dashboard.UserContent.MapController do
   use UroWeb, :controller
 
   alias Uro.UserContent
@@ -31,18 +31,18 @@ defmodule UroWeb.UserContent.MapController do
   end
 
   def show(conn, %{"id" => id}) do
-    map = UserContent.get_map!(id)
+    map = UserContent.get_map_uploader_by!(id, conn.assigns[:current_user])
     render(conn, "show.html", map: map)
   end
 
   def edit(conn, %{"id" => id}) do
-    map = UserContent.get_map!(id)
+    map = UserContent.get_map_uploader_by!(id, conn.assigns[:current_user])
     changeset = UserContent.change_map(map)
     render(conn, "edit.html", map: map, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "map" => map_params}) do
-    map = UserContent.get_map!(id)
+    map = UserContent.get_map_uploader_by!(id, conn.assigns[:current_user])
 
     case UserContent.update_map(map, map_params) do
       {:ok, map} ->
@@ -56,11 +56,22 @@ defmodule UroWeb.UserContent.MapController do
   end
 
   def delete(conn, %{"id" => id}) do
-    map = UserContent.get_map!(id)
-    {:ok, _map} = UserContent.delete_map(map)
-
-    conn
-    |> put_flash(:info, gettext("Map deleted successfully."))
-    |> redirect(to: Routes.dashboard_map_path(conn, :index))
+    case UserContent.get_map_uploaded_by_user!(id, conn.assigns[:current_user]) do
+      map ->
+        case UserContent.delete_map(map) do
+          {:ok, _map} ->
+            conn
+            |> put_flash(:info, gettext("Map deleted successfully."))
+            |> redirect(to: Routes.dashboard_map_path(conn, :index))
+          {:error, %Ecto.Changeset{}} ->
+            conn
+            |> put_flash(:info, gettext("Could not delete map."))
+            |> redirect(to: Routes.dashboard_map_path(conn, :index))
+        end
+      nil ->
+        conn
+        |> put_flash(:info, gettext("Could not delete map."))
+        |> redirect(to: Routes.dashboard_map_path(conn, :index))
+    end
   end
 end

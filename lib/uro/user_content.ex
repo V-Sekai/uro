@@ -60,6 +60,18 @@ defmodule Uro.UserContent do
   end
 
   @doc """
+  Gets a single avatar uploaded by a specified user.
+
+  Raises `Ecto.NoResultsError` if the Avatar does not exist or was not uploaded by this user.
+  """
+  def get_avatar_uploaded_by_user!(id, user) do
+    Avatar
+    |> where(uploader_id: ^user.id)
+    |> Repo.get!(id)
+    |> Repo.preload([:uploader])
+  end
+
+  @doc """
   Creates a avatar.
 
   ## Examples
@@ -187,6 +199,18 @@ defmodule Uro.UserContent do
   end
 
   @doc """
+  Gets a single map uploaded by a specified user.
+
+  Raises `Ecto.NoResultsError` if the map does not exist or was not uploaded by this user.
+  """
+  def get_map_uploaded_by_user!(id, user) do
+    Map
+    |> where(uploader_id: ^user.id)
+    |> Repo.get!(id)
+    |> Repo.preload([:uploader])
+  end
+
+  @doc """
   Creates a map.
 
   ## Examples
@@ -309,6 +333,18 @@ defmodule Uro.UserContent do
   """
   def get_prop!(id) do
     Prop
+    |> Repo.get!(id)
+    |> Repo.preload([:uploader])
+  end
+
+  @doc """
+  Gets a single prop uploaded by a specified user.
+
+  Raises `Ecto.NoResultsError` if the Prop does not exist or was not uploaded by this user.
+  """
+  def get_prop_uploaded_by_user!(id, user) do
+    Prop
+    |> where(uploader_id: ^user.id)
     |> Repo.get!(id)
     |> Repo.preload([:uploader])
   end
