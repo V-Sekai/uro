@@ -8,11 +8,11 @@ defmodule UroWeb.API.V1.UserContent.AvatarController do
     id
     |> UserContent.get_avatar!
     |> case do
-      avatar ->
+      %Uro.UserContent.Avatar{} = avatar ->
         conn
         |> put_status(200)
         |> json(%{data: %{avatar: UroWeb.Helpers.UserContentHelper.get_api_user_content(avatar)}})
-     _ ->
+      _ ->
         conn
         |> put_status(400)
     end

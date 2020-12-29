@@ -57,7 +57,7 @@ defmodule UroWeb.Dashboard.UserContent.AvatarController do
 
   def delete(conn, %{"id" => id}) do
     case UserContent.get_avatar_uploaded_by_user!(id, conn.assigns[:current_user]) do
-      avatar ->
+      %Uro.UserContent.Avatar{} = avatar ->
         case UserContent.delete_avatar(avatar) do
           {:ok, _avatar} ->
             conn
@@ -68,7 +68,7 @@ defmodule UroWeb.Dashboard.UserContent.AvatarController do
             |> put_flash(:info, gettext("Could not delete avatar."))
             |> redirect(to: Routes.dashboard_avatar_path(conn, :index))
         end
-      nil ->
+      _ ->
         conn
         |> put_flash(:info, gettext("Could not delete avatar."))
         |> redirect(to: Routes.dashboard_avatar_path(conn, :index))

@@ -18,7 +18,7 @@ defmodule UroWeb.API.V1.Dashboard.UserContent.MapController do
     id
     |> UserContent.get_map_uploaded_by_user!(conn.assigns[:current_user])
     |> case do
-      map ->
+      %Uro.UserContent.Map{} = map ->
         conn
         |> put_status(200)
         |> json(%{data: %{map: UroWeb.Helpers.UserContentHelper.get_api_user_content(map)}})

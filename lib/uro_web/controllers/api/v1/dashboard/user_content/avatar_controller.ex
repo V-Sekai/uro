@@ -18,7 +18,7 @@ defmodule UroWeb.API.V1.Dashboard.UserContent.AvatarController do
     id
     |> UserContent.get_avatar_uploaded_by_user!(conn.assigns[:current_user])
     |> case do
-      avatar ->
+      %Uro.UserContent.Avatar{} = avatar ->
         conn
         |> put_status(200)
         |> json(%{data: %{avatar: UroWeb.Helpers.UserContentHelper.get_api_user_content(avatar)}})
