@@ -7,6 +7,7 @@ defmodule Uro.Accounts do
   alias Uro.Repo
 
   alias Uro.Accounts.User
+  alias Uro.Accounts.UserPrivilegeRuleset
 
   @user_associated_schemas [:user_privilege_ruleset]
 
@@ -92,9 +93,16 @@ defmodule Uro.Accounts do
   end
 
   def update_user_as_admin(%User{} = user, attrs) do
-    user
-    |> User.admin_changeset(attrs)
-    |> Repo.update()
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:user, User.admin_changeset(user, attrs))
+    |> Ecto.Multi.update(:user_privilege_ruleset, &UserPrivilegeRuleset.admin_changeset(&1.user.user_privilege_ruleset, attrs["user_privilege_ruleset"]))
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{user: user}} ->
+        {:ok, user}
+      {:error, _, reason, _} ->
+        {:error, reason}
+    end
   end
 
   def delete_user(%User{} = user) do

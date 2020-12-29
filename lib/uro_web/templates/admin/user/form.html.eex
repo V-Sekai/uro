@@ -25,6 +25,8 @@
   <%= checkbox f, :email_notifications %>
   <%= error_tag f, :email_notifications %>
 
+  <%= render UroWeb.LayoutView, "user_privilege_ruleset.html", current_form: f %>
+
   <div>
     <%= submit gettext("Save") %>
   </div>
