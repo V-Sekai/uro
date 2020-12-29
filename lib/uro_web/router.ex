@@ -113,7 +113,7 @@ defmodule UroWeb.Router do
   end
 
   scope "/api/v1/dashboard", UroWeb.API.V1, as: :api_v1_dashboard do
-    pipe_through [:api, :api_protected, :dashboard]
+    pipe_through [:api, :api_protected]
 
     resources "/avatars", Dashboard.UserContent.AvatarController, as: :avatar, only: @view_commands
     resources "/maps", Dashboard.UserContent.MapController, as: :map, only: @view_commands
