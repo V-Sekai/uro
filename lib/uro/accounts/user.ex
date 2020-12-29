@@ -83,6 +83,15 @@ defmodule Uro.Accounts.User do
     |> user_custom_changeset(attrs)
   end
 
+  @spec admin_changeset(Schema.t() | Changeset.t(), Map) :: Changeset.t()
+  def admin_changeset(user_or_changeset, attrs) do
+    user_or_changeset
+    |> pow_user_id_field_changeset(attrs)
+    |> pow_password_changeset(attrs)
+    |> user_custom_changeset(attrs)
+    |> cast(attrs, [:display_name])
+  end
+
   defp put_display_name(%Ecto.Changeset{valid?: true, changes: %{username: username}} = changeset) do
     put_change(changeset, :display_name, username)
   end

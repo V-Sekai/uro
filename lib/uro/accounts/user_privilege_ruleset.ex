@@ -13,9 +13,8 @@ defmodule Uro.Accounts.UserPrivilegeRuleset do
     timestamps()
   end
 
-  def changeset(user_or_changeset, attrs) do
-    user_or_changeset
-    |> cast(attrs, [])
-    |> validate_required([])
+  def admin_changeset(user_privilege_ruleset_or_changeset, attrs) do
+    user_privilege_ruleset_or_changeset
+    |> cast(attrs, [:can_upload_avatars, :can_upload_maps, :can_upload_props])
   end
 end

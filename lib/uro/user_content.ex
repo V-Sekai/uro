@@ -72,9 +72,17 @@ defmodule Uro.UserContent do
 
   """
   def create_avatar(attrs \\ %{}) do
-    %Avatar{}
-    |> Avatar.changeset(attrs)
-    |> Repo.insert()
+    user_content = %Avatar{}
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:user_content, Avatar.changeset(user_content, attrs))
+    |> Ecto.Multi.update(:user_content_with_upload, &Avatar.upload_changeset(&1.user_content, attrs))
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{user_content_with_upload: user_content_with_upload}} ->
+        {:ok, user_content_with_upload}
+      {:error, _, reason, _} ->
+        {:error, reason}
+    end
   end
 
   @doc """
@@ -92,6 +100,7 @@ defmodule Uro.UserContent do
   def update_avatar(%Avatar{} = avatar, attrs) do
     avatar
     |> Avatar.changeset(attrs)
+    |> Avatar.upload_changeset(attrs)
     |> Repo.update()
   end
 
@@ -190,9 +199,17 @@ defmodule Uro.UserContent do
 
   """
   def create_map(attrs \\ %{}) do
-    %Map{}
-    |> Map.changeset(attrs)
-    |> Repo.insert()
+    user_content = %Map{}
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:user_content, Map.changeset(user_content, attrs))
+    |> Ecto.Multi.update(:user_content_with_upload, &Map.upload_changeset(&1.user_content, attrs))
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{user_content_with_upload: user_content_with_upload}} ->
+        {:ok, user_content_with_upload}
+      {:error, _, reason, _} ->
+        {:error, reason}
+    end
   end
 
   @doc """
@@ -210,6 +227,7 @@ defmodule Uro.UserContent do
   def update_map(%Map{} = map, attrs) do
     map
     |> Map.changeset(attrs)
+    |> Map.upload_changeset(attrs)
     |> Repo.update()
   end
 
@@ -308,9 +326,17 @@ defmodule Uro.UserContent do
 
   """
   def create_prop(attrs \\ %{}) do
-    %Prop{}
-    |> Prop.changeset(attrs)
-    |> Repo.insert()
+    user_content = %Prop{}
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:user_content, Prop.changeset(user_content, attrs))
+    |> Ecto.Multi.update(:user_content_with_upload, &Prop.upload_changeset(&1.user_content, attrs))
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{user_content_with_upload: user_content_with_upload}} ->
+        {:ok, user_content_with_upload}
+      {:error, _, reason, _} ->
+        {:error, reason}
+    end
   end
 
   @doc """
@@ -328,6 +354,7 @@ defmodule Uro.UserContent do
   def update_prop(%Prop{} = prop, attrs) do
     prop
     |> Prop.changeset(attrs)
+    |> Prop.upload_changeset(attrs)
     |> Repo.update()
   end
 

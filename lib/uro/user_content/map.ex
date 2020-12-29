@@ -15,4 +15,9 @@ defmodule Uro.UserContent.Map do
   def changeset(map, attrs) do
     user_content_changeset(map, attrs)
   end
+
+  @doc false
+  def upload_changeset(map, attrs) do
+    user_content_upload_changeset(map, attrs)
+  end
 end

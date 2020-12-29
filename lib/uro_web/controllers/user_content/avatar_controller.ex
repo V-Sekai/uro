@@ -26,7 +26,7 @@ defmodule UroWeb.UserContent.AvatarController do
         |> redirect(to: Routes.dashboard_avatar_path(conn, :show, avatar))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn,"new.html", changeset: changeset)
     end
   end
 

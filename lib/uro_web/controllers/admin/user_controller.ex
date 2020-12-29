@@ -28,7 +28,7 @@ defmodule UroWeb.Admin.UserController do
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Accounts.get_user!(id)
 
-    case Accounts.update_user(user, user_params) do
+    case Accounts.update_user_as_admin(user, user_params) do
       {:ok, user} ->
         conn
         |> put_flash(:info, gettext("User updated successfully."))

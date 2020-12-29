@@ -15,4 +15,9 @@ defmodule Uro.UserContent.Avatar do
   def changeset(avatar, attrs) do
     user_content_changeset(avatar, attrs)
   end
+
+  @doc false
+  def upload_changeset(avatar, attrs) do
+    user_content_upload_changeset(avatar, attrs)
+  end
 end

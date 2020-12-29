@@ -6,6 +6,9 @@ defmodule UroWeb.Router do
   extensions: [PowResetPassword, PowEmailConfirmation]
   use PowAssent.Phoenix.Router
 
+  @view_commands [:index, :show]
+  @modify_commands [:new, :edit, :create, :update, :delete]
+
   pipeline :remote_ip do
     plug RemoteIp
   end
@@ -36,6 +39,18 @@ defmodule UroWeb.Router do
     plug Uro.Plug.RequireAdmin
   end
 
+  pipeline :protected_avatar_upload do
+    plug Uro.Plug.RequireAvatarUploadPermission
+  end
+
+  pipeline :protected_map_upload do
+    plug Uro.Plug.RequireMapUploadPermission
+  end
+
+  pipeline :protected_prop_upload do
+    plug Uro.Plug.RequirePropUploadPermission
+  end
+
   pipeline :not_authenticated do
     plug Pow.Plug.RequireNotAuthenticated,
       error_handler: UroWeb.AuthErrorHandler
@@ -59,6 +74,10 @@ defmodule UroWeb.Router do
     #plug :put_layout, {UroWeb.LayoutView, "dashboard.html"}
   end
 
+  #######
+  # API #
+  #######
+
   scope "/api/v1", UroWeb.API.V1, as: :api_v1 do
     pipe_through [:remote_ip, :api]
 
@@ -77,6 +96,10 @@ defmodule UroWeb.Router do
     resources "/registration", RegistrationController, singleton: true, only: [:show]
     resources "/identity_proofs", IdentityProofController, as: :identity_proof, only: [:show, :create]
   end
+
+  ########################
+  # Session/Registration #
+  ########################
 
   scope "/", UroWeb do
     pipe_through [:browser, :not_authenticated]
@@ -100,12 +123,33 @@ defmodule UroWeb.Router do
     #delete "/profile", RegistrationController, :delete, as: :profile
   end
 
-  #scope "/dashboard", UroWeb, as: :dashboard do
-  #  pipe_through [:browser, :protected, :dashboard]
+  #############
+  # Dashboard #
+  #############
 
-  #  get "/", DashboardController, :index, as: :root
-  #  resources "/avatars", UserContent.AvatarController, as: :avatar
-  #end
+  scope "/dashboard", UroWeb, as: :dashboard do
+    pipe_through [:browser, :protected, :dashboard, :protected_avatar_upload]
+
+    resources "/avatars", UserContent.AvatarController, as: :avatar, only: @modify_commands
+  end
+
+  scope "/dashboard", UroWeb, as: :dashboard do
+    pipe_through [:browser, :protected, :dashboard, :protected_map_upload]
+
+    resources "/maps", UserContent.MapController, as: :map, only: @modify_commands
+  end
+
+  scope "/dashboard", UroWeb, as: :dashboard do
+    pipe_through [:browser, :protected, :dashboard]
+
+    get "/", DashboardController, :index, as: :root
+    resources "/avatars", UserContent.AvatarController, as: :avatar, only: @view_commands
+    resources "/maps", UserContent.MapController, as: :map, only: @view_commands
+  end
+
+  #########
+  # Admin #
+  #########
 
   scope "/admin", UroWeb, as: :admin do
     pipe_through [:browser, :protected_admin]
@@ -120,6 +164,10 @@ defmodule UroWeb.Router do
     resources "/users", Admin.UserController, as: :user
     post "/users/:id/lock", Admin.UserController, :lock
   end
+
+  ########
+  # Root #
+  ########
 
   scope "/", UroWeb do
     pipe_through :browser
@@ -141,6 +189,10 @@ defmodule UroWeb.Router do
     pow_extension_routes()
     pow_assent_routes()
   end
+
+  ###########
+  # Swagger #
+  ###########
 
   def swagger_info do
     %{

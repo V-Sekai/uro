@@ -2,6 +2,18 @@ defmodule UroWeb.Helpers.Auth do
   require Pow.Phoenix.Router
   require PowEmailConfirmation.Phoenix.Router
 
+  def get_user_privilege_ruleset(user) do
+    user
+    |> is_map
+    |> case do
+      true ->
+        user
+        |> Uro.Repo.preload([:user_privilege_ruleset])
+        |> Map.get(:user_privilege_ruleset)
+      false -> nil
+    end
+  end
+
   def validate_user_params(user_params) do
     Enum.all?(["username_or_email", "password"], fn x -> Map.has_key?(user_params, x) end)
   end

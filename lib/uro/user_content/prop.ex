@@ -15,4 +15,9 @@ defmodule Uro.UserContent.Prop do
   def changeset(prop, attrs) do
     user_content_changeset(prop, attrs)
   end
+
+  @doc false
+  def upload_changeset(prop, attrs) do
+    user_content_upload_changeset(prop, attrs)
+  end
 end

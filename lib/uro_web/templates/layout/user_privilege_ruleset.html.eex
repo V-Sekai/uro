@@ -1,0 +1,11 @@
+<%= label @current_form, :can_upload_avatars, gettext("Can Upload Avatars") %>
+<%= checkbox @current_form, :can_upload_avatars %>
+<%= error_tag @current_form, :can_upload_avatars %>
+
+<%= label @current_form, :can_upload_maps, gettext("Can Upload Maps") %>
+<%= checkbox @current_form, :can_upload_maps %>
+<%= error_tag @current_form, :can_upload_maps %>
+
+<%= label @current_form, :can_upload_props, gettext("Can Upload Props") %>
+<%= checkbox @current_form, :can_upload_props %>
+<%= error_tag @current_form, :can_upload_props %>

@@ -4,18 +4,8 @@ defmodule UroWeb.Helpers.Admin do
   @doc false
   def is_admin?(user) do
     user
-    |> is_map
-    |> case do
-      true ->
-        user
-        |> Uro.Repo.preload([:user_privilege_ruleset])
-        |> Map.get(:user_privilege_ruleset)
-        |> case do
-          nil -> false
-          user_privilege_ruleset -> check_admin_field(user_privilege_ruleset)
-        end
-      false -> false
-    end
+    |> UroWeb.Helpers.Auth.get_user_privilege_ruleset
+    |> check_admin_field
   end
 
   @doc false
