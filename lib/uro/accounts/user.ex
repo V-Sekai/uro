@@ -45,21 +45,21 @@ defmodule Uro.Accounts.User do
 
   @spec lock_changeset(Schema.t() | Changeset.t()) :: Changeset.t()
   def lock_changeset(user_or_changeset) do
-    changeset = Changeset.change(user_or_changeset)
+    changeset = change(user_or_changeset)
     locked_at = DateTime.truncate(DateTime.utc_now(), :second)
 
-    case Changeset.get_field(changeset, :locked_at) do
-      nil  -> Changeset.change(changeset, locked_at: locked_at)
-      _any -> Changeset.add_error(changeset, :locked_at, "already set")
+    case get_field(changeset, :locked_at) do
+      nil  -> change(changeset, locked_at: locked_at)
+      _any -> add_error(changeset, :locked_at, "already set")
     end
   end
 
   @spec unlock_changeset(Schema.t() | Changeset.t()) :: Changeset.t()
   def unlock_changeset(user_or_changeset) do
-    changeset = Changeset.change(user_or_changeset)
-    case Changeset.get_field(changeset, :locked_at) do
-      _any  -> Changeset.change(changeset, locked_at: nil)
-      nil -> Changeset.add_error(changeset, :locked_at, "already set")
+    changeset = change(user_or_changeset)
+    case get_field(changeset, :locked_at) do
+      nil -> add_error(changeset, :locked_at, "already set")
+      _any  -> change(changeset, locked_at: nil)
     end
   end
 
