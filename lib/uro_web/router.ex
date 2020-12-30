@@ -197,6 +197,8 @@ defmodule UroWeb.Router do
     get "/", PageController, :index
     get "/about", PageController, :about
     get "/download", PageController, :download
+
+    post "/reset-password", ResetPasswordController, :create
   end
 
   scope "/" do
