@@ -22,11 +22,11 @@ defmodule Uro.Uploaders.UserContentPreview do
   end
 
   # Override the storage directory:
-  def storage_dir(_version, {_file, scope}) do
+  def storage_dir(_version, {_file, _scope}) do
     "uploads/"
   end
 
-  def default_url(version, scope) do
+  def default_url(version, _scope) do
     "/images/user_content/default_#{version}.png"
   end
 end

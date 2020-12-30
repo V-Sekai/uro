@@ -17,7 +17,7 @@ defmodule Uro.Uploaders.UserContentData do
   end
 
   # Override the storage directory:
-  def storage_dir(_version, {_file, scope}) do
+  def storage_dir(_version, {_file, _scope}) do
     "uploads/"
   end
 end
