@@ -23,14 +23,7 @@ defmodule Uro.Uploaders.UserContentPreview do
 
   # Override the storage directory:
   def storage_dir(_version, {_file, scope}) do
-    case scope do
-      %Uro.UserContent.Avatar{} ->
-        "uploads/user_content/#{scope.uploader_id}/avatars/"
-      %Uro.UserContent.Map{} ->
-        "uploads/user_content/#{scope.uploader_id}/maps/"
-      %Uro.UserContent.Prop{} ->
-        "uploads/user_content/#{scope.uploader_id}/props/"
-    end
+    "uploads/"
   end
 
   def default_url(version, scope) do
