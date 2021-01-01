@@ -96,7 +96,7 @@ defmodule UroWeb.Router do
     pipe_through [:remote_ip, :api, :api_protected]
 
     # Your protected API endpoints here
-    resources "/registration", RegistrationController, singleton: true, only: [:show]
+    get "/profile", RegistrationController, :show, as: :profile
     resources "/identity_proofs", IdentityProofController, as: :identity_proof, only: [:show, :create]
   end
 
