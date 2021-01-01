@@ -5,27 +5,18 @@ defmodule UroWeb.API.V1.RegistrationController do
   alias Plug.Conn
   alias UroWeb.ErrorHelpers
 
+  @spec show(Conn.t(), map()) :: Conn.t()
   def show(conn, _params) do
     conn
     |> UroWeb.Helpers.Auth.get_current_user
     |> case do
-      {:ok, user} ->
-        conn
-        |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email
-        |> case do
-          {:ok, conn} ->
-            conn
-            |> Pow.Plug.delete()
-            |> json(%{data: %{user: user}})
-          {:failed, conn} ->
-            conn
-            |> Pow.Plug.delete()
-            |> json(%{data: %{user: user}})
-        end
-      {:error, _changeset} ->
+      nil ->
         conn
         |> put_status(500)
         |> json(%{error: %{status: 500, message: gettext("Couldn't get current user")}})
+      user ->
+        conn
+        |> json(%{data: %{user: user}})
     end
   end
 
@@ -34,9 +25,14 @@ defmodule UroWeb.API.V1.RegistrationController do
     conn
     |> Uro.Accounts.create_user(user_params)
     |> case do
-      {:ok, user, conn} ->
-        json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token], user: user}})
-
+      {:ok, _user, conn} ->
+        conn
+        |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email
+        |> case do
+          _ ->
+            conn
+            |> json(%{data: %{}})
+        end
       {:error, changeset, conn} ->
         errors = Changeset.traverse_errors(changeset, &ErrorHelpers.translate_error/1)
 
