@@ -6,11 +6,11 @@ defmodule UroWeb.Helpers.Shard do
     %{
       user: UroWeb.Helpers.User.get_api_user_public(shard.user),
       address: to_string(shard.address),
-      port: to_string(shard.port),
+      port: shard.port,
       map: to_string(shard.map),
       name: to_string(shard.name),
-      current_users: to_string(shard.current_users),
-      max_users: to_string(shard.max_users),
+      current_users: shard.current_users,
+      max_users: shard.max_users,
     }
   end
 
