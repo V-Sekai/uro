@@ -85,6 +85,8 @@ defmodule UroWeb.Router do
     resources "/session", SessionController, singleton: true, only: [:create, :delete]
     post "/session/renew", SessionController, :renew
 
+    resources "/users", UserController, only: [:show]
+
     resources "/avatars", UserContent.AvatarController, only: [:show]
     resources "/maps", UserContent.MapController, only: [:show]
 

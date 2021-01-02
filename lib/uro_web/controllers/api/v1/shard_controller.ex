@@ -38,7 +38,7 @@ defmodule UroWeb.API.V1.ShardController do
     shards = VSekai.list_fresh_shards()
     conn
     |> put_status(200)
-    |> json(%{data: %{shards: shards}})
+    |> json(%{data: %{shards: UroWeb.Helpers.Shard.get_api_shard_list_public(shards)}})
   end
 
   def create(conn, %{"shard" => shard_params}) do
