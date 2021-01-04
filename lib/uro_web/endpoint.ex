@@ -43,6 +43,7 @@ defmodule UroWeb.Endpoint do
   # Max upload size, 200mb
   plug Plug.Parsers,
     parsers: [:urlencoded, {:multipart, length: 200_000_000}, :json],
+    query_string_length: 1_000_000,
     pass: ["*/*"],
     json_decoder: Phoenix.json_library()
 
