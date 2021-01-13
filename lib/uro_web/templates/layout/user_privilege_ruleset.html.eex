@@ -11,4 +11,4 @@
 <%= label p, :can_upload_props, gettext("Can Upload Props") %>
 <%= checkbox p, :can_upload_props %>
 <%= error_tag p, :can_upload_props %>
-<%= end %>
+<% end %>
