@@ -10,10 +10,18 @@ defmodule Uro.Application do
     children = [
       # Start the Ecto repository
       Uro.Repo,
+      
       # Start the endpoint when the application starts
-      UroWeb.Endpoint
+      UroWeb.Endpoint,
+      
       # Starts a worker by calling: Uro.Worker.start_link(arg)
       # {Uro.Worker, arg},
+      
+      # Starts Pow's Mnesia-backed cache store
+      Pow.Store.Backend.MnesiaCache
+      # # Or in a distributed system:
+      # {Pow.Store.Backend.MnesiaCache, extra_db_nodes: Node.list()},
+      # Pow.Store.Backend.MnesiaCache.Unsplit # Recover from netsplit
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

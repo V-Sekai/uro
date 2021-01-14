@@ -35,7 +35,7 @@ config :email_checker,
   smtp_retries: 2,
   timeout_milliseconds: :infinity
 
-  config :uro, :pow,
+config :uro, :pow,
   user: Uro.Accounts.User,
   repo: Uro.Repo,
   web_module: UroWeb,
@@ -43,14 +43,15 @@ config :email_checker,
   controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks,
   mailer_backend: UroWeb.Pow.Mailer,
   routes_backend: UroWeb.Pow.Routes,
-  web_mailer_module: UroWeb
+  web_mailer_module: UroWeb,
+  cache_store_backend: Pow.Store.Backend.MnesiaCache
 
-  config :uro, :pow_assent,
+config :uro, :pow_assent,
   user_identities_context: Uro.UserIdentities,
   providers: [
   ]
 
-  config :uro, :phoenix_swagger,
+config :uro, :phoenix_swagger,
   swagger_files: %{
     "priv/static/swagger.json" => [
       router: UroWeb.Router,
@@ -58,7 +59,7 @@ config :email_checker,
     ]
   }
 
-  config :phoenix_swagger, json_library: Jason
+config :phoenix_swagger, json_library: Jason
 
 # Configures Elixir's Logger
 config :logger, :console,

@@ -20,7 +20,7 @@ defmodule Uro.MixProject do
   def application do
     [
       mod: {Uro.Application, []},
-      extra_applications: [:logger, :runtime_tools, :email_checker]
+      extra_applications: [:logger, :runtime_tools, :email_checker, :mnesia]
     ]
   end
 
