@@ -92,6 +92,7 @@ defmodule UroWeb.Helpers.UserContentHelper do
       "description" => Map.get(user_content_params, "description", ""),
       "user_content_data" => user_content_data,
       "user_content_preview" => user_content_preview,
+      "is_public" => Map.get(user_content_params, "is_public"),
       "uploader_id" => conn.assigns[:current_user].id
     }
   end

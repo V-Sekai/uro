@@ -6,13 +6,13 @@ defmodule Uro.UserContent.UserContent do
     quote do
       use Ecto.Schema
       use Waffle.Ecto.Schema
-      @derive {Jason.Encoder, only: [:description, :name, :user_content_data, :user_content_preview, :uploader_id]}
+      @derive {Jason.Encoder, only: [:description, :name, :user_content_data, :user_content_preview, :uploader_id, :is_public]}
       import unquote(__MODULE__), only: [user_content_fields: 0]
 
       @spec user_content_changeset(Ecto.Schema.t() | Changeset.t(), map()) :: Changeset.t()
       def user_content_changeset(changeset, attrs) do
         changeset
-        |> cast(attrs, [:name, :description, :uploader_id])
+        |> cast(attrs, [:name, :description, :uploader_id, :is_public])
         |> foreign_key_constraint(:uploader_id)
       end
 
@@ -31,6 +31,7 @@ defmodule Uro.UserContent.UserContent do
       field :name, :string
       field :user_content_data, Uro.Uploaders.UserContentData.Type
       field :user_content_preview, Uro.Uploaders.UserContentPreview.Type
+      field :is_public, :boolean
       belongs_to :uploader, Uro.Accounts.User, foreign_key: :uploader_id, type: :binary_id
     end
   end
