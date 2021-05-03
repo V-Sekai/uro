@@ -24,6 +24,14 @@ defmodule Uro.UserContent do
   end
 
   @doc """
+  Returns the list of avatars with pagination
+  """
+  def list_avatars_paginated(params) do
+    Avatar
+    |> Repo.paginate(params)
+  end
+
+  @doc """
   Returns the list of avatars uploaded by a user.
 
   ## Examples
@@ -37,6 +45,15 @@ defmodule Uro.UserContent do
     |> where(uploader_id: ^user.id)
     |> Repo.all
     |> Repo.preload([:uploader])
+  end
+
+  @doc """
+  Returns the list of avatars uploaded by a user with pagination.
+  """
+  def list_avatars_uploaded_by_with_pagination(params, user) do
+    Avatar
+    |> where(uploader_id: ^user.id)
+    |> Repo.paginate(params)
   end
 
   @doc """
@@ -163,6 +180,14 @@ defmodule Uro.UserContent do
   end
 
   @doc """
+  Returns the list of maps with pagination
+  """
+  def list_maps_paginated(params) do
+    Map
+    |> Repo.paginate(params)
+  end
+
+  @doc """
   Returns the list of maps uploaded by a user.
 
   ## Examples
@@ -176,6 +201,15 @@ defmodule Uro.UserContent do
     |> where(uploader_id: ^user.id)
     |> Repo.all
     |> Repo.preload([:uploader])
+  end
+
+  @doc """
+  Returns the list of maps uploaded by a user with pagination.
+  """
+  def list_maps_uploaded_by_with_pagination(params, user) do
+    Map
+    |> where(uploader_id: ^user.id)
+    |> Repo.paginate(params)
   end
 
   @doc """

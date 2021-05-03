@@ -4,9 +4,9 @@ defmodule UroWeb.Admin.AvatarController do
   alias Uro.UserContent
   alias Uro.UserContent.Avatar
 
-  def index(conn, _params) do
-    avatars = UserContent.list_avatars()
-    render(conn, "index.html", avatars: avatars)
+  def index(conn, params) do
+    page = UserContent.list_avatars_paginated(params)
+    render(conn, "index.html", avatars: page.entries, page: page)
   end
 
   def new(conn, _params) do

@@ -10,10 +10,6 @@
     <strong><%=gettext("Description") %>: </strong><%= @map.description %>
   </li>
 
-  <li>
-    <strong><%=gettext("URL") %>: </strong><%= @map.url %>
-  </li>
-
 </ul>
 
 <span><%= link gettext("Edit"), to: Routes.admin_map_path(@conn, :edit, @map) %></span>

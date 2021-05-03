@@ -7,9 +7,10 @@ defmodule UroWeb.Dashboard.UserContent.AvatarController do
   @user_content_data_param_name "user_content_data"
   @user_content_preview_param_name "user_content_preview"
 
-  def index(conn, _params) do
-    avatars = UserContent.list_avatars_uploaded_by(conn.assigns[:current_user])
-    render(conn, "index.html", avatars: avatars)
+  def index(conn, params) do
+    page = UserContent.list_avatars_uploaded_by_with_pagination(params, conn.assigns[:current_user])
+    IO.inspect(page.entries)
+    render(conn, "index.html", avatars: page.entries, page: page)
   end
 
   def new(conn, _params) do

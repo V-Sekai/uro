@@ -20,7 +20,7 @@ defmodule Uro.MixProject do
   def application do
     [
       mod: {Uro.Application, []},
-      extra_applications: [:logger, :runtime_tools, :email_checker, :mnesia]
+      extra_applications: [:logger, :runtime_tools, :email_checker, :mnesia, :scrivener_ecto]
     ]
   end
 
@@ -60,6 +60,7 @@ defmodule Uro.MixProject do
       {:waffle_ecto, "~> 0.0.10"},
       {:swoosh, "~> 1.3"},
       {:hammer, "~> 6.0"},
+      {:scrivener_ecto, "~> 2.7"},
     ]
   end
 

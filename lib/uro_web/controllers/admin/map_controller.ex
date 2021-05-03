@@ -4,9 +4,9 @@ defmodule UroWeb.Admin.MapController do
   alias Uro.UserContent
   alias Uro.UserContent.Map
 
-  def index(conn, _params) do
-    maps = UserContent.list_maps()
-    render(conn, "index.html", maps: maps)
+  def index(conn, params) do
+    page = UserContent.list_maps_paginated(params)
+    render(conn, "index.html", maps: page.entries, page: page)
   end
 
   def new(conn, _params) do

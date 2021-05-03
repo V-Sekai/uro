@@ -1,0 +1,6 @@
+<%= if @page.page_number > 1 do %>
+  <%= link "Prev Page", to: @path_function_with_item.(:index, page: @page.page_number - 1) %>
+<% end %>
+<%= if @page.page_number < @page.total_pages do %>
+  <%= link "Next Page", to: @path_function_with_item.(:index, page: @page.page_number + 1) %>
+<% end %>

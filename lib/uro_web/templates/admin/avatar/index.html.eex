@@ -26,3 +26,9 @@
 </table>
 
 <span><%= link gettext("New Avatar"), to: Routes.admin_avatar_path(@conn, :new) %></span>
+
+<p>
+<%= render UroWeb.LayoutView, "paginate_navigation.html",
+page: @page,
+path_function_with_item: fn (atom, page) -> Routes.admin_avatar_path(@conn, atom, page) end %>
+</p>
