@@ -213,7 +213,7 @@ defmodule UroWeb.Router do
     pipe_through [:browser]
 
     pow_extension_routes()
-    pow_assent_routes()
+    pow_assent_authorization_routes()
   end
 
   ###########

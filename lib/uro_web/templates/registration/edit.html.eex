@@ -31,6 +31,12 @@
   </div>
   <% end %>
 
+  <span>
+  <%= label f, :linked_services, gettext("Linked services") %>
+  <%= for link <- PowAssent.Phoenix.ViewHelpers.provider_links(@conn),
+    do: content_tag(:div, content_tag(:span, link)) %>
+  </span>
+
   <div>
     <%= submit gettext("Update") %>
   </div>
