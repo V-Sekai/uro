@@ -43,6 +43,12 @@ defmodule Uro.Accounts.User do
     timestamps()
   end
 
+  def user_identity_changeset(user_or_changeset, user_identity, attrs, user_id_attrs) do
+    user_or_changeset
+    |> user_custom_changeset(attrs, true)
+    |> pow_assent_user_identity_changeset(user_identity, attrs, user_id_attrs)
+  end
+
   @spec lock_changeset(Schema.t() | Changeset.t()) :: Changeset.t()
   def lock_changeset(user_or_changeset) do
     changeset = change(user_or_changeset)
@@ -63,16 +69,22 @@ defmodule Uro.Accounts.User do
     end
   end
 
-  @spec user_custom_changeset(Schema.t() | Changeset.t(), Map) :: Changeset.t()
-  def user_custom_changeset(user_or_changeset, attrs) do
+  @spec user_custom_changeset(Schema.t() | Changeset.t(), Map, Boolean) :: Changeset.t()
+  def user_custom_changeset(user_or_changeset, attrs, force_unique_username) do
     user_or_changeset
     |> cast(attrs, [:username, :email_notifications])
     |> validate_required([:username])
     |> put_display_name
     |> downcase_username
+    |> make_username_unique(force_unique_username)
     |> validate_username(:username)
     |> validate_email(:email)
     |> unique_constraint(:username)
+  end
+
+  @spec user_custom_changeset(Schema.t() | Changeset.t(), Map) :: Changeset.t()
+  def user_custom_changeset(user_or_changeset, attrs) do
+    user_custom_changeset(user_or_changeset, attrs, false)
   end
 
   @spec changeset(Schema.t() | Changeset.t(), Map) :: Changeset.t()
@@ -98,11 +110,21 @@ defmodule Uro.Accounts.User do
 
   defp put_display_name(changeset), do: changeset
 
-  def downcase_username(%{valid?: true, changes: %{username: username}}=changeset) do
+  defp downcase_username(%{valid?: true, changes: %{username: username}}=changeset) do
     put_change(changeset, :username, username |> String.downcase)
   end
 
-  def downcase_username(changeset), do: changeset
+  defp downcase_username(changeset), do: changeset
+
+  defp make_username_unique(%Ecto.Changeset{valid?: true, changes: %{username: username}} = changeset, make_username_unique) do
+    if make_username_unique do
+      put_change(changeset, :username, username <> "_" <> UroWeb.Helpers.UsernameStringGen.generate())
+    else
+      changeset
+    end
+  end
+
+  defp make_username_unique(changeset, make_username_unique), do: changeset
 
   def validate_username(changeset, field) when is_atom(field) do
     validate_change(changeset, field, fn (_current_field, value) ->
