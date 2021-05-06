@@ -60,7 +60,8 @@ defmodule Uro.MixProject do
       {:waffle_ecto, "~> 0.0.10"},
       {:swoosh, "~> 1.3"},
       {:hammer, "~> 6.0"},
-      {:scrivener_ecto, "~> 2.7"}
+      {:scrivener_ecto, "~> 2.7"},
+      {:puid, "~> 1.1"}
     ]
   end
 
