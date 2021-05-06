@@ -53,7 +53,13 @@ config :uro, :pow,
 
 config :uro, :pow_assent,
   user_identities_context: Uro.UserIdentities,
-  providers: []
+  providers: [
+    discord: [
+      client_id: System.get_env("DISCORD_CLIENT_ID", ""),
+      client_secret: System.get_env("DISCORD_CLIENT_SECRET", ""),
+      strategy: Assent.Strategy.Discord
+    ]
+  ]
 
 config :uro, :phoenix_swagger,
   swagger_files: %{
