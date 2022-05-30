@@ -21,7 +21,7 @@ config :uro, UroWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "bNDe+pg86uL938fQA8QGYCJ4V7fE5RAxoQ8grq9drPpO7mZ0oEMSNapKLiA48smR",
   render_errors: [view: UroWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Uro.PubSub, adapter: Phoenix.PubSub.PG2],
+  pubsub_server: Uro.PubSub,
   live_view: [signing_salt: "0dBPUwA2"]
 
 config :uro, UroWeb.Pow.Mailer,
