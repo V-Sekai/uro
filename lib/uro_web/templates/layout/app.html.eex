@@ -12,6 +12,7 @@
   </head>
   <body>
     <header>
+      <a class="blue-header" style="display: block" href="https://discord.gg/7BQDHesck8">Interested in V-Sekai or #GodotVR development? Join the V-Sekai discord server!</a>
       <section class="container">
         <nav role="navigation">
           <ul>
