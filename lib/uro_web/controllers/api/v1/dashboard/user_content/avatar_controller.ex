@@ -11,7 +11,8 @@ defmodule UroWeb.API.V1.Dashboard.UserContent.AvatarController do
     avatars = UserContent.list_avatars_uploaded_by(conn.assigns[:current_user])
     conn
     |> put_status(200)
-    |> json(%{data: %{avatars: UroWeb.Helpers.UserContentHelper.get_api_user_content_list(avatars)}})
+    |> json(%{data: %{avatars: UroWeb.Helpers.UserContentHelper.get_api_user_content_list(
+      avatars, %{merge_is_public: true, merge_inserted_at: true, merge_updated_at: true})}})
   end
 
   def show(conn, %{"id" => id}) do
@@ -21,7 +22,8 @@ defmodule UroWeb.API.V1.Dashboard.UserContent.AvatarController do
       %Uro.UserContent.Avatar{} = avatar ->
         conn
         |> put_status(200)
-        |> json(%{data: %{avatar: UroWeb.Helpers.UserContentHelper.get_api_user_content(avatar)}})
+        |> json(%{data: %{avatar: UroWeb.Helpers.UserContentHelper.get_api_user_content(
+          avatar, %{merge_is_public: true, merge_inserted_at: true, merge_updated_at: true})}})
       _ ->
         conn
         |> put_status(400)

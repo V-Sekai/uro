@@ -9,7 +9,7 @@ defmodule UroWeb.Dashboard.UserContent.MapController do
 
   def index(conn, params) do
     page = UserContent.list_maps_uploaded_by_with_pagination(params, conn.assigns[:current_user])
-    render(conn, "index.html", maps: page.entries, page: page)
+    render(conn, "index.html", page: page)
   end
 
   def new(conn, _params) do

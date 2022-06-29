@@ -1,6 +1,7 @@
 defmodule Uro.Accounts.UserPrivilegeRuleset do
   use Ecto.Schema
   import Ecto.Changeset
+  @derive {Jason.Encoder, only: [:is_admin, :can_upload_avatars, :can_upload_maps, :can_upload_props]}
 
   schema "user_privilege_rulesets" do
     belongs_to :user, Uro.Accounts.User, foreign_key: :user_id, type: :binary_id

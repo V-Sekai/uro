@@ -11,7 +11,8 @@ defmodule UroWeb.API.V1.Dashboard.UserContent.MapController do
     maps = UserContent.list_maps_uploaded_by(conn.assigns[:current_user])
     conn
     |> put_status(200)
-    |> json(%{data: %{maps: UroWeb.Helpers.UserContentHelper.get_api_user_content_list(maps)}})
+    |> json(%{data: %{maps: UroWeb.Helpers.UserContentHelper.get_api_user_content_list(
+      maps, %{merge_is_public: true, merge_inserted_at: true, merge_updated_at: true})}})
   end
 
   def show(conn, %{"id" => id}) do
@@ -21,7 +22,8 @@ defmodule UroWeb.API.V1.Dashboard.UserContent.MapController do
       %Uro.UserContent.Map{} = map ->
         conn
         |> put_status(200)
-        |> json(%{data: %{map: UroWeb.Helpers.UserContentHelper.get_api_user_content(map)}})
+        |> json(%{data: %{map: UroWeb.Helpers.UserContentHelper.get_api_user_content(
+          map, %{merge_is_public: true, merge_inserted_at: true, merge_updated_at: true})}})
       _ ->
         conn
         |> put_status(400)
