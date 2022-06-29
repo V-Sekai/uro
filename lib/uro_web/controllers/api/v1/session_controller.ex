@@ -5,9 +5,20 @@ defmodule UroWeb.API.V1.SessionController do
   alias Plug.Conn
 
   @doc false
+  defp session_data(conn, user) do
+    conn
+    |> json(%{data: %{
+        access_token: conn.private[:api_access_token],
+        renewal_token: conn.private[:api_renewal_token],
+        user: user,
+        user_privilege_ruleset: UroWeb.Helpers.Auth.get_user_privilege_ruleset(user)
+    }})
+  end
+
+  @doc false
   defp login_valid(conn) do
     conn
-    |> json(%{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token], user: conn.assigns[:current_user]}})
+    |> session_data(conn.assigns[:current_user])
   end
 
   @doc false
@@ -53,9 +64,8 @@ defmodule UroWeb.API.V1.SessionController do
         conn
         |> put_status(401)
         |> json(%{error: %{status: 401, message: "Invalid token"}})
-
       {conn, user} ->
-        json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token], user: user}})
+        session_data(conn, user)
     end
   end
 
