@@ -102,6 +102,13 @@ defmodule UroWeb.Router do
     resources "/identity_proofs", IdentityProofController, as: :identity_proof, only: [:show, :create]
   end
 
+  scope "/api/v1", UroWeb.API.V1, as: :api_v1_user_content do
+    pipe_through [:api]
+
+    resources "/avatars", UserContent.AvatarController, as: :avatar, only: @view_commands
+    resources "/maps", UserContent.MapController, as: :map, only: @view_commands
+  end
+
   scope "/api/v1/dashboard", UroWeb.API.V1, as: :api_v1_dashboard do
     pipe_through [:remote_ip, :api, :api_protected, :protected_avatar_upload]
 
@@ -189,6 +196,17 @@ defmodule UroWeb.Router do
     post "/users/:id/lock", Admin.UserController, :lock
   end
 
+  ################
+  # User Content #
+  ################
+
+  scope "/", UroWeb, as: :user_content do
+    pipe_through :browser
+
+    resources "/avatars", UserContent.AvatarController, as: :avatar
+    resources "/maps", UserContent.MapController, as: :map
+  end
+
   ########
   # Root #
   ########
@@ -199,8 +217,6 @@ defmodule UroWeb.Router do
     get "/", PageController, :index
     get "/about", PageController, :about
     get "/download", PageController, :download
-
-    post "/reset-password", ResetPasswordController, :create
   end
 
   scope "/" do

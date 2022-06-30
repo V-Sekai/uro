@@ -9,8 +9,7 @@ defmodule UroWeb.Dashboard.UserContent.AvatarController do
 
   def index(conn, params) do
     page = UserContent.list_avatars_uploaded_by_with_pagination(params, conn.assigns[:current_user])
-    IO.inspect(page.entries)
-    render(conn, "index.html", avatars: page.entries, page: page)
+    render(conn, "index.html", page: page)
   end
 
   def new(conn, _params) do

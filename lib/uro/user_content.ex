@@ -32,6 +32,25 @@ defmodule Uro.UserContent do
   end
 
   @doc """
+  Returns the list of avatars marked as public
+  """
+  def list_public_avatars() do
+    Avatar
+    |> where(is_public: true)
+    |> Repo.all
+    |> Repo.preload([:uploader])
+  end
+
+  @doc """
+  Returns the list of avatars marked as public with pagination
+  """
+  def list_public_avatars_paginated(params) do
+    Avatar
+    |> where(is_public: true)
+    |> Repo.paginate(params)
+  end
+
+  @doc """
   Returns the list of avatars uploaded by a user.
 
   ## Examples
@@ -72,6 +91,19 @@ defmodule Uro.UserContent do
   """
   def get_avatar!(id) do
     Avatar
+    |> Repo.get!(id)
+    |> Repo.preload([:uploader])
+  end
+
+  @doc """
+  Gets a single public avatar.
+
+  Raises `Ecto.NoResultsError` if the Avatar does not exist or is inaccessible.
+
+  """
+  def get_public_avatar!(id) do
+    Avatar
+    |> where(is_public: true)
     |> Repo.get!(id)
     |> Repo.preload([:uploader])
   end
@@ -173,6 +205,7 @@ defmodule Uro.UserContent do
       [%Map{}, ...]
 
   """
+
   def list_maps do
     Map
     |> Repo.all
@@ -184,6 +217,25 @@ defmodule Uro.UserContent do
   """
   def list_maps_paginated(params) do
     Map
+    |> Repo.paginate(params)
+  end
+
+  @doc """
+  Returns the list of maps marked as public
+  """
+  def list_public_maps() do
+    Map
+    |> where(is_public: true)
+    |> Repo.all
+    |> Repo.preload([:uploader])
+  end
+
+  @doc """
+  Returns the list of map marked as public with pagination
+  """
+  def list_public_maps_paginated(params) do
+    Map
+    |> where(is_public: true)
     |> Repo.paginate(params)
   end
 
@@ -228,6 +280,19 @@ defmodule Uro.UserContent do
   """
   def get_map!(id) do
     Map
+    |> Repo.get!(id)
+    |> Repo.preload([:uploader])
+  end
+
+  @doc """
+  Gets a single public map.
+
+  Raises `Ecto.NoResultsError` if the Map does not exist or is inaccessible.
+
+  """
+  def get_public_map!(id) do
+    Map
+    |> where(is_public: true)
     |> Repo.get!(id)
     |> Repo.preload([:uploader])
   end
