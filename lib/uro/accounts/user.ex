@@ -19,7 +19,6 @@ defmodule Uro.Accounts.User do
     field :email_notifications, :boolean
 
     field :profile_picture, :string
-    field :is_admin, :boolean, default: false
 
     has_one :user_privilege_ruleset, Uro.Accounts.UserPrivilegeRuleset, foreign_key: :user_id
 
