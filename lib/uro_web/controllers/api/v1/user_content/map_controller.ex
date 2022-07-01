@@ -8,7 +8,7 @@ defmodule UroWeb.API.V1.UserContent.MapController do
     maps = UserContent.list_public_maps()
     conn
     |> put_status(200)
-    |> json(%{data: %{avatars: UroWeb.Helpers.UserContentHelper.get_api_user_content_list(maps, %{merge_uploader_id: true})}})
+    |> json(%{data: %{maps: UroWeb.Helpers.UserContentHelper.get_api_user_content_list(maps, %{merge_uploader_id: true})}})
   end
 
   def show(conn, %{"id" => id}) do
