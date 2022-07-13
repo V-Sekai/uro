@@ -1,81 +1,113 @@
----
-name: Feature request
-about: Suggest an idea for this project
-title: Solved problem and solution
-labels: enhancement
-assignees: ''
+name: Feature implementation proposal
+description: Propose a possible solution to solve an engine limitation
+labels: [enhancement]
+body:
 
----
+- type: checkboxes
+  attributes:
+    label: Describe the status of the issue.
+    options:
+      - label: proposed
+      - label: draft
+      - label: rejected
+      - label: accepted
+      - label: deprecated
+      - label: superseded by
+  validations:
+    required: true
 
-* Status: [proposed | rejected | accepted | deprecated | … | superseded by [ADR-0005](0005-example.md)] <!-- optional -->
-* Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
+- type: textarea
+  attributes:
+    label: List the deciders of the issue.
+    value: V-Sekai,
+  validations:
+    required: true
 
-Technical Story: [description | ticket/issue URL] <!-- optional -->
+- type: textarea
+  attributes:
+    label: Describe the tags of the issue.
+    description: This is important to know the *context* in which the feature is being proposed. Features used in real-world projects are more likely to be added.
+    value: V-Sekai,
+  validations:
+    required: true
 
-## Context and Problem Statement
+- type: textarea
+  attributes:
+    label: Context and Problem Statement
+    description: Describe the problem or limitation you are having in your project, e.g., in free form using two to three sentences. You may want to articulate the problem in the form of a question.
+    placeholder: Example - "A 3D space game with heavy use of cut-out animation"
+  validations:
+    required: true
 
-[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
+- type: textarea
+  attributes:
+    label: Describe the proposed option and how it helps to overcome the problem or limitation
+    placeholder: Example - "The 3D selection tools are cumbersome to use."
+  validations:
+    required: true
 
-## Decision Drivers <!-- optional -->
+- type: textarea
+  attributes:
+    label: Describe how your proposal will work, with code, pseudo-code, mock-ups, or diagrams
+    placeholder: Example - "When the user presses Ctrl + Shift + G, select all nodes that have the group..."
+  validations:
+    required: true
 
-* [driver 1, e.g., a force, facing concern, …]
-* [driver 2, e.g., a force, facing concern, …]
-* … <!-- numbers of drivers can vary -->
+- type: textarea
+  attributes:
+    label: Positive Consequences
+    placeholder: e.g., improvement of quality attribute satisfaction, follow-up decisions required, …
+  validations:
+    required: false
 
-## Considered Options
+- type: textarea
+  attributes:
+    label: Negative Consequences
+    placeholder: e.g., compromising quality attribute, follow-up decisions required, …
+  validations:
+    required: false
 
-* [option 1]
-* [option 2]
-* [option 3]
-* … <!-- numbers of options can vary -->
+- type: textarea
+  attributes:
+    label: Option graveyard
+    placeholder: |
+       - Option: <!-- [List the proposed options no longer open for consideration.] --> 
+       - Rejection Reason: <!-- [List the reasons for the rejection: (the Bad traits)] -->
+  validations:
+    required: false
 
-## Decision Outcome
+- type: textarea
+  attributes:
+    label: If this enhancement will not be used often, can it be worked around with a few lines of script?
+    placeholder: Example - "Implementing mesh merging systems is not a few lines of script."
+  validations:
+    required: true
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+- type: textarea
+  attributes:
+    label: Is there a reason why this should be core and done by us?
+    placeholder: Example - "This is about improving the 3D editor usability out of the box."
+  validations:
+    required: true
 
-### Positive Consequences <!-- optional -->
+- type: textarea
+  attributes:
+    label: References
+    value: |
+      - [V-Sekai](https://v-sekai.org/)
+  validations:
+    required: false
 
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-* …
+- type: textarea
+  attributes:
+    label: License of the contribution
+    value: |
+      Copyright (c) 2022 V-Sekai contributors.
+      
+      Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-### Negative Consequences <!-- optional -->
+      The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* …
-
-## Pros and Cons of the Options <!-- optional -->
-
-### [option 1]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 3]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-## Links <!-- optional -->
-
-* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
-* … <!-- numbers of links can vary -->
-
-<!-- markdownlint-disable-file MD013 -->
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  validations:
+    required: true
