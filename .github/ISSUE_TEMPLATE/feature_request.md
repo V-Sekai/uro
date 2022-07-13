@@ -1,6 +1,7 @@
 ---
 name: Feature implementation proposal
-description: Propose a possible solution to solve an engine limitation
+about: Propose a possible solution to solve an limitation.
+title: "[DATE]: [FEATURE NAME]"
 labels: [enhancement]
 body:
 - type: checkboxes
