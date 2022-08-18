@@ -1,5 +1,9 @@
 # Uro
 
+## Local Dev
+ 
+It's possible to run the entire stack locally with docker-compose by running `docker-compose up` 
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
