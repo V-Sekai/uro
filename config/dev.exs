@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 db_hostname = System.get_env("URO_LOCAL_DB") || "localhost"
 
