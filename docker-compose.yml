@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  uro:
+    restart: on-failure
+    environment:
+      - URO_LOCAL_DB=db
+    build:
+      dockerfile: ./local-dev-docker/Dockerfile
+      context: .
+    ports:
+      - "4000:4000"
+    links:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - ".:/app"
+    command: bash /app/local-dev-docker/setup.sh
+  db:
+    image: cockroachdb/cockroach:latest
+    ports:
+    - "26257:26257"
+    - "8080:8080"
+    command: start-single-node --insecure
+    volumes:
+      - "./cockroach-data/crdb:/cockroach/cockroach-data"
+networks:
+  uro:
+    name: "uro"

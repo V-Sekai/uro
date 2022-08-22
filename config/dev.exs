@@ -1,5 +1,7 @@
 use Mix.Config
 
+db_hostname = System.get_env("URO_LOCAL_DB") || "localhost"
+
 # Configure your database
 config :uro, Uro.Repo,
   adapter: Ecto.Adapaters.Postgres,
@@ -7,7 +9,7 @@ config :uro, Uro.Repo,
   password: "",
   port: "26257",
   database: "uro_dev",
-  hostname: "localhost",
+  hostname: db_hostname,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
