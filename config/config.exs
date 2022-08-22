@@ -28,6 +28,13 @@ config :uro, UroWeb.Pow.Mailer,
   adapter: Swoosh.Adapters.Sendgrid,
   api_key: System.get_env("SENDGRID_API_KEY", "")
 
+config :uro, :stale_shard_cutoff,
+  amount: 3,
+  calendar_type: "month"
+
+# every 30 days
+config :uro, :stale_shard_interval, 30 * 24 * 60 * 60 * 1000
+
 config :email_checker,
   default_dns: :system,
   also_dns: [],
