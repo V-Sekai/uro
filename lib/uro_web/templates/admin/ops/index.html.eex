@@ -1,0 +1,5 @@
+<%= form_for @changeset, Routes.admin_ops_path(@conn, :update), [as: :ops], fn f -> %>
+    Maintenance Mode: <%= checkbox(f, :maint_mode) %>
+
+    <%= submit "Submit" %>
+<% end %>

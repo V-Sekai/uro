@@ -16,6 +16,7 @@ defmodule UroWeb.Router do
 
   pipeline :browser do
     plug :accepts, ["html"]
+    plug UroWeb.MaintModePlug, accepts: :html
     plug :fetch_session
     plug :fetch_flash
     plug :protect_from_forgery
@@ -63,6 +64,7 @@ defmodule UroWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug UroWeb.MaintModePlug, accepts: :json
     plug UroWeb.APIAuthPlug, otp_app: :uro
   end
 
@@ -210,6 +212,10 @@ defmodule UroWeb.Router do
     resources "/shards", Admin.ShardController, as: :shard
     resources "/events", Admin.EventController, as: :event
     resources "/users", Admin.UserController, as: :user
+
+    put "/ops", Admin.OpsController, :update
+    get "/ops", Admin.OpsController, :index
+
     post "/users/:id/lock", Admin.UserController, :lock
   end
 
