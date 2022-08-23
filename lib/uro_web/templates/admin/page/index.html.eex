@@ -11,4 +11,6 @@
   <%= link "Events", to: Routes.admin_event_path(@conn, :index) %>
   |
   <%= link "Users", to: Routes.admin_user_path(@conn, :index) %>
+  |
+  <%= link "Ops", to: Routes.admin_ops_path(@conn, :index) %>
 </section>
