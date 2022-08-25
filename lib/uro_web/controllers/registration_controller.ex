@@ -4,7 +4,7 @@ defmodule UroWeb.RegistrationController do
 
   def show(conn, _params) do
     conn
-    |> UroWeb.Helpers.Auth.get_current_user
+    |> UroWeb.Helpers.Auth.get_current_user()
     |> case do
       user ->
         conn
@@ -14,7 +14,7 @@ defmodule UroWeb.RegistrationController do
 
   def new(conn, _params) do
     conn
-    |> Pow.Plug.change_user
+    |> Pow.Plug.change_user()
     |> case do
       changeset ->
         conn
@@ -26,19 +26,20 @@ defmodule UroWeb.RegistrationController do
     conn
     |> Uro.Accounts.create_user(user_params)
     |> case do
-      {:ok,_user,conn} ->
+      {:ok, _user, conn} ->
         conn
-        |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email
+        |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email()
         |> case do
-        {:ok, conn} ->
-          conn
-          |> put_flash(:info, gettext("Welcome!"))
-          |> redirect(to: Routes.page_path(conn, :index))
-        {:failed, conn} ->
-          conn
-          |> Pow.Plug.delete()
-          |> put_flash(:info, gettext("An email has been sent to you to confirm your account!"))
-          |> redirect(to: Routes.signup_path(conn, :new))
+          {:ok, conn} ->
+            conn
+            |> put_flash(:info, gettext("Welcome!"))
+            |> redirect(to: Routes.page_path(conn, :index))
+
+          {:failed, conn} ->
+            conn
+            |> Pow.Plug.delete()
+            |> put_flash(:info, gettext("An email has been sent to you to confirm your account!"))
+            |> redirect(to: Routes.signup_path(conn, :new))
         end
 
       {:error, changeset, conn} ->
@@ -48,7 +49,7 @@ defmodule UroWeb.RegistrationController do
 
   def edit(conn, _params) do
     conn
-    |> Pow.Plug.change_user
+    |> Pow.Plug.change_user()
     |> case do
       changeset ->
         render(conn, "edit.html", changeset: changeset)
@@ -59,7 +60,7 @@ defmodule UroWeb.RegistrationController do
     conn
     |> Uro.Accounts.update_current_user(user_params)
     |> case do
-      {:ok,_user,conn} ->
+      {:ok, _user, conn} ->
         conn
         |> put_flash(:info, gettext("Updated profile successfully!"))
         |> redirect(to: Routes.page_path(conn, :index))
