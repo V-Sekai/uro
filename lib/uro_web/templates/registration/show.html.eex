@@ -11,7 +11,7 @@
     <strong><%=gettext("Display Name") %>: </strong><%= @user.display_name %>
   </li>
   <li>
-    <strong><%=gettext("Receive Email Notifications") %>: </strong> <%= @user.email_notifications %>
+    <strong><%=gettext("Receive Email Notifications") %>: </strong> <%= if @user.email_notifications, do: "yes", else: "no" %>
   </li>
 </ul>
 
