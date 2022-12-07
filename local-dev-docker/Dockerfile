@@ -4,6 +4,7 @@ WORKDIR /app
 
 RUN apk add --update postgresql-client nodejs npm inotify-tools git bash make gcc libc-dev
 
+RUN mix deps.get --force
 RUN mix local.hex --force
 RUN mix local.rebar --force
 
