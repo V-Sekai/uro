@@ -1,4 +1,4 @@
-FROM elixir:1.11-alpine
+FROM uro:build
 
 WORKDIR /app
 
@@ -9,4 +9,5 @@ RUN mix local.rebar --force
 
 ENV PORT 4000
 
+RUN apk del make
 ENTRYPOINT mix ecto.create && mix ecto.migrate && mix phx.server
