@@ -35,5 +35,12 @@
   </span>
   </ul>
 
-  <%= submit gettext("Register") %>
+  <div>
+    <%= submit gettext("Register") %>
+  </div>
+
+  <div>
+    <%= for link <- PowAssent.Phoenix.ViewHelpers.provider_links(@conn),
+        do: content_tag(:div, content_tag(:span, link)) %>
+  </div>
 <% end %>
