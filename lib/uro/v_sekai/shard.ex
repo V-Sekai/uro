@@ -3,6 +3,9 @@ defmodule Uro.VSekai.Shard do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
+  @derive {Phoenix.Param, key: :id}
   schema "shards" do
     belongs_to :user, Uro.Accounts.User, foreign_key: :user_id, type: :binary_id
 

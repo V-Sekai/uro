@@ -2,30 +2,42 @@ defmodule Uro.Repo.Migrations.ChangeUserContentDescriptionType do
   use Ecto.Migration
 
   def up do
-    alter table(:avatars) do
-      modify :description, :text
-    end
+    is_sqlite =
+      Ecto.Adapter.lookup_meta(Uro.Repo.get_dynamic_repo()).sql ==
+        Ecto.Adapters.SQLite3.Connection
 
-    alter table(:maps) do
-      modify :description, :text
-    end
+    if not is_sqlite do
+      alter table(:avatars) do
+        modify :description, :text
+      end
 
-    alter table(:props) do
-      modify :description, :text
+      alter table(:maps) do
+        modify :description, :text
+      end
+
+      alter table(:props) do
+        modify :description, :text
+      end
     end
   end
 
   def down do
-    alter table(:avatars) do
-      modify :description, :string
-    end
+    is_sqlite =
+      Ecto.Adapter.lookup_meta(Uro.Repo.get_dynamic_repo()).sql ==
+        Ecto.Adapters.SQLite3.Connection
 
-    alter table(:maps) do
-      modify :description, :string
-    end
+    if not is_sqlite do
+      alter table(:avatars) do
+        modify :description, :string
+      end
 
-    alter table(:props) do
-      modify :description, :string
+      alter table(:maps) do
+        modify :description, :string
+      end
+
+      alter table(:props) do
+        modify :description, :string
+      end
     end
   end
 end
