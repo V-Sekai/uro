@@ -3,7 +3,7 @@ defmodule Uro.Repo.Migrations.MapAddIsPublic do
 
   def change do
     alter table(:maps) do
-     add :is_public, :boolean, default: false, null: false
+      add :is_public, :boolean, default: false, null: false
     end
   end
 end

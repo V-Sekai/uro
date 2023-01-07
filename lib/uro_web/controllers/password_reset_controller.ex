@@ -10,13 +10,15 @@ defmodule UroWeb.ResetPasswordController do
     |> ResetPasswordController.respond_create()
   end
 
-  defp maybe_halt({:ok, %{token: token, user: %{locked_at: locked_at}}, conn}) when not is_nil(locked_at) do
+  defp maybe_halt({:ok, %{token: token, user: %{locked_at: locked_at}}, conn})
+       when not is_nil(locked_at) do
     user = Plug.change_user(conn)
 
     expire_token(conn, token)
 
     {:error, %{user | action: :update}, conn}
   end
+
   defp maybe_halt(response), do: response
 
   defp expire_token(conn, token) do

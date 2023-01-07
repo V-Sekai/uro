@@ -14,15 +14,15 @@ defmodule Uro.Uploaders.UserIcon do
   # end
 
   # Whitelist file extensions:
-   def validate({file, _}) do
+  def validate({file, _}) do
     file_extension = file.file_name |> Path.extname() |> String.downcase()
     Enum.member?(@extension_whitelist, file_extension)
-   end
+  end
 
   # Define a thumbnail transformation:
-   def transform(:thumb, _) do
-     {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250 -format png", :png}
-   end
+  def transform(:thumb, _) do
+    {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250 -format png", :png}
+  end
 
   # Override the persisted filenames:
   # def filename(version, _) do

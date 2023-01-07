@@ -24,7 +24,7 @@ defmodule Uro.VSekai do
   """
   def list_shards do
     Shard
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload(user: [:user])
   end
 
@@ -38,7 +38,9 @@ defmodule Uro.VSekai do
 
   """
   def list_fresh_shards do
-    stale_timestamp = DateTime.add(DateTime.utc_now(), -shard_freshness_time_in_seconds(), :second)
+    stale_timestamp =
+      DateTime.add(DateTime.utc_now(), -shard_freshness_time_in_seconds(), :second)
+
     Repo.all(from m in Shard, where: m.updated_at > ^stale_timestamp, preload: [:user])
   end
 
@@ -59,7 +61,8 @@ defmodule Uro.VSekai do
   def get_shard!(id) do
     Shard
     |> Repo.get!(id)
-    |> Repo.preload(user: [:user])  end
+    |> Repo.preload(user: [:user])
+  end
 
   @doc """
   Creates a shard.
@@ -126,12 +129,11 @@ defmodule Uro.VSekai do
     Shard.changeset(shard, %{})
   end
 
-
   def get_shard_by_address(address) when is_nil(address) do
     nil
   end
+
   def get_shard_by_address(address) do
     Repo.get_by(Shard, address: address)
   end
-
 end

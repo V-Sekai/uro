@@ -27,9 +27,13 @@ defmodule Uro.EnsureUserNotLockedPlug do
     |> handler.call(:account_locked)
     |> Conn.halt()
   end
+
   defp maybe_halt(_any, conn, _handler), do: conn
 
   @spec raise_no_error_handler!() :: no_return()
   defp raise_no_error_handler!,
-    do: Config.raise_error("No :error_handler configuration option provided. It's required to set this when using #{inspect __MODULE__}.")
+    do:
+      Config.raise_error(
+        "No :error_handler configuration option provided. It's required to set this when using #{inspect(__MODULE__)}."
+      )
 end

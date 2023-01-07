@@ -10,7 +10,9 @@ defmodule UroWeb.Helpers.Auth do
         user
         |> Uro.Repo.preload([:user_privilege_ruleset])
         |> Map.get(:user_privilege_ruleset)
-      false -> nil
+
+      false ->
+        nil
     end
   end
 
@@ -20,12 +22,14 @@ defmodule UroWeb.Helpers.Auth do
 
   def verify_confirmed_or_send_confirmation_email(conn) do
     conn
-    |> PowEmailConfirmation.Plug.email_unconfirmed?
+    |> PowEmailConfirmation.Plug.email_unconfirmed?()
     |> case do
       true ->
         Pow.Plug.current_user(conn)
         |> PowEmailConfirmation.Phoenix.ControllerCallbacks.send_confirmation_email(conn)
+
         {:failed, conn}
+
       false ->
         {:ok, conn}
     end
@@ -33,11 +37,18 @@ defmodule UroWeb.Helpers.Auth do
 
   def validate_login(conn, user_params) do
     if validate_user_params(user_params) do
-      user = Uro.Accounts.get_by_username_or_email(user_params["username_or_email"] |> String.downcase)
+      user =
+        Uro.Accounts.get_by_username_or_email(
+          user_params["username_or_email"]
+          |> String.downcase()
+        )
 
       if user do
         conn
-        |> Pow.Plug.authenticate_user(%{"email" => user.email, "password" => user_params["password"]})
+        |> Pow.Plug.authenticate_user(%{
+          "email" => user.email,
+          "password" => user_params["password"]
+        })
       else
         {:error, conn}
       end
@@ -58,6 +69,7 @@ defmodule UroWeb.Helpers.Auth do
 
   def session_username(conn) do
     user = get_current_user(conn)
+
     if user do
       if user.username do
         user.username
@@ -69,6 +81,7 @@ defmodule UroWeb.Helpers.Auth do
 
   def session_display_name(conn) do
     user = get_current_user(conn)
+
     if user do
       if user.display_name do
         user.display_name

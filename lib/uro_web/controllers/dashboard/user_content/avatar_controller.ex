@@ -8,7 +8,9 @@ defmodule UroWeb.Dashboard.UserContent.AvatarController do
   @user_content_preview_param_name "user_content_preview"
 
   def index(conn, params) do
-    page = UserContent.list_avatars_uploaded_by_with_pagination(params, conn.assigns[:current_user])
+    page =
+      UserContent.list_avatars_uploaded_by_with_pagination(params, conn.assigns[:current_user])
+
     render(conn, "index.html", page: page)
   end
 
@@ -19,14 +21,20 @@ defmodule UroWeb.Dashboard.UserContent.AvatarController do
 
   def create(conn, %{"avatar" => avatar_params}) do
     case UserContent.create_avatar(
-      UroWeb.Helpers.UserContentHelper.get_correct_user_content_params(conn, avatar_params, @user_content_data_param_name, @user_content_preview_param_name)) do
+           UroWeb.Helpers.UserContentHelper.get_correct_user_content_params(
+             conn,
+             avatar_params,
+             @user_content_data_param_name,
+             @user_content_preview_param_name
+           )
+         ) do
       {:ok, avatar} ->
         conn
         |> put_flash(:info, gettext("Avatar created successfully."))
         |> redirect(to: Routes.dashboard_avatar_path(conn, :show, avatar))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn,"new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset)
     end
   end
 
@@ -63,11 +71,13 @@ defmodule UroWeb.Dashboard.UserContent.AvatarController do
             conn
             |> put_flash(:info, gettext("Avatar deleted successfully."))
             |> redirect(to: Routes.dashboard_avatar_path(conn, :index))
+
           {:error, %Ecto.Changeset{}} ->
             conn
             |> put_flash(:info, gettext("Could not delete avatar."))
             |> redirect(to: Routes.dashboard_avatar_path(conn, :index))
         end
+
       _ ->
         conn
         |> put_flash(:info, gettext("Could not delete avatar."))

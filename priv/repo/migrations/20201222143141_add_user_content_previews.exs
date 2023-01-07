@@ -5,9 +5,11 @@ defmodule Uro.Repo.Migrations.AddUserContentPreviews do
     alter table(:avatars) do
       add :user_content_preview, :string
     end
+
     alter table(:maps) do
       add :user_content_preview, :string
     end
+
     alter table(:props) do
       add :user_content_preview, :string
     end

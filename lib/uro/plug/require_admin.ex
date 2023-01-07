@@ -8,7 +8,7 @@ defmodule Uro.Plug.RequireAdmin do
   @spec call(Conn.t(), atom()) :: Conn.t()
   def call(conn, handler) do
     conn
-    |> UroWeb.Helpers.Admin.is_session_admin?
+    |> UroWeb.Helpers.Admin.is_session_admin?()
     |> maybe_halt(conn, handler)
   end
 

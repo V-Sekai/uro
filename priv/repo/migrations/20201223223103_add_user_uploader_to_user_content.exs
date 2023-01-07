@@ -5,9 +5,11 @@ defmodule Uro.Repo.Migrations.AddUserUploaderToUserContent do
     alter table(:avatars) do
       add :uploader_id, references(:users, type: :uuid)
     end
+
     alter table(:maps) do
       add :uploader_id, references(:users, type: :uuid)
     end
+
     alter table(:props) do
       add :uploader_id, references(:users, type: :uuid)
     end

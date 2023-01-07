@@ -3,7 +3,8 @@ defmodule UroWeb.Router do
   use Pow.Phoenix.Router
 
   use Pow.Extension.Phoenix.Router,
-  extensions: [PowResetPassword, PowEmailConfirmation]
+    extensions: [PowResetPassword, PowEmailConfirmation]
+
   use PowAssent.Phoenix.Router
 
   @view_commands [:index, :show]
@@ -31,6 +32,7 @@ defmodule UroWeb.Router do
   pipeline :protected do
     plug Pow.Plug.RequireAuthenticated,
       error_handler: UroWeb.AuthErrorHandler
+
     plug Uro.EnsureUserNotLockedPlug,
       error_handler: UroWeb.AuthErrorHandler
   end
@@ -54,6 +56,7 @@ defmodule UroWeb.Router do
   pipeline :not_authenticated do
     plug Pow.Plug.RequireNotAuthenticated,
       error_handler: UroWeb.AuthErrorHandler
+
     plug Uro.EnsureUserNotLockedPlug,
       error_handler: UroWeb.AuthErrorHandler
   end
@@ -66,12 +69,13 @@ defmodule UroWeb.Router do
   pipeline :api_protected do
     plug Pow.Plug.RequireAuthenticated,
       error_handler: UroWeb.APIAuthErrorHandler
+
     plug Uro.EnsureUserNotLockedPlug,
       error_handler: UroWeb.APIAuthErrorHandler
   end
 
   pipeline :dashboard do
-    #plug :put_layout, {UroWeb.LayoutView, "dashboard.html"}
+    # plug :put_layout, {UroWeb.LayoutView, "dashboard.html"}
   end
 
   #######
@@ -91,7 +95,6 @@ defmodule UroWeb.Router do
     resources "/maps", UserContent.MapController, only: [:show]
 
     resources "/shards", ShardController, only: [:index, :create, :update, :delete]
-
   end
 
   scope "/api/v1", UroWeb.API.V1, as: :api_v1 do
@@ -99,7 +102,10 @@ defmodule UroWeb.Router do
 
     # Your protected API endpoints here
     get "/profile", RegistrationController, :show, as: :profile
-    resources "/identity_proofs", IdentityProofController, as: :identity_proof, only: [:show, :create]
+
+    resources "/identity_proofs", IdentityProofController,
+      as: :identity_proof,
+      only: [:show, :create]
   end
 
   scope "/api/v1", UroWeb.API.V1, as: :api_v1_user_content do
@@ -112,7 +118,9 @@ defmodule UroWeb.Router do
   scope "/api/v1/dashboard", UroWeb.API.V1, as: :api_v1_dashboard do
     pipe_through [:remote_ip, :api, :api_protected, :protected_avatar_upload]
 
-    resources "/avatars", Dashboard.UserContent.AvatarController, as: :avatar, only: @modify_commands
+    resources "/avatars", Dashboard.UserContent.AvatarController,
+      as: :avatar,
+      only: @modify_commands
   end
 
   scope "/api/v1/dashboard", UroWeb.API.V1, as: :api_v1_dashboard do
@@ -124,7 +132,10 @@ defmodule UroWeb.Router do
   scope "/api/v1/dashboard", UroWeb.API.V1, as: :api_v1_dashboard do
     pipe_through [:api, :api_protected]
 
-    resources "/avatars", Dashboard.UserContent.AvatarController, as: :avatar, only: @view_commands
+    resources "/avatars", Dashboard.UserContent.AvatarController,
+      as: :avatar,
+      only: @view_commands
+
     resources "/maps", Dashboard.UserContent.MapController, as: :map, only: @view_commands
   end
 
@@ -150,8 +161,8 @@ defmodule UroWeb.Router do
 
     get "/profile", RegistrationController, :show, as: :profile
     get "/profile/edit", RegistrationController, :edit, as: :profile
-	  put "/profile/edit", RegistrationController, :update, as: :profile
-    #delete "/profile", RegistrationController, :delete, as: :profile
+    put "/profile/edit", RegistrationController, :update, as: :profile
+    # delete "/profile", RegistrationController, :delete, as: :profile
   end
 
   #############
@@ -161,7 +172,9 @@ defmodule UroWeb.Router do
   scope "/dashboard", UroWeb, as: :dashboard do
     pipe_through [:browser, :protected, :dashboard, :protected_avatar_upload]
 
-    resources "/avatars", Dashboard.UserContent.AvatarController, as: :avatar, only: @modify_commands
+    resources "/avatars", Dashboard.UserContent.AvatarController,
+      as: :avatar,
+      only: @modify_commands
   end
 
   scope "/dashboard", UroWeb, as: :dashboard do
@@ -174,7 +187,11 @@ defmodule UroWeb.Router do
     pipe_through [:browser, :protected, :dashboard]
 
     get "/", DashboardController, :index, as: :root
-    resources "/avatars", Dashboard.UserContent.AvatarController, as: :avatar, only: @view_commands
+
+    resources "/avatars", Dashboard.UserContent.AvatarController,
+      as: :avatar,
+      only: @view_commands
+
     resources "/maps", Dashboard.UserContent.MapController, as: :map, only: @view_commands
   end
 

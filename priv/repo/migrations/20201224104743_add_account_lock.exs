@@ -3,7 +3,7 @@ defmodule Uro.Repo.Migrations.AddAccountLock do
 
   def change do
     alter table(:users) do
-     add :locked_at, :utc_datetime
+      add :locked_at, :utc_datetime
     end
   end
 end

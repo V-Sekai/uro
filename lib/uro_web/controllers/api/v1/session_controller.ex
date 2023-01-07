@@ -7,12 +7,14 @@ defmodule UroWeb.API.V1.SessionController do
   @doc false
   defp session_data(conn, user) do
     conn
-    |> json(%{data: %{
+    |> json(%{
+      data: %{
         access_token: conn.private[:api_access_token],
         renewal_token: conn.private[:api_renewal_token],
         user: user,
         user_privilege_ruleset: UroWeb.Helpers.Auth.get_user_privilege_ruleset(user)
-    }})
+      }
+    })
   end
 
   @doc false
@@ -43,11 +45,12 @@ defmodule UroWeb.API.V1.SessionController do
       {:ok, conn} ->
         conn
         |> Uro.EnsureUserNotLockedPlug.call(UroWeb.APIAuthErrorHandler)
-        |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email
+        |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email()
         |> case do
           {:ok, conn} -> login_valid(conn)
           {:failed, conn} -> email_unconfirmed(conn)
         end
+
       {:error, conn} ->
         login_invalid(conn)
     end
@@ -64,6 +67,7 @@ defmodule UroWeb.API.V1.SessionController do
         conn
         |> put_status(401)
         |> json(%{error: %{status: 401, message: "Invalid token"}})
+
       {conn, user} ->
         session_data(conn, user)
     end

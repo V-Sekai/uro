@@ -35,4 +35,3 @@
     <%= submit gettext("Update") %>
   </div>
 <% end %>
-

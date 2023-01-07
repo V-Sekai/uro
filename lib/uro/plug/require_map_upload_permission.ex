@@ -8,7 +8,7 @@ defmodule Uro.Plug.RequireMapUploadPermission do
   @spec call(Conn.t(), atom()) :: Conn.t()
   def call(conn, handler) do
     conn
-    |> UroWeb.Helpers.UserContentHelper.session_has_map_upload_permission?
+    |> UroWeb.Helpers.UserContentHelper.session_has_map_upload_permission?()
     |> maybe_halt(conn, handler)
   end
 

@@ -20,7 +20,7 @@
   <%= label f, :display_name %>
   <%= text_input f, :display_name %>
   <%= error_tag f, :display_name %>
-  
+
   <%= label f, :email_notifications %>
   <%= checkbox f, :email_notifications %>
   <%= error_tag f, :email_notifications %>

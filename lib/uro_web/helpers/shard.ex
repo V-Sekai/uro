@@ -10,12 +10,12 @@ defmodule UroWeb.Helpers.Shard do
       map: to_string(shard.map),
       name: to_string(shard.name),
       current_users: shard.current_users,
-      max_users: shard.max_users,
+      max_users: shard.max_users
     }
   end
 
   @doc false
   def get_api_shard_list_public(shard_list) do
-    Enum.map(shard_list, fn(x) -> get_api_shard_public(x) end)
+    Enum.map(shard_list, fn x -> get_api_shard_public(x) end)
   end
 end

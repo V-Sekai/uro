@@ -10,6 +10,5 @@ defmodule Uro.Repo.Migrations.CreateProps do
 
       timestamps()
     end
-
   end
 end

@@ -12,6 +12,5 @@ defmodule Uro.Repo.Migrations.CreateShards do
 
       timestamps()
     end
-
   end
 end

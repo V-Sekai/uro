@@ -19,11 +19,15 @@ defmodule UroWeb.API.V1.IdentityProofController do
         |> case do
           {:ok, identity_proof} ->
             json(conn, %{id: identity_proof.id})
+
           {:error, %Ecto.Changeset{} = changeset} ->
             errors = Ecto.Changeset.traverse_errors(changeset, &ErrorHelpers.translate_error/1)
+
             conn
             |> put_status(500)
-            |> json(%{error: %{status: 500, message: "Couldn't create identity_proof", errors: errors}})
+            |> json(%{
+              error: %{status: 500, message: "Couldn't create identity_proof", errors: errors}
+            })
         end
       else
         conn
@@ -40,11 +44,11 @@ defmodule UroWeb.API.V1.IdentityProofController do
       nil ->
         conn
         |> put_status(400)
+
       identity_proof ->
         conn
         |> put_status(200)
         |> json(%{data: %{identity_proof: identity_proof}})
     end
   end
-
 end

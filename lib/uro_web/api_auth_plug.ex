@@ -13,8 +13,8 @@ defmodule UroWeb.APIAuthPlug do
   @spec fetch(Conn.t(), Config.t()) :: {Conn.t(), map() | nil}
   def fetch(conn, config) do
     with {:ok, signed_token} <- fetch_access_token(conn),
-         {:ok, token}        <- verify_token(conn, signed_token, config),
-         {user, _metadata}   <- CredentialsCache.get(store_config(config), token) do
+         {:ok, token} <- verify_token(conn, signed_token, config),
+         {user, _metadata} <- CredentialsCache.get(store_config(config), token) do
       {conn, user}
     else
       _any -> {conn, nil}
@@ -31,16 +31,22 @@ defmodule UroWeb.APIAuthPlug do
   @impl true
   @spec create(Conn.t(), map(), Config.t()) :: {Conn.t(), map()}
   def create(conn, user, config) do
-    store_config  = store_config(config)
-    access_token  = Pow.UUID.generate()
+    store_config = store_config(config)
+    access_token = Pow.UUID.generate()
     renewal_token = Pow.UUID.generate()
-    conn          =
+
+    conn =
       conn
       |> Conn.put_private(:api_access_token, sign_token(conn, access_token, config))
       |> Conn.put_private(:api_renewal_token, sign_token(conn, renewal_token, config))
 
     CredentialsCache.put(store_config, access_token, {user, [renewal_token: renewal_token]})
-    PersistentSessionCache.put(store_config, renewal_token, {[id: user.id], [access_token: access_token]})
+
+    PersistentSessionCache.put(
+      store_config,
+      renewal_token,
+      {[id: user.id], [access_token: access_token]}
+    )
 
     {conn, user}
   end
@@ -56,9 +62,8 @@ defmodule UroWeb.APIAuthPlug do
     store_config = store_config(config)
 
     with {:ok, signed_token} <- fetch_access_token(conn),
-         {:ok, token}        <- verify_token(conn, signed_token, config),
-         {_user, metadata}   <- CredentialsCache.get(store_config, token) do
-
+         {:ok, token} <- verify_token(conn, signed_token, config),
+         {_user, metadata} <- CredentialsCache.get(store_config, token) do
       PersistentSessionCache.delete(store_config, metadata[:renewal_token])
       CredentialsCache.delete(store_config, token)
     else
@@ -80,9 +85,8 @@ defmodule UroWeb.APIAuthPlug do
     store_config = store_config(config)
 
     with {:ok, signed_token} <- fetch_access_token(conn),
-         {:ok, token}        <- verify_token(conn, signed_token, config),
+         {:ok, token} <- verify_token(conn, signed_token, config),
          {clauses, metadata} <- PersistentSessionCache.get(store_config, token) do
-
       CredentialsCache.delete(store_config, metadata[:access_token])
       PersistentSessionCache.delete(store_config, token)
 
@@ -94,7 +98,7 @@ defmodule UroWeb.APIAuthPlug do
 
   defp load_and_create_session(conn, {clauses, _metadata}, config) do
     case Pow.Operations.get_by(clauses, config) do
-      nil  -> {conn, nil}
+      nil -> {conn, nil}
       user -> create(conn, user, config)
     end
   end
@@ -108,7 +112,7 @@ defmodule UroWeb.APIAuthPlug do
   defp fetch_access_token(conn) do
     case Conn.get_req_header(conn, "authorization") do
       [token | _rest] -> {:ok, token}
-      _any            -> :error
+      _any -> :error
     end
   end
 

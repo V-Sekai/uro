@@ -9,7 +9,7 @@ defmodule Uro.Uploaders.UserContentData do
   def validate({file, _}) do
     file_extension = file.file_name |> Path.extname() |> String.downcase()
     Enum.member?(@extension_whitelist, file_extension)
-   end
+  end
 
   # Override the persisted filenames:
   def filename(version, {_file, scope}) do

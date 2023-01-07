@@ -37,11 +37,12 @@ defmodule UroWeb.SessionController do
       {:ok, conn} ->
         conn
         |> Uro.EnsureUserNotLockedPlug.call(UroWeb.AuthErrorHandler)
-        |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email
+        |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email()
         |> case do
           {:ok, conn} -> login_valid(conn)
           {:failed, conn} -> email_unconfirmed(conn)
         end
+
       {:error, conn} ->
         login_invalid(conn)
     end
@@ -49,7 +50,7 @@ defmodule UroWeb.SessionController do
 
   def delete(conn, _params) do
     conn
-    |> Pow.Plug.delete
+    |> Pow.Plug.delete()
     |> redirect(to: Routes.page_path(conn, :index))
   end
 end

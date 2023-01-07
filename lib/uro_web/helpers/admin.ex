@@ -4,7 +4,7 @@ defmodule UroWeb.Helpers.Admin do
   @doc false
   def is_admin?(user) do
     user
-    |> UroWeb.Helpers.Auth.get_user_privilege_ruleset
+    |> UroWeb.Helpers.Auth.get_user_privilege_ruleset()
     |> check_admin_field
   end
 
