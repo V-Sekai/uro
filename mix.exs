@@ -35,12 +35,7 @@ defmodule Uro.MixProject do
     [
       {:phoenix, "~> 1.5"},
       {:phoenix_pubsub, "~> 2.0"},
-      # Can't currently upgrade these, results in Postgrex error when attempting migration
-      # source SQL: # LOCK TABLE \"schema_migrations\" IN SHARE UPDATE EXCLUSIVE MODE\n^"
       {:phoenix_ecto, "~> 4.2.1"},
-      {:ecto_sql, "~> 3.5.3"},
-
-      {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.14 "},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
       {:gettext, "~> 0.18 "},
@@ -51,11 +46,12 @@ defmodule Uro.MixProject do
       {:bcrypt_elixir, "~> 2.3"},
       {:pow, "~> 1.0.23"},
       {:email_checker, "~> 0.1.4"},
-      {:pow_assent, "~> 0.4.10"},
+      {:pow_assent, "~> 0.4.13"},
       {:ssl_verify_fun, "~> 1.1.6"},
       {:phoenix_swagger, "~> 0.8.3"},
       {:ex_json_schema, "~> 0.7.4"},
       {:remote_ip, "~> 1.0"},
+      {:ecto_sqlite3, git: "https://github.com/fire/ecto_sqlite3", tag: "strict", override: true},
       {:waffle, "~> 1.1"},
       {:waffle_ecto, "~> 0.0.10"},
       {:swoosh, "~> 1.3"},

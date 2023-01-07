@@ -2,7 +2,7 @@ defmodule Uro.Repo.Migrations.BinaryIdUserIdentity do
   use Ecto.Migration
 
   def change do
-    create table(:user_identities, primary_key: false) do
+    create table(:user_identities, primary_key: false, options: "STRICT, WITHOUT ROWID") do
       add :id, :uuid, primary_key: true
       add :provider, :string, null: false
       add :uid, :string, null: false
@@ -10,7 +10,6 @@ defmodule Uro.Repo.Migrations.BinaryIdUserIdentity do
 
       timestamps()
     end
-
     create unique_index(:user_identities, [:uid, :provider])
   end
 end

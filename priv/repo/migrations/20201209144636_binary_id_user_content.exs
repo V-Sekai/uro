@@ -2,7 +2,7 @@ defmodule Uro.Repo.Migrations.BinaryIdUserContent do
   use Ecto.Migration
 
   def change do
-    create table(:avatars, primary_key: false) do
+    create table(:avatars, primary_key: false, options: "STRICT, WITHOUT ROWID") do
       add :id, :uuid, primary_key: true
       add :name, :string
       add :description, :text
@@ -12,7 +12,7 @@ defmodule Uro.Repo.Migrations.BinaryIdUserContent do
       timestamps()
     end
 
-    create table(:maps, primary_key: false) do
+    create table(:maps, primary_key: false, options: "STRICT, WITHOUT ROWID") do
       add :id, :uuid, primary_key: true
       add :description, :text
       add :url, :string
@@ -21,7 +21,7 @@ defmodule Uro.Repo.Migrations.BinaryIdUserContent do
       timestamps()
     end
 
-    create table(:props, primary_key: false) do
+    create table(:props, primary_key: false, options: "STRICT, WITHOUT ROWID") do
       add :id, :uuid, primary_key: true
       add :name, :string
       add :description, :text

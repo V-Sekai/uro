@@ -7,7 +7,6 @@ defmodule Uro.Repo.Migrations.AddPowEmailConfirmationToUsers do
       add :email_confirmed_at, :utc_datetime
       add :unconfirmed_email, :string
     end
-
     create unique_index(:users, [:email_confirmation_token])
   end
 end

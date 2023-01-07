@@ -5,6 +5,9 @@ defmodule Uro.Accounts.UserPrivilegeRuleset do
   @derive {Jason.Encoder,
            only: [:is_admin, :can_upload_avatars, :can_upload_maps, :can_upload_props]}
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
+  @derive {Phoenix.Param, key: :id}
   schema "user_privilege_rulesets" do
     belongs_to :user, Uro.Accounts.User, foreign_key: :user_id, type: :binary_id
 
