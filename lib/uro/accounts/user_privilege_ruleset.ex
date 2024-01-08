@@ -18,6 +18,6 @@ defmodule Uro.Accounts.UserPrivilegeRuleset do
 
   def admin_changeset(user_privilege_ruleset_or_changeset, attrs) do
     user_privilege_ruleset_or_changeset
-    |> cast(attrs, [:can_upload_avatars, :can_upload_maps, :can_upload_props])
+    |> cast(attrs, [:user_id, :is_admin, :can_upload_avatars, :can_upload_maps, :can_upload_props])
   end
 end

@@ -8,10 +8,11 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = (env, options) => ({
   optimization: {
     minimizer: [
-      new TerserPlugin({ cache: true, parallel: true, sourceMap: false }),
+      new TerserPlugin({ cache: true, parallel: true }),
       new CssMinimizerPlugin()
     ],
   },
+  devtool: false,
   entry: {
     './js/app.js': glob.sync('./vendor/**/*.js').concat(['./js/app.js'])
   },
