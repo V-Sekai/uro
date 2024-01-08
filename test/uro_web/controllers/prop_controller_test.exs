@@ -75,6 +75,7 @@ defmodule UroWeb.PropControllerTest do
     test "deletes chosen prop", %{conn: conn, prop: prop} do
       conn = delete(conn, Routes.admin_prop_path(conn, :delete, prop))
       assert redirected_to(conn) == Routes.admin_prop_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.admin_prop_path(conn, :show, prop))
       end

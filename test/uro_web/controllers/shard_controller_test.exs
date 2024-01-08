@@ -75,6 +75,7 @@ defmodule UroWeb.ShardControllerTest do
     test "deletes chosen shard", %{conn: conn, shard: shard} do
       conn = delete(conn, Routes.admin_shard_path(conn, :delete, shard))
       assert redirected_to(conn) == Routes.admin_shard_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.admin_shard_path(conn, :show, shard))
       end

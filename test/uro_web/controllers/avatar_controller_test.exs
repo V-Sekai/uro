@@ -4,7 +4,11 @@ defmodule UroWeb.AvatarControllerTest do
   alias Uro.Content
 
   @create_attrs %{description: "some description", name: "some name", url: "some url"}
-  @update_attrs %{description: "some updated description", name: "some updated name", url: "some updated url"}
+  @update_attrs %{
+    description: "some updated description",
+    name: "some updated name",
+    url: "some updated url"
+  }
   @invalid_attrs %{description: nil, name: nil, url: nil}
 
   def fixture(:avatar) do
@@ -75,6 +79,7 @@ defmodule UroWeb.AvatarControllerTest do
     test "deletes chosen avatar", %{conn: conn, avatar: avatar} do
       conn = delete(conn, Routes.admin_avatar_path(conn, :delete, avatar))
       assert redirected_to(conn) == Routes.admin_avatar_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.admin_avatar_path(conn, :show, avatar))
       end
