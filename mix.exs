@@ -7,7 +7,7 @@ defmodule Uro.MixProject do
       version: "0.1.0",
       elixir: ">= 1.11.4",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers() ++ [:phoenix_swagger],
+      compilers: [] ++ Mix.compilers() ++ [:phoenix_swagger],
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -33,25 +33,25 @@ defmodule Uro.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.5"},
+      {:phoenix, "~> 1.7"},
       {:phoenix_pubsub, "~> 2.0"},
-      # Can't currently upgrade these, results in Postgrex error when attempting migration
-      # source SQL: # LOCK TABLE \"schema_migrations\" IN SHARE UPDATE EXCLUSIVE MODE\n^"
-      {:phoenix_ecto, "~> 4.2.1"},
+      {:phoenix_ecto, "~> 4.4"},
+      {:phoenix_live_view, "~> 0.20.3"},
+      {:phoenix_view, "~> 2.0"},
       {:ecto_sql, "~> 3.5.3"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 2.14 "},
+      {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
-      {:gettext, "~> 0.18 "},
+      {:gettext, "~> 0.18"},
       {:hackney, "~> 1.17"},
-      {:jason, "~> 1.2 "},
+      {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:comeonin, "~> 5.3.2"},
       {:bcrypt_elixir, "~> 2.3"},
-      {:pow, "~> 1.0.23"},
+      {:pow, "~> 1.0"},
       {:email_checker, "~> 0.1.4"},
       {:pow_assent, "~> 0.4.10"},
-      {:ssl_verify_fun, "~> 1.1.6"},
+      {:ssl_verify_fun, "~> 1.1"},
       {:phoenix_swagger, "~> 0.8.3"},
       {:ex_json_schema, "~> 0.7.4"},
       {:remote_ip, "~> 1.0"},

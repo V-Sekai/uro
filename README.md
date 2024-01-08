@@ -22,3 +22,19 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+## How to create a test environment?
+
+```bash
+cockroach start-single-node --insecure --background
+export MIX_ENV=dev 
+mix deps.get
+mix ecto.drop
+mix ecto.setup
+mix run priv/repo/test_seeds.exs
+iex -S mix phx.server
+```
+
+## Log into Cockroachdb sql shell
+
+`./cockroach sql --database="uro_dev" --insecure`
