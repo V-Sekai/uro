@@ -7,7 +7,11 @@ defmodule Uro.ContentTest do
     alias Uro.UserContent.Avatar
 
     @valid_attrs %{description: "some description", name: "some name", url: "some url"}
-    @update_attrs %{description: "some updated description", name: "some updated name", url: "some updated url"}
+    @update_attrs %{
+      description: "some updated description",
+      name: "some updated name",
+      url: "some updated url"
+    }
     @invalid_attrs %{description: nil, name: nil, url: nil}
 
     def avatar_fixture(attrs \\ %{}) do
@@ -70,7 +74,11 @@ defmodule Uro.ContentTest do
     alias Uro.UserContent.Map
 
     @valid_attrs %{description: "some description", name: "some name", url: "some url"}
-    @update_attrs %{description: "some updated description", name: "some updated name", url: "some updated url"}
+    @update_attrs %{
+      description: "some updated description",
+      name: "some updated name",
+      url: "some updated url"
+    }
     @invalid_attrs %{description: nil, name: nil, url: nil}
 
     def map_fixture(attrs \\ %{}) do
