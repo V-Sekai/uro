@@ -57,8 +57,8 @@ jobs:
       - name: Setup Database
         run: MIX_ENV=test mix ecto.setup
         
-      - name: Run Seeds
-        run: MIX_ENV=test mix run priv/repo/test_seeds.exs
+      # - name: Run Seeds
+      #   run: MIX_ENV=test mix run priv/repo/test_seeds.exs
 
       - name: Run tests
         id: test_step
