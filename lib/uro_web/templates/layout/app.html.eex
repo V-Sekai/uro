@@ -42,6 +42,11 @@
             <li>
               <%= link gettext("Download"), to: Routes.page_path(@conn, :download) %>
             </li>
+			<%= if UroWeb.Helpers.Auth.signed_in?(@conn) do %>
+				<li>
+				  <%= link gettext("Dashboard"), to: Routes.page_path(@conn, :dashboard) %>
+				</li>
+			<% end %>
           </ul>
         </nav>
         <a href=<%=Routes.page_path(@conn, :index) %> class="vsk-logo">
