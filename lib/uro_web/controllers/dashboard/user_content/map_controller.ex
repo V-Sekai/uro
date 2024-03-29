@@ -19,14 +19,20 @@ defmodule UroWeb.Dashboard.UserContent.MapController do
 
   def create(conn, %{"map" => map_params}) do
     case UserContent.create_map(
-      UroWeb.Helpers.UserContentHelper.get_correct_user_content_params(conn, map_params, @user_content_data_param_name, @user_content_preview_param_name)) do
+           UroWeb.Helpers.UserContentHelper.get_correct_user_content_params(
+             conn,
+             map_params,
+             @user_content_data_param_name,
+             @user_content_preview_param_name
+           )
+         ) do
       {:ok, map} ->
         conn
         |> put_flash(:info, gettext("Map created successfully."))
         |> redirect(to: Routes.dashboard_map_path(conn, :show, map))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn,"new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset)
     end
   end
 
@@ -63,11 +69,13 @@ defmodule UroWeb.Dashboard.UserContent.MapController do
             conn
             |> put_flash(:info, gettext("Map deleted successfully."))
             |> redirect(to: Routes.dashboard_map_path(conn, :index))
+
           {:error, %Ecto.Changeset{}} ->
             conn
             |> put_flash(:info, gettext("Could not delete map."))
             |> redirect(to: Routes.dashboard_map_path(conn, :index))
         end
+
       _ ->
         conn
         |> put_flash(:info, gettext("Could not delete map."))

@@ -4,7 +4,11 @@ defmodule UroWeb.MapControllerTest do
   alias Uro.Content
 
   @create_attrs %{description: "some description", name: "some name", url: "some url"}
-  @update_attrs %{description: "some updated description", name: "some updated name", url: "some updated url"}
+  @update_attrs %{
+    description: "some updated description",
+    name: "some updated name",
+    url: "some updated url"
+  }
   @invalid_attrs %{description: nil, name: nil, url: nil}
 
   def fixture(:map) do
@@ -75,6 +79,7 @@ defmodule UroWeb.MapControllerTest do
     test "deletes chosen map", %{conn: conn, map: map} do
       conn = delete(conn, Routes.admin_map_path(conn, :delete, map))
       assert redirected_to(conn) == Routes.admin_map_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.admin_map_path(conn, :show, map))
       end

@@ -75,6 +75,7 @@ defmodule UroWeb.EventControllerTest do
     test "deletes chosen event", %{conn: conn, event: event} do
       conn = delete(conn, Routes.admin_event_path(conn, :delete, event))
       assert redirected_to(conn) == Routes.admin_event_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.admin_event_path(conn, :show, event))
       end

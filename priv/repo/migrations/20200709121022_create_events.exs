@@ -11,6 +11,5 @@ defmodule Uro.Repo.Migrations.CreateEvents do
 
       timestamps()
     end
-
   end
 end

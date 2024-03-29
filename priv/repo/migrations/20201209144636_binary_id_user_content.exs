@@ -11,6 +11,7 @@ defmodule Uro.Repo.Migrations.BinaryIdUserContent do
 
       timestamps()
     end
+
     create table(:maps, primary_key: false) do
       add :id, :uuid, primary_key: true
       add :description, :text
@@ -19,6 +20,7 @@ defmodule Uro.Repo.Migrations.BinaryIdUserContent do
 
       timestamps()
     end
+
     create table(:props, primary_key: false) do
       add :id, :uuid, primary_key: true
       add :name, :string

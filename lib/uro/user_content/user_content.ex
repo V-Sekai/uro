@@ -6,7 +6,16 @@ defmodule Uro.UserContent.UserContent do
     quote do
       use Ecto.Schema
       use Waffle.Ecto.Schema
-      @derive {Jason.Encoder, only: [:description, :name, :user_content_data, :user_content_preview, :uploader_id, :is_public]}
+
+      @derive {Jason.Encoder,
+               only: [
+                 :description,
+                 :name,
+                 :user_content_data,
+                 :user_content_preview,
+                 :uploader_id,
+                 :is_public
+               ]}
       import unquote(__MODULE__), only: [user_content_fields: 0]
 
       @spec user_content_changeset(Ecto.Schema.t() | Changeset.t(), map()) :: Changeset.t()

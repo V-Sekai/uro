@@ -6,5 +6,4 @@ defmodule Uro.Repo.Migrations.ShardSchemaAddMapField do
       add :map, :string
     end
   end
-
 end

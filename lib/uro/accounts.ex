@@ -14,6 +14,7 @@ defmodule Uro.Accounts do
   def get_by_username(username) when is_nil(username) do
     nil
   end
+
   def get_by_username(username) do
     User
     |> Repo.get_by(username: username)
@@ -23,6 +24,7 @@ defmodule Uro.Accounts do
   def get_by_email(email) when is_nil(email) do
     nil
   end
+
   def get_by_email(email) do
     User
     |> Repo.get_by(email: email)
@@ -32,17 +34,18 @@ defmodule Uro.Accounts do
   def get_by_username_or_email(username_or_email) when is_nil(username_or_email) do
     nil
   end
+
   def get_by_username_or_email(username_or_email) do
     User
     |> where(username: ^username_or_email)
     |> or_where(email: ^username_or_email)
-    |> Repo.one
+    |> Repo.one()
     |> Repo.preload(@user_associated_schemas)
   end
 
   def list_users_admin do
     User
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload(@user_associated_schemas)
   end
 
@@ -51,7 +54,7 @@ defmodule Uro.Accounts do
 
     User
     |> User.admin_search(search_term)
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload(@user_associated_schemas)
   end
 
@@ -70,6 +73,7 @@ defmodule Uro.Accounts do
   def create_associated_entries_for_user(user) do
     user
     |> create_user_privilege_ruleset_for_user
+
     user
   end
 
@@ -80,7 +84,9 @@ defmodule Uro.Accounts do
       {:ok, user, conn} ->
         user
         |> create_associated_entries_for_user
+
         {:ok, user, conn}
+
       {:error, changeset, conn} ->
         {:error, changeset, conn}
     end
@@ -95,11 +101,18 @@ defmodule Uro.Accounts do
   def update_user_as_admin(%User{} = user, attrs) do
     Ecto.Multi.new()
     |> Ecto.Multi.update(:user, User.admin_changeset(user, attrs))
-    |> Ecto.Multi.update(:user_privilege_ruleset, &UserPrivilegeRuleset.admin_changeset(&1.user.user_privilege_ruleset, attrs["user_privilege_ruleset"]))
+    |> Ecto.Multi.update(
+      :user_privilege_ruleset,
+      &UserPrivilegeRuleset.admin_changeset(
+        &1.user.user_privilege_ruleset,
+        attrs["user_privilege_ruleset"]
+      )
+    )
     |> Repo.transaction()
     |> case do
       {:ok, %{user: user}} ->
         {:ok, user}
+
       {:error, _, reason, _} ->
         {:error, reason}
     end
@@ -116,7 +129,7 @@ defmodule Uro.Accounts do
 
   def delete_current_user(conn) do
     conn
-    |> Pow.Plug.delete_user
+    |> Pow.Plug.delete_user()
   end
 
   def change_user(%User{} = user) do

@@ -11,4 +11,3 @@
     <%= submit gettext("Submit") %>
   </div>
 <% end %>
-

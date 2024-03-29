@@ -39,12 +39,17 @@ defmodule Uro.UserRelationsTest do
 
     test "update_friendship/2 with valid data updates the friendship" do
       friendship = friendship_fixture()
-      assert {:ok, %Friendship{} = friendship} = UserRelations.update_friendship(friendship, @update_attrs)
+
+      assert {:ok, %Friendship{} = friendship} =
+               UserRelations.update_friendship(friendship, @update_attrs)
     end
 
     test "update_friendship/2 with invalid data returns error changeset" do
       friendship = friendship_fixture()
-      assert {:error, %Ecto.Changeset{}} = UserRelations.update_friendship(friendship, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               UserRelations.update_friendship(friendship, @invalid_attrs)
+
       assert friendship == UserRelations.get_friendship!(friendship.id)
     end
 

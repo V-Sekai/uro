@@ -10,6 +10,5 @@ defmodule Uro.Repo.Migrations.CreateAvatars do
 
       timestamps()
     end
-
   end
 end

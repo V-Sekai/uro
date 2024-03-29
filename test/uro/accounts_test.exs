@@ -66,7 +66,10 @@ defmodule Uro.AccountsTest do
     alias Uro.Accounts.User
 
     @valid_attrs %{encrypted_password: "some encrypted_password", username: "some username"}
-    @update_attrs %{encrypted_password: "some updated encrypted_password", username: "some updated username"}
+    @update_attrs %{
+      encrypted_password: "some updated encrypted_password",
+      username: "some updated username"
+    }
     @invalid_attrs %{encrypted_password: nil, username: nil}
 
     def user_fixture(attrs \\ %{}) do

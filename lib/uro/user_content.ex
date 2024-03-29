@@ -19,7 +19,7 @@ defmodule Uro.UserContent do
   """
   def list_avatars do
     Avatar
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload([:uploader])
   end
 
@@ -37,7 +37,7 @@ defmodule Uro.UserContent do
   def list_public_avatars() do
     Avatar
     |> where(is_public: true)
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload([:uploader])
   end
 
@@ -62,7 +62,7 @@ defmodule Uro.UserContent do
   def list_avatars_uploaded_by(user) do
     Avatar
     |> where(uploader_id: ^user.id)
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload([:uploader])
   end
 
@@ -134,13 +134,18 @@ defmodule Uro.UserContent do
   """
   def create_avatar(attrs \\ %{}) do
     user_content = %Avatar{}
+
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:user_content, Avatar.changeset(user_content, attrs))
-    |> Ecto.Multi.update(:user_content_with_upload, &Avatar.upload_changeset(&1.user_content, attrs))
+    |> Ecto.Multi.update(
+      :user_content_with_upload,
+      &Avatar.upload_changeset(&1.user_content, attrs)
+    )
     |> Repo.transaction()
     |> case do
       {:ok, %{user_content_with_upload: user_content_with_upload}} ->
         {:ok, user_content_with_upload}
+
       {:error, _, reason, _} ->
         {:error, reason}
     end
@@ -208,7 +213,7 @@ defmodule Uro.UserContent do
 
   def list_maps do
     Map
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload([:uploader])
   end
 
@@ -226,7 +231,7 @@ defmodule Uro.UserContent do
   def list_public_maps() do
     Map
     |> where(is_public: true)
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload([:uploader])
   end
 
@@ -251,7 +256,7 @@ defmodule Uro.UserContent do
   def list_maps_uploaded_by(user) do
     Map
     |> where(uploader_id: ^user.id)
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload([:uploader])
   end
 
@@ -323,6 +328,7 @@ defmodule Uro.UserContent do
   """
   def create_map(attrs \\ %{}) do
     user_content = %Map{}
+
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:user_content, Map.changeset(user_content, attrs))
     |> Ecto.Multi.update(:user_content_with_upload, &Map.upload_changeset(&1.user_content, attrs))
@@ -330,6 +336,7 @@ defmodule Uro.UserContent do
     |> case do
       {:ok, %{user_content_with_upload: user_content_with_upload}} ->
         {:ok, user_content_with_upload}
+
       {:error, _, reason, _} ->
         {:error, reason}
     end
@@ -396,11 +403,11 @@ defmodule Uro.UserContent do
   """
   def list_props do
     Prop
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload([:uploader])
   end
 
-    @doc """
+  @doc """
   Returns the list of props uploaded by a user.
 
   ## Examples
@@ -412,7 +419,7 @@ defmodule Uro.UserContent do
   def list_props_uploaded_by(user) do
     Prop
     |> where(uploader_id: ^user.id)
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload([:uploader])
   end
 
@@ -462,13 +469,18 @@ defmodule Uro.UserContent do
   """
   def create_prop(attrs \\ %{}) do
     user_content = %Prop{}
+
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:user_content, Prop.changeset(user_content, attrs))
-    |> Ecto.Multi.update(:user_content_with_upload, &Prop.upload_changeset(&1.user_content, attrs))
+    |> Ecto.Multi.update(
+      :user_content_with_upload,
+      &Prop.upload_changeset(&1.user_content, attrs)
+    )
     |> Repo.transaction()
     |> case do
       {:ok, %{user_content_with_upload: user_content_with_upload}} ->
         {:ok, user_content_with_upload}
+
       {:error, _, reason, _} ->
         {:error, reason}
     end

@@ -19,8 +19,9 @@ defmodule UroWeb do
 
   def mailer_view do
     quote do
-      use Phoenix.View, root: "lib/uro_web/templates",
-                        namespace: UroWeb
+      use Phoenix.View,
+        root: "lib/uro_web/templates",
+        namespace: UroWeb
 
       use Phoenix.HTML
     end

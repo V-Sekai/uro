@@ -124,6 +124,7 @@ defmodule Uro.UserRelations do
     |> case do
       nil ->
         nil
+
       identity_proof ->
         if identity_proof.user_from == requester or identity_proof.user_to == requester do
           identity_proof
@@ -148,6 +149,7 @@ defmodule Uro.UserRelations do
   def create_identity_proof(user_from, user_to) do
     user_from_id = user_from.id
     user_to_id = user_to.id
+
     %IdentityProof{}
     |> IdentityProof.changeset(%{user_from_id: user_from_id, user_to_id: user_to_id})
     |> Repo.insert()

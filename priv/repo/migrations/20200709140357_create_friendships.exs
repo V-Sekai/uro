@@ -8,6 +8,5 @@ defmodule Uro.Repo.Migrations.CreateFriendships do
 
       timestamps()
     end
-
   end
 end

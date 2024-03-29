@@ -17,6 +17,6 @@ defmodule UroWeb.Helpers.User do
 
   @doc false
   def get_api_user_list_public(user_list) do
-    Enum.map(user_list, fn(x) -> get_api_user_public(x) end)
+    Enum.map(user_list, fn x -> get_api_user_public(x) end)
   end
 end

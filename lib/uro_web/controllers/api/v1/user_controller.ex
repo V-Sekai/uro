@@ -6,12 +6,13 @@ defmodule UroWeb.API.V1.UserController do
 
   def show(conn, %{"id" => id}) do
     id
-    |> Accounts.get_user!
+    |> Accounts.get_user!()
     |> case do
       %Accounts.User{} = user ->
         conn
         |> put_status(200)
         |> json(%{data: %{user: UroWeb.Helpers.User.get_api_user_public(user)}})
+
       _ ->
         conn
         |> put_status(400)

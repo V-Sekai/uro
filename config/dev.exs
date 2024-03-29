@@ -13,7 +13,6 @@ config :uro, Uro.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
-
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
@@ -30,7 +29,6 @@ config :uro, UroWeb.Endpoint,
       "node_modules/webpack/bin/webpack.js",
       "--mode",
       "development",
-      "--watch-stdin",
       cd: Path.expand("../assets", __DIR__)
     ]
   ]

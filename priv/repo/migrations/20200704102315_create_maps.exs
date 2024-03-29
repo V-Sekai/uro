@@ -10,6 +10,5 @@ defmodule Uro.Repo.Migrations.CreateMaps do
 
       timestamps()
     end
-
   end
 end

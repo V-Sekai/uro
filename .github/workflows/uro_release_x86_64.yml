@@ -1,0 +1,61 @@
+name: Uro Development x86_64
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: hexpm/elixir:1.12.3-erlang-24.0.5-ubuntu-focal-20210325
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Elixir
+        run: |
+          mix local.hex --force
+          mix local.rebar --force
+
+      - name: Install system dependencies
+        run: |
+          apt update
+          apt install -y build-essential erlang-dev curl
+
+      - name: Restore dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-deps-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-deps-
+
+      - name: Install dependencies
+        run: mix deps.get
+
+      - name: Compile code
+        run: mix compile
+
+      - name: Install CockroachDB
+        run: |
+          curl -s https://binaries.cockroachdb.com/cockroach-v23.2.0-rc.1.linux-amd64.tgz | tar xvz
+          mkdir -p ${{ runner.temp }}/cockroach
+          cp cockroach-v23.2.0-rc.1.linux-amd64/cockroach ${{ runner.temp }}/cockroach/
+          echo "${{ runner.temp }}/cockroach" >> $GITHUB_PATH
+
+      - name: Start CockroachDB
+        run: |
+          cockroach start-single-node --insecure --background
+
+      - name: Wait for CockroachDB to be ready
+        run: |
+          until cockroach sql --execute="SELECT 1" --insecure; do sleep 1; done
+
+      - name: Setup Database
+        run: MIX_ENV=test mix ecto.setup
+        
+      - name: Check formatted code
+        run: mix format --check-formatted

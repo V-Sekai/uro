@@ -7,7 +7,7 @@ defmodule Uro.MixProject do
       version: "0.1.0",
       elixir: ">= 1.11.4",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers ++ [:phoenix_swagger],
+      compilers: [:phoenix, :gettext] ++ Mix.compilers() ++ [:phoenix_swagger],
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -39,7 +39,6 @@ defmodule Uro.MixProject do
       # source SQL: # LOCK TABLE \"schema_migrations\" IN SHARE UPDATE EXCLUSIVE MODE\n^"
       {:phoenix_ecto, "~> 4.2.1"},
       {:ecto_sql, "~> 3.5.3"},
-
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.14 "},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
@@ -60,7 +59,7 @@ defmodule Uro.MixProject do
       {:waffle_ecto, "~> 0.0.10"},
       {:swoosh, "~> 1.3"},
       {:hammer, "~> 6.0"},
-      {:scrivener_ecto, "~> 2.7"},
+      {:scrivener_ecto, "~> 2.7"}
     ]
   end
 
