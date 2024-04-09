@@ -16,15 +16,30 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install system dependencies
+        run: |
+          apt update
+          apt install -y build-essential erlang-dev curl git libclang1
+
+      - name: Install foundationdb dependency
+        run: |
+          set -e
+          curl -L https://github.com/apple/foundationdb/releases/download/7.1.53/foundationdb-clients_7.1.53-1_amd64.deb --output fdb-client.deb
+          dpkg -i fdb-client.deb
+          curl -L https://github.com/apple/foundationdb/releases/download/7.1.53/foundationdb-server_7.1.53-1_amd64.deb --output fdb-server.deb
+          dpkg -i fdb-server.deb
+          apt update && apt install -y libfuse3-dev execstack
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
       - name: Set up Elixir
         run: |
           mix local.hex --force
           mix local.rebar --force
-
-      - name: Install system dependencies
-        run: |
-          apt update
-          apt install -y build-essential erlang-dev curl
 
       - name: Restore dependencies cache
         uses: actions/cache@v2
@@ -32,12 +47,6 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-deps-${{ hashFiles('mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-deps-
-
-      - name: Install dependencies
-        run: mix deps.get
-
-      - name: Compile code
-        run: mix compile
 
       - name: Install CockroachDB
         run: |
@@ -54,16 +63,33 @@ jobs:
         run: |
           until cockroach sql --execute="SELECT 1" --insecure; do sleep 1; done
 
-      - name: Setup Database
-        run: MIX_ENV=test mix ecto.setup
-        
-      - name: Run Seeds
-        run: MIX_ENV=test mix run priv/repo/test_seeds.exs
+      - name: Install dependencies
+        run: mix deps.get
+
+      - name: Compile code
+        run: mix compile
+
+      - uses: actions/checkout@v2
+        with:
+          repository: V-Sekai/elixir-mvsqlite
+          path: elixir_mvsqlite
+      
+      - run: cargo build --locked --release -p mvstore --manifest-path elixir_mvsqlite/rust_src/Cargo.toml
 
       - name: Run tests
-        id: test_step
         continue-on-error: true
-        run: mix test | tee test_output.txt; test ${PIPESTATUS[0]} -eq 0
+        id: test_step
+        run: |
+          set -e
+          chmod +x elixir_mvsqlite/rust_src/target/release/mvstore
+          export RUST_LOG=error
+          elixir_mvsqlite/rust_src/target/release/mvstore --data-plane 127.0.0.1:7000 --admin-api 127.0.0.1:7001 --metadata-prefix mvstore-test --raw-data-prefix m --auto-create-namespace --cluster /etc/foundationdb/fdb.cluster &
+          sleep 1
+          curl http://localhost:7001/api/create_namespace -d '{"key":"uro_dev.sqlite3","metadata":""}'
+          sleep 1
+          MIX_ENV=test mix ecto.setup
+          MIX_ENV=test mix run priv/repo/test_seeds.exs
+          mix test | tee test_output.txt; test ${PIPESTATUS[0]} -eq 0
 
       - name: Upload test results
         uses: actions/upload-artifact@v2
