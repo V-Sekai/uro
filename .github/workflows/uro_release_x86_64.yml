@@ -54,6 +54,18 @@ jobs:
           mkdir -p ${{ runner.temp }}/cockroach
           cp cockroach-v23.2.0-rc.1.linux-amd64/cockroach ${{ runner.temp }}/cockroach/
           echo "${{ runner.temp }}/cockroach" >> $GITHUB_PATH
+      - name: Install dependencies
+        run: mix deps.get
+
+      - name: Compile code
+        run: mix compile
+
+      - uses: actions/checkout@v2
+        with:
+          repository: V-Sekai/elixir-mvsqlite
+          path: elixir_mvsqlite
+      
+      - run: cargo build --locked --release -p mvstore --manifest-path elixir_mvsqlite/rust_src/Cargo.toml
 
       - name: Start CockroachDB
         run: |
@@ -92,6 +104,7 @@ jobs:
           mix test | tee test_output.txt; test ${PIPESTATUS[0]} -eq 0
 
       - name: Upload test results
+        continue-on-error: true
         uses: actions/upload-artifact@v2
         with:
           name: test-results

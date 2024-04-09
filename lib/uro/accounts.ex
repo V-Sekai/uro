@@ -64,15 +64,15 @@ defmodule Uro.Accounts do
     |> Repo.preload(@user_associated_schemas)
   end
 
-  def create_user_privilege_ruleset_for_user(user, attrs \\ %{}) do
+  def create_user_privilege_ruleset_for_user(user) do
     user
-    |> Ecto.build_assoc(:user_privilege_ruleset, attrs)
+    |> Ecto.build_assoc(:user_privilege_ruleset, %UserPrivilegeRuleset{user_id: user.id})
     |> Repo.insert()
   end
 
   def create_associated_entries_for_user(user) do
     user
-    |> create_user_privilege_ruleset_for_user
+    |> create_user_privilege_ruleset_for_user()
 
     user
   end

@@ -2,7 +2,7 @@ defmodule Uro.Repo.Migrations.CreateUserIdentities do
   use Ecto.Migration
 
   def change do
-    create table(:user_identities, primary_key: false) do
+    create table(:user_identities, primary_key: false, options: "STRICT, WITHOUT ROWID") do
       add :id, :uuid, primary_key: true
       add :provider, :string, null: false
       add :uid, :string, null: false
