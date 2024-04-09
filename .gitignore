@@ -37,3 +37,5 @@ npm-debug.log
 /Mnesia.*/
 /assets/yarn-error.*
 .*.swp
+
+priv/waffle/private/uploads/

@@ -87,7 +87,10 @@ defmodule UroWeb.API.V1.ShardController do
   end
 
   def delete(conn, %{"id" => id}) do
-    shard = VSekai.get_shard!(id)
+    shard =
+      Uro.VSekai.Shard
+      |> Repo.get!(id)
+      |> Repo.preload(:user)
 
     if can_connection_modify_shard(conn, shard) do
       case VSekai.delete_shard(shard) do

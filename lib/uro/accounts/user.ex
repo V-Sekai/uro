@@ -4,7 +4,7 @@ defmodule Uro.Accounts.User do
 
   use Pow.Ecto.Schema,
     user_id_field: :email,
-    password_hash_methods: {&Bcrypt.hash_pwd_salt/1, &Bcrypt.verify_pass/2}
+    password_hash_verify: {&Bcrypt.hash_pwd_salt/1, &Bcrypt.verify_pass/2}
 
   use Pow.Extension.Ecto.Schema,
     extensions: [PowResetPassword, PowEmailConfirmation]

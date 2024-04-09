@@ -10,6 +10,9 @@ defmodule Uro.Repo.Migrations.CreateShards do
       add :current_users, :integer
       add :max_users, :integer
 
+      add :map, :string
+      add :user_id, references(:users, type: :uuid, on_delete: :delete_all)
+
       timestamps()
     end
   end

@@ -68,6 +68,9 @@ config :uro, UroWeb.Endpoint,
     ]
   ]
 
+config :waffle,
+  storage_dir_prefix: "priv/waffle/private"
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
