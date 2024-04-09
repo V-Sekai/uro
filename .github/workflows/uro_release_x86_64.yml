@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: hexpm/elixir:1.12.3-erlang-24.0.5-ubuntu-focal-20210325
+      image: hexpm/elixir:1.16.2-erlang-24.3.4.17-ubuntu-focal-20240216
 
     steps:
       - uses: actions/checkout@v2
