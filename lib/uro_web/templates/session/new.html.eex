@@ -21,7 +21,5 @@
   <div>
     <%= link(gettext("Reset password"), to: Routes.pow_reset_password_reset_password_path(@conn, :new)) %>
   </div>
-
-    <%= for link <- PowAssent.Phoenix.ViewHelpers.provider_links(@conn),
-        do: content_tag(:div, content_tag(:span, link)) %>
+  <PowAssent.Phoenix.HTML.CoreComponents.provider_links conn={@conn} />
 <% end %>
