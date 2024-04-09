@@ -34,6 +34,8 @@ mix ecto.setup
 mix run priv/repo/test_seeds.exs
 iex -S mix phx.server
 ```
+Note that `bcrypt_elixir` will require a working compiler in the PATH. On a Windows system with Visual Studio, you will want to run `mix deps.compile --force` from within a "x64 Native Tools Command Prompt" or cmd with vcvarsall.bat (may fail to build the rest of uro) then return to a bash shell for the rest of the build.
+
 
 ## Log into Cockroachdb sql shell
 
