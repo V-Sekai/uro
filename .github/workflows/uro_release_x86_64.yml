@@ -81,6 +81,15 @@ jobs:
       - name: Compile code
         run: mix compile
 
+      - name: Run tests
+        continue-on-error: true
+        id: test_step_postgres
+        run: |
+          set -e
+          URO_DB_TYPE=postgres MIX_ENV=test mix ecto.setup
+          URO_DB_TYPE=postgres MIX_ENV=test mix run priv/repo/test_seeds.exs
+          URO_DB_TYPE=postgres mix test | tee test_output_postgres.txt; test ${PIPESTATUS[0]} -eq 0
+          
       - uses: actions/checkout@v2
         with:
           repository: V-Sekai/elixir-mvsqlite
@@ -88,9 +97,16 @@ jobs:
       
       - run: cargo build --locked --release -p mvstore --manifest-path elixir_mvsqlite/rust_src/Cargo.toml
 
+      - name: Upload test results
+        continue-on-error: true
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: test_output_postgres.txt
+
       - name: Run tests
         continue-on-error: true
-        id: test_step
+        id: test_step_sqlite
         run: |
           set -e
           chmod +x elixir_mvsqlite/rust_src/target/release/mvstore
@@ -99,16 +115,16 @@ jobs:
           sleep 1
           curl http://localhost:7001/api/create_namespace -d '{"key":"uro_dev.sqlite3","metadata":""}'
           sleep 1
-          MIX_ENV=test mix ecto.setup
-          MIX_ENV=test mix run priv/repo/test_seeds.exs
-          mix test | tee test_output.txt; test ${PIPESTATUS[0]} -eq 0
-
+          URO_DB_TYPE=sqlite MIX_ENV=test mix ecto.setup
+          URO_DB_TYPE=sqlite MIX_ENV=test mix run priv/repo/test_seeds.exs
+          URO_DB_TYPE=sqlite mix test | tee test_output_sqlite.txt; test ${PIPESTATUS[0]} -eq 0
+          
       - name: Upload test results
         continue-on-error: true
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: test_output.txt
+          path: test_output_sqlite.txt
 
       - name: Parse and check test results
         continue-on-error: true

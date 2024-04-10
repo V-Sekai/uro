@@ -1,14 +1,29 @@
 import Config
 
 db_hostname = System.get_env("URO_LOCAL_DB") || "localhost"
+db_type = System.get_env("URO_DB_TYPE") || "postgresql"
 
 # Configure your database
-config :uro, Uro.Repo,
-  adapter: Ecto.Adapters.SQLite3,
-  database: "uro_dev.sqlite3",
-  datetime_type: :text_datetime,
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+case db_type do
+  "postgres" ->
+    config :uro, Uro.Repo,
+      adapter: Ecto.Adapters.Postgres,
+      username: "root",
+      password: "",
+      port: "26257",
+      database: "uro_dev",
+      hostname: db_hostname,
+      show_sensitive_data_on_connection_error: true,
+      pool_size: 10
+
+  "sqlite" ->
+    config :uro, Uro.Repo,
+      adapter: Ecto.Adapters.SQLite3,
+      database: "uro_dev.sqlite3",
+      datetime_type: :text_datetime,
+      show_sensitive_data_on_connection_error: true,
+      pool_size: 10
+end
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
