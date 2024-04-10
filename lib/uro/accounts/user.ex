@@ -117,8 +117,6 @@ defmodule Uro.Accounts.User do
     put_change(changeset, :username, username |> String.downcase())
   end
 
-  defp downcase_username(changeset), do: changeset
-
   defp make_username_unique(
          %Ecto.Changeset{valid?: true, changes: %{username: username}} = changeset,
          make_username_unique
