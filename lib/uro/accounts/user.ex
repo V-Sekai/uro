@@ -131,8 +131,8 @@ defmodule Uro.Accounts.User do
     wildcard_search = "%#{search_term}%"
 
     from user in query,
-      where: ilike(user.username, ^wildcard_search),
-      or_where: ilike(user.display_name, ^wildcard_search),
-      or_where: ilike(user.email, ^wildcard_search)
+      where: like(user.username, ^wildcard_search),
+      or_where: like(user.display_name, ^wildcard_search),
+      or_where: like(user.email, ^wildcard_search)
   end
 end

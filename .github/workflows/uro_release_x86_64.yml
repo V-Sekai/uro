@@ -19,7 +19,13 @@ jobs:
       - name: Install system dependencies
         run: |
           apt update
-          apt install -y build-essential erlang-dev curl
+          apt install -y build-essential erlang-dev curl git libclang1
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
 
       - name: Set up Elixir
         run: |
@@ -40,6 +46,34 @@ jobs:
           cp cockroach-v23.2.0-rc.1.linux-amd64/cockroach ${{ runner.temp }}/cockroach/
           echo "${{ runner.temp }}/cockroach" >> $GITHUB_PATH
 
+      - name: Install dependencies
+        run: mix deps.get
+
+      - name: Compile code
+        run: mix compile
+
+      - name: Install dependencies
+        run: mix deps.get
+
+      - name: Compile code
+        run: mix compile
+
+      - name: Run test sqlite
+        continue-on-error: true
+        id: test_step_sqlite
+        run: |
+          set -e
+          URO_DB_TYPE=sqlite MIX_ENV=test mix ecto.setup
+          URO_DB_TYPE=sqlite MIX_ENV=test mix run priv/repo/test_seeds.exs
+          URO_DB_TYPE=sqlite mix test | tee test_output_sqlite.txt
+
+      - name: Upload sqlite test results
+        continue-on-error: true
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: test_output_sqlite.txt
+
       - name: Start CockroachDB
         run: |
           cockroach start-single-node --insecure --background
@@ -54,41 +88,21 @@ jobs:
       - name: Compile code
         run: mix compile
 
-      - name: Run tests
+      - name: Run tests postgres
         continue-on-error: true
-        id: test_step
+        id: test_step_postgres
         run: |
           set -e
-          chmod +x elixir_mvsqlite/rust_src/target/release/mvstore
-          export RUST_LOG=error
-          elixir_mvsqlite/rust_src/target/release/mvstore --data-plane 127.0.0.1:7000 --admin-api 127.0.0.1:7001 --metadata-prefix mvstore-test --raw-data-prefix m --auto-create-namespace --cluster /etc/foundationdb/fdb.cluster &
-          sleep 1
-          curl http://localhost:7001/api/create_namespace -d '{"key":"uro_dev.sqlite3","metadata":""}'
-          sleep 1
-          MIX_ENV=test mix ecto.setup
-          MIX_ENV=test mix run priv/repo/test_seeds.exs
-          mix test | tee test_output.txt; test ${PIPESTATUS[0]} -eq 0
+          URO_DB_TYPE=postgresql MIX_ENV=test mix ecto.setup
+          URO_DB_TYPE=postgresql MIX_ENV=test mix run priv/repo/test_seeds.exs
+          URO_DB_TYPE=postgresql mix test | tee test_output_postgresql.txt; test ${PIPESTATUS[0]} -eq 0
 
-      - name: Upload test results
+      - name: Upload postgres test results
+        continue-on-error: true
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: test_output.txt
-
-      - name: Parse and check test results
-        continue-on-error: true
-        if: always()
-        run: |
-          echo "Parsing test results..."
-          TEST_OUTPUT=$(grep -oP '\d+ tests, \K\d+(?= failures)' test_output.txt)
-          echo "TEST_FAILURES=$TEST_OUTPUT" >> $GITHUB_ENV
-
-          if [ "$TEST_OUTPUT" -le 102 ]; then
-            echo "Test failures are within the acceptable range."
-          else
-            echo "Too many test failures: $TEST_OUTPUT"
-            exit 1
-          fi
+          path: test_output_postgresql.txt
 
       - name: Check formatted code
         run: mix format --check-formatted
