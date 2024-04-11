@@ -19,22 +19,7 @@ jobs:
       - name: Install system dependencies
         run: |
           apt update
-          apt install -y build-essential erlang-dev curl git libclang1
-
-      - name: Install foundationdb dependency
-        run: |
-          set -e
-          curl -L https://github.com/apple/foundationdb/releases/download/7.1.53/foundationdb-clients_7.1.53-1_amd64.deb --output fdb-client.deb
-          dpkg -i fdb-client.deb
-          curl -L https://github.com/apple/foundationdb/releases/download/7.1.53/foundationdb-server_7.1.53-1_amd64.deb --output fdb-server.deb
-          dpkg -i fdb-server.deb
-          apt update && apt install -y libfuse3-dev execstack
-
-      - name: Setup Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
+          apt install -y build-essential erlang-dev curl
 
       - name: Set up Elixir
         run: |
@@ -68,13 +53,6 @@ jobs:
 
       - name: Compile code
         run: mix compile
-
-      - uses: actions/checkout@v2
-        with:
-          repository: V-Sekai/elixir-mvsqlite
-          path: elixir_mvsqlite
-      
-      - run: cargo build --locked --release -p mvstore --manifest-path elixir_mvsqlite/rust_src/Cargo.toml
 
       - name: Run tests
         continue-on-error: true
