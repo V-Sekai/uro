@@ -15,7 +15,6 @@ services:
       - db
     volumes:
       - ".:/app"
-    command: bash /app/local-dev-docker/setup.sh
   db:
     image: cockroachdb/cockroach:latest
     ports:

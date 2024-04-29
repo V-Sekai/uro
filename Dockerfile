@@ -1,16 +1,13 @@
-FROM docker.io/groupsinfra/elixir-uro-base:v1.1.1
-
-ENV PORT 4000
+FROM uro:build
 
 WORKDIR /app
 
-COPY . ./
+RUN apk add --update postgresql-client nodejs npm inotify-tools git bash make gcc libc-dev
 
-RUN cd assets/ && yarn install && npm install && npm run deploy ; cd -
+RUN mix local.hex --force
+RUN mix local.rebar --force
 
-RUN MIX_ENV=prod COMPILE_PHASE=1 mix deps.get
+ENV PORT 4000
 
-RUN MIX_ENV=prod COMPILE_PHASE=1 mix do compile, phx.digest
-
-CMD MIX_ENV=prod mix ecto.migrate && MIX_ENV=prod mix phx.server
-
+RUN apk del make
+ENTRYPOINT mix ecto.create && mix ecto.migrate && mix phx.server
