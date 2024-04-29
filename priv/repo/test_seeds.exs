@@ -5,14 +5,14 @@
 # Inside the script, you can read and write to any of your
 # repositories directly:
 #
-#     Uro.Repo.insert!(%Uro.SomeSchema{})
+#     Vertex.Repo.insert!(%Vertex.SomeSchema{})
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias Uro.Repo
-alias Uro.Accounts.User
-alias Uro.Accounts.UserPrivilegeRuleset
+alias Vertex.Repo
+alias Vertex.Accounts.User
+alias Vertex.Accounts.UserPrivilegeRuleset
 
 current_time = DateTime.utc_now()
 

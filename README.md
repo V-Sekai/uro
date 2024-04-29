@@ -1,4 +1,4 @@
-# Uro
+# Vertex
 
 ## Local Dev
 
@@ -35,7 +35,7 @@ mix run priv/repo/test_seeds.exs
 iex -S mix phx.server
 ```
 
-Note that `bcrypt_elixir` will require a working compiler in the PATH. On a Windows system with Visual Studio, you will want to run `mix deps.compile --force` from within a "x64 Native Tools Command Prompt" or cmd with vcvarsall.bat (may fail to build the rest of uro) then return to a bash shell for the rest of the build.
+Note that `bcrypt_elixir` will require a working compiler in the PATH. On a Windows system with Visual Studio, you will want to run `mix deps.compile --force` from within a "x64 Native Tools Command Prompt" or cmd with vcvarsall.bat (may fail to build the rest of vertex) then return to a bash shell for the rest of the build.
 
 ## How do we create a test environment for the Macos?
 
@@ -50,12 +50,12 @@ DYLD_FALLBACK_LIBRARY_PATH=/usr/local/lib ./target/release/mvstore --data-plane 
 ```bash
 # create database
 sleep 1
-curl http://localhost:7001/api/create_namespace -d '{"key":"uro_dev.sqlite3","metadata":""}'
+curl http://localhost:7001/api/create_namespace -d '{"key":"vertex_dev.sqlite3","metadata":""}'
 sleep 1
 ```
 
 ```
-cd SERVICE_uro_sqlite_fdb
+cd vertex
 MIX_ENV=test mix ecto.setup
 MIX_ENV=test mix run priv/repo/test_seeds.exs
 MIX_ENV=test mix test | tee test_output.txt; test ${PIPESTATUS[0]} -eq 0
@@ -63,7 +63,7 @@ MIX_ENV=test mix test | tee test_output.txt; test ${PIPESTATUS[0]} -eq 0
 
 ## Log into Cockroachdb sql shell
 
-`./cockroach sql --database="uro_dev" --insecure`
+`./cockroach sql --database="vertex_dev" --insecure`
 
 You may approve all pending email verifications using the following:
 
@@ -88,6 +88,7 @@ update user_privilege_rulesets set is_admin=true where user_id = '12345678-abcd-
 By default, the `dev` environment will store assets in `priv/waffle/private` directory, and the client expects this to be available on port 80. To serve the CDN content on port 80:
 
 ```bash
+mkdir -p priv/waffle/private
 cd priv/waffle/private
 python -m http.server 80
 ```

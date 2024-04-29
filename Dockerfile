@@ -1,4 +1,4 @@
-FROM docker.io/groupsinfra/elixir-uro-base:v1.1.1
+FROM docker.io/groupsinfra/elixir-vertex-base:v1.1.1
 
 ENV PORT 4000
 

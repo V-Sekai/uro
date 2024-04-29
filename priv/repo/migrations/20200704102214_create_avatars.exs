@@ -1,4 +1,4 @@
-defmodule Uro.Repo.Migrations.CreateAvatars do
+defmodule Vertex.Repo.Migrations.CreateAvatars do
   use Ecto.Migration
 
   def change do

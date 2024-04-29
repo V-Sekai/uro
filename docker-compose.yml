@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  uro:
+  vertex:
     restart: on-failure
     environment:
       - URO_LOCAL_DB=db
@@ -25,5 +25,5 @@ services:
     volumes:
       - "./cockroach-data/crdb:/cockroach/cockroach-data"
 networks:
-  uro:
-    name: "uro"
+  vertex:
+    name: "vertex"

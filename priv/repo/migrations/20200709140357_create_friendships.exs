@@ -1,4 +1,4 @@
-defmodule Uro.Repo.Migrations.CreateFriendships do
+defmodule Vertex.Repo.Migrations.CreateFriendships do
   use Ecto.Migration
 
   def change do

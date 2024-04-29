@@ -16,7 +16,7 @@ database_pass =
   System.get_env("DATABASE_PASS") ||
     System.get_env("COMPILE_PHASE")
 
-config :uro, Uro.Repo,
+config :vertex, Vertex.Repo,
   ssl: true,
   url: database_url,
   password: database_pass,
@@ -30,7 +30,7 @@ secret_key_base =
     You can generate one by calling: mix phx.gen.secret
     """
 
-config :uro, UroWeb.Endpoint,
+config :vertex, VertexWeb.Endpoint,
   http: [
     port: String.to_integer(System.get_env("PORT") || "4000"),
     transport_options: [socket_opts: [:inet6]]
@@ -42,7 +42,7 @@ config :uro, UroWeb.Endpoint,
 # If you are doing OTP releases, you need to instruct Phoenix
 # to start each relevant endpoint:
 #
-#     config :uro, UroWeb.Endpoint, server: true
+#     config :vertex, VertexWeb.Endpoint, server: true
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.

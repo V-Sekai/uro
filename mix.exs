@@ -1,9 +1,9 @@
-defmodule Uro.MixProject do
+defmodule Vertex.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :uro,
+      app: :vertex,
       version: "0.1.0",
       elixir: ">= 1.11.4",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule Uro.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Uro.Application, []},
+      mod: {Vertex.Application, []},
       extra_applications: [:logger, :runtime_tools, :email_checker, :mnesia, :scrivener_ecto]
     ]
   end
@@ -39,7 +39,6 @@ defmodule Uro.MixProject do
       {:phoenix_live_view, "~> 0.20.3"},
       {:phoenix_view, "~> 2.0"},
       {:ecto_sql, "~> 3.11"},
-      {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
       {:gettext, "~> 0.18"},

@@ -1,7 +1,0 @@
-<%= render UroWeb.LayoutView, "user_content_table.html",
-conn: @conn,
-page: @page,
-new_user_content_string: gettext("New Map"),
-is_editable: false,
-path_function_with_item: fn (atom, item) -> Routes.user_content_map_path(@conn, atom, item) end,
-path_function: fn (atom) -> Routes.user_content_map_path(@conn, atom) end %>

@@ -1,4 +1,0 @@
-<%= form_for @changeset, @action, [multipart: true], fn f -> %>
-  <%= render UroWeb.LayoutView, "error.html", changeset: @changeset%>
-  <%= render UroWeb.LayoutView, "user_content_form.html", current_form: f %>
-<% end %>

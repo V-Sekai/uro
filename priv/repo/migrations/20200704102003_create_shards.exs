@@ -1,4 +1,4 @@
-defmodule Uro.Repo.Migrations.CreateShards do
+defmodule Vertex.Repo.Migrations.CreateShards do
   use Ecto.Migration
 
   def change do

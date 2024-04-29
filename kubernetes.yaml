@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: uro
+  name: vertex
   namespace: default
   labels:
-    app: uro
+    app: vertex
 spec:
   type: NodePort
   ports:
@@ -12,24 +12,24 @@ spec:
     port: 4000
     protocol: TCP
   selector:
-    app: uro
+    app: vertex
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: uro-deployment
+  name: vertex-deployment
   namespace: default
   labels:
-    app: uro
+    app: vertex
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: uro
+      app: vertex
   template:
     metadata:
       labels:
-        app: uro
+        app: vertex
     spec:
       serviceAccountName: cockroachdb
       volumes:
@@ -49,7 +49,7 @@ spec:
         command:
         - "/bin/ash"
         - "-ecx"
-        - "/request-cert -namespace=${POD_NAMESPACE} -certs-dir=/cockroach-certs -type=client -user=uro-prod -symlink-ca-from=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        - "/request-cert -namespace=${POD_NAMESPACE} -certs-dir=/cockroach-certs -type=client -user=vertex-prod -symlink-ca-from=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
         env:
         - name: POD_NAMESPACE
           valueFrom:
@@ -59,21 +59,21 @@ spec:
         - name: client-certs
           mountPath: /cockroach-certs
       containers:
-      - name: uro
+      - name: vertex
         env:
         - name: SECRET_KEY_BASE
           valueFrom:
             secretKeyRef:
-              name: uro-prod
+              name: vertex-prod
               key: secret-key-base
         - name: DATABASE_PASS
           valueFrom:
             secretKeyRef:
-              name: uro-prod
+              name: vertex-prod
               key: pass
         - name: DATABASE_URL
-          value: "postgres://uro-prod@cockroachdb-public:26257/uro_prod?sslmode=verify-full&sslcert=/cockroach-certs/client.uro-prod.crt&sslkey=/cockroach-certs/client.uro-prod.key&sslrootcert=/cockroach-certs/ca.crt"
-        image: groupsinfra/uro:latest
+          value: "postgres://vertex-prod@cockroachdb-public:26257/vertex_prod?sslmode=verify-full&sslcert=/cockroach-certs/client.vertex-prod.crt&sslkey=/cockroach-certs/clientvertex-prod.key&sslrootcert=/cockroach-certs/ca.crt"
+        image: groupsinfra/vertex:latest
         imagePullPolicy: Always
         volumeMounts:
         - name: client-certs

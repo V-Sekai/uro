@@ -1,4 +1,4 @@
-defmodule Uro.Repo.Migrations.CreateEvents do
+defmodule Vertex.Repo.Migrations.CreateEvents do
   use Ecto.Migration
 
   def change do

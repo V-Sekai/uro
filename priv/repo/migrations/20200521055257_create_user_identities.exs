@@ -1,4 +1,4 @@
-defmodule Uro.Repo.Migrations.CreateUserIdentities do
+defmodule Vertex.Repo.Migrations.CreateUserIdentities do
   use Ecto.Migration
 
   def change do

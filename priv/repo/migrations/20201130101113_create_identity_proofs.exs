@@ -1,4 +1,4 @@
-defmodule Uro.Repo.Migrations.CreateIdentityProofs do
+defmodule Vertex.Repo.Migrations.CreateIdentityProofs do
   use Ecto.Migration
 
   def change do

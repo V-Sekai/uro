@@ -1,4 +1,4 @@
-defmodule Uro.Repo.Migrations.CreateProps do
+defmodule Vertex.Repo.Migrations.CreateProps do
   use Ecto.Migration
 
   def change do
