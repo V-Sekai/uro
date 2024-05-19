@@ -2,8 +2,8 @@ version: "3.9"
 services:
   uro:
     restart: on-failure
-    environment:
-      - DATABASE_URL=postgresql://vsekai:vsekai@database:5432/vsekai?sslmode=disable
+    # environment:
+    #   - DATABASE_URL=postgresql://vsekai:vsekai@database:5432/vsekai?sslmode=disable
     build:
       dockerfile: ./local-dev-docker/Dockerfile
       context: .

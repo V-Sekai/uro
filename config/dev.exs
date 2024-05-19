@@ -1,19 +1,11 @@
 import Config
 
-database_url =
-  System.get_env("DATABASE_URL")
-    |> IO.inspect(label: "DATABASE_URL") ||
-    System.get_env("COMPILE_PHASE") ||
-    raise """
-    environment variable DATABASE_URL is missing.
-    For example: ecto://USER@HOST/DATABASE
-    """
-
-
 # Configure your database
 config :uro, Uro.Repo,
   adapter: Ecto.Adapaters.Postgres,
-  url: database_url,
+  url:
+    "DATABASE_URL"
+    |> System.get_env("postgresql://vsekai:vsekai@database:5432/vsekai?sslmode=disable"),
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
@@ -24,7 +16,12 @@ config :uro, Uro.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :uro, UroWeb.Endpoint,
-  http: [port: System.fetch_env!("PORT") |> String.to_integer()],
+  http: [
+    port:
+      "PORT"
+      |> System.get_env("4000")
+      |> String.to_integer()
+  ],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,

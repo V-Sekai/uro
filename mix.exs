@@ -42,6 +42,7 @@ defmodule Uro.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:gettext, "~> 0.18"},
       {:hackney, "~> 1.17"},
       {:jason, "~> 1.2"},
