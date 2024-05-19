@@ -22,10 +22,6 @@ config :uro, UroWeb.Endpoint,
   pubsub_server: Uro.PubSub,
   live_view: [signing_salt: "0dBPUwA2"]
 
-config :uro, UroWeb.Pow.Mailer,
-  adapter: Swoosh.Adapters.Sendgrid,
-  api_key: System.get_env("SENDGRID_API_KEY", "")
-
 config :uro, :stale_shard_cutoff,
   amount: 3,
   calendar_type: "month"

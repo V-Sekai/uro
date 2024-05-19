@@ -22,6 +22,11 @@ config :uro, Uro.Repo,
   password: database_pass,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
+config :uro, UroWeb.Pow.Mailer,
+  local: false,
+  adapter: Swoosh.Adapters.Sendgrid,
+  api_key: System.fetch_env!("SENDGRID_API_KEY")
+
 secret_key_base =
   System.get_env("SECRET_KEY_BASE") ||
     System.get_env("COMPILE_PHASE") ||

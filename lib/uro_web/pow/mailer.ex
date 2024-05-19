@@ -10,7 +10,7 @@ defmodule UroWeb.Pow.Mailer do
   def cast(%{user: user, subject: subject, text: text, html: html}) do
     %Swoosh.Email{}
     |> to({user.display_name, user.email})
-    |> from({"V-Sekai", "Verification@v-sekai.cloud"})
+    |> from({"V-Sekai", "verification@v-sekai.cloud"})
     |> subject(subject)
     |> html_body(html)
     |> text_body(text)

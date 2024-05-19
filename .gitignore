@@ -39,4 +39,6 @@ npm-debug.log
 .*.swp
 
 cockroach-data
+postgres
+
 priv/waffle/private/uploads/
