@@ -1,12 +1,46 @@
-FROM elixir:1.11-alpine
+ARG ELIXIR_VERSION=1.13
+
+FROM elixir:${ELIXIR_VERSION}-alpine
+
+ARG PORT=4000
+ENV MIX_ENV=dev \
+	COMPILE_PHASE=1 \
+	PORT=${PORT}
 
 WORKDIR /app
 
-RUN apk add --update postgresql-client nodejs npm inotify-tools git bash make gcc libc-dev
+RUN apk add --no-cache \
+	nodejs \
+	npm \
+	inotify-tools \
+	git \
+	bash \
+	make \
+	gcc \
+	libc-dev
 
-RUN mix local.hex --force
-RUN mix local.rebar --force
+RUN mix local.hex --force && \
+	mix local.rebar --force
 
-ENV PORT 4000
+COPY mix.exs mix.lock ./
+RUN mix do deps.get, deps.compile
 
-ENTRYPOINT mix ecto.create && mix ecto.migrate && mix phx.server
+WORKDIR /app/assets
+COPY assets/package.json assets/package-lock.json ./
+RUN npm install
+
+COPY assets/ ./
+RUN npm run deploy
+
+WORKDIR /app
+COPY config ./config
+COPY priv ./priv
+COPY lib ./lib
+
+# ENV PORT=420
+RUN mix do compile, phx.digest
+
+EXPOSE ${PORT}
+
+ENV COMPILE_PHASE=
+ENTRYPOINT mix do ecto.migrate, phx.server

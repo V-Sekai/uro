@@ -1,15 +1,19 @@
 import Config
 
-db_hostname = System.get_env("URO_LOCAL_DB") || "localhost"
+database_url =
+  System.get_env("DATABASE_URL")
+    |> IO.inspect(label: "DATABASE_URL") ||
+    System.get_env("COMPILE_PHASE") ||
+    raise """
+    environment variable DATABASE_URL is missing.
+    For example: ecto://USER@HOST/DATABASE
+    """
+
 
 # Configure your database
 config :uro, Uro.Repo,
   adapter: Ecto.Adapaters.Postgres,
-  username: "root",
-  password: "",
-  port: "26257",
-  database: "uro_dev",
-  hostname: db_hostname,
+  url: database_url,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
@@ -20,7 +24,7 @@ config :uro, Uro.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :uro, UroWeb.Endpoint,
-  http: [port: 4000],
+  http: [port: System.fetch_env!("PORT") |> String.to_integer()],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
