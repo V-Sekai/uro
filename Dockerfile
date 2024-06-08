@@ -1,6 +1,31 @@
 ARG ELIXIR_VERSION=1.16
+ARG NODE_VERSION=20
 
-FROM elixir:${ELIXIR_VERSION}-alpine
+# Node.js build environment.
+FROM node:${NODE_VERSION}-slim AS node-base
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+WORKDIR /app
+
+# Only install production dependencies, used in the final image.
+FROM node-base AS node-production-dependencies
+
+COPY ./frontend/package.json ./frontend/pnpm-lock.yaml ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+
+# Build the frontend, using all dependencies, including `devDependencies`
+# which might be needed for the build.
+FROM node-base AS node-build
+
+COPY ./frontend ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run build
+
+# Elixir build environment.
+FROM elixir:${ELIXIR_VERSION}-alpine as elixir-base
 
 ARG PORT=4000
 ARG MIX_ENV=prod
@@ -27,12 +52,14 @@ RUN mix local.hex --force && \
 COPY mix.exs mix.lock ./
 RUN mix do deps.get, deps.compile
 
-WORKDIR /app/assets
-COPY assets/package.json assets/package-lock.json ./
-RUN npm install
+# COPY assets/package.json assets/package-lock.json ./
+# RUN npm install
 
-COPY assets/ ./
-RUN npm run deploy
+# COPY --from=node-production-dependencies /app/node_modules /app/frontend/node_modules
+COPY --from=node-build /app/out /app/priv/static
+
+# COPY assets/ ./
+# RUN npm run deploy
 
 WORKDIR /app
 COPY config ./config

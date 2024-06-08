@@ -1,22 +1,44 @@
 defmodule UroWeb.Helpers.User do
-  use UroWeb, :controller
+  @moduledoc false
 
-  @doc false
-  def get_api_user_public(nil) do
-    nil
+  defmodule UserObject do
+    @moduledoc false
+
+    require OpenApiSpex
+    alias OpenApiSpex.Schema
+
+    OpenApiSpex.schema(%{
+      title: "User",
+      type: :object,
+      required: [:id, :username, :display_name],
+      properties: %{
+        id: %Schema{
+          type: :string
+        },
+        username: %Schema{
+          type: :string
+        },
+        display_name: %Schema{
+          type: :string
+        },
+        avatar: %Schema{
+          type: :string
+        }
+      }
+    })
   end
 
-  @doc false
-  def get_api_user_public(user) do
+  def transform_user(user) when is_map(user) do
     %{
-      id: to_string(user.id),
-      username: to_string(user.username),
-      display_name: to_string(user.display_name)
+      id: user.id,
+      username: user.username,
+      display_name: user.display_name,
+      avatar: user.profile_picture
     }
   end
 
-  @doc false
-  def get_api_user_list_public(user_list) do
-    Enum.map(user_list, fn x -> get_api_user_public(x) end)
-  end
+  def transform_user(users) when is_list(users),
+    do: Enum.map(users, fn x -> transform_user(x) end)
+
+  def transform_user(_), do: nil
 end

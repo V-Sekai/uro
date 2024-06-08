@@ -19,10 +19,11 @@ defmodule Uro.Application do
       # {Uro.Worker, arg},
 
       # Starts Pow's Mnesia-backed cache store
-      Pow.Store.Backend.MnesiaCache,
+      # Pow.Store.Backend.MnesiaCache,
       # # Or in a distributed system:
       # {Pow.Store.Backend.MnesiaCache, extra_db_nodes: Node.list()},
       # Pow.Store.Backend.MnesiaCache.Unsplit # Recover from netsplit
+      {Redix, {"redis://redis:6379", [name: :redix]}},
       {Phoenix.PubSub, [name: Uro.PubSub, adapter: Phoenix.PubSub.PG2]}
     ]
 

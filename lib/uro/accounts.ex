@@ -8,6 +8,7 @@ defmodule Uro.Accounts do
 
   alias Uro.Accounts.User
   alias Uro.Accounts.UserPrivilegeRuleset
+  import Uro.Helpers.UUID
 
   @user_associated_schemas [:user_privilege_ruleset]
 
@@ -58,11 +59,13 @@ defmodule Uro.Accounts do
     |> Repo.preload(@user_associated_schemas)
   end
 
-  def get_user!(id) do
+  def get_user!(id) when is_uuid(id) do
     User
     |> Repo.get!(id)
     |> Repo.preload(@user_associated_schemas)
   end
+
+  def get_user!(_), do: nil
 
   def create_user_privilege_ruleset_for_user(user, attrs \\ %{}) do
     user

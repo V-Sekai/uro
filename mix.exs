@@ -20,7 +20,14 @@ defmodule Uro.MixProject do
   def application do
     [
       mod: {Uro.Application, []},
-      extra_applications: [:logger, :runtime_tools, :email_checker, :mnesia, :scrivener_ecto]
+      extra_applications: [
+        :logger,
+        :runtime_tools,
+        :email_checker,
+        :mnesia,
+        :scrivener_ecto,
+        :httpoison
+      ]
     ]
   end
 
@@ -39,14 +46,20 @@ defmodule Uro.MixProject do
       {:phoenix_live_view, "~> 0.20.3"},
       {:phoenix_view, "~> 2.0"},
       {:ecto_sql, "~> 3.11"},
+      {:redix, "~> 0.9.2"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
+      # {:reverse_proxy_plug, "~> 3.0", only: :dev},
+      {:redirect, "~> 0.4.0"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:recode, "~> 0.7", only: :dev},
       {:gettext, "~> 0.18"},
       {:hackney, "~> 1.17"},
+      {:httpoison, "~> 2.0"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
+      {:plug_static_index_html, "~> 1.0"},
       {:comeonin, "~> 5.3.2"},
       {:bcrypt_elixir, "~> 2.3"},
       {:pow, "~> 1.0"},
@@ -54,6 +67,7 @@ defmodule Uro.MixProject do
       {:pow_assent, "~> 0.4.18"},
       {:ssl_verify_fun, "~> 1.1.6"},
       {:phoenix_swagger, "~> 0.8.3"},
+      {:open_api_spex, "~> 3.18"},
       {:ex_json_schema, "~> 0.7.4"},
       {:remote_ip, "~> 1.0"},
       {:waffle, "~> 1.1"},

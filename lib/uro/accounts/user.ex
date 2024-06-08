@@ -1,5 +1,4 @@
 defmodule Uro.Accounts.User do
-  @derive {Jason.Encoder, only: [:id, :username, :display_name]}
   use Ecto.Schema
 
   use Pow.Ecto.Schema,
@@ -71,8 +70,8 @@ defmodule Uro.Accounts.User do
     user_or_changeset
     |> cast(attrs, [:username, :email_notifications])
     |> validate_required([:username])
-    |> put_display_name
-    |> downcase_username
+    |> put_display_name()
+    |> downcase_username()
     |> validate_username(:username)
     |> validate_email(:email)
     |> unique_constraint(:username)
@@ -102,7 +101,7 @@ defmodule Uro.Accounts.User do
   defp put_display_name(changeset), do: changeset
 
   def downcase_username(%{valid?: true, changes: %{username: username}} = changeset) do
-    put_change(changeset, :username, username |> String.downcase())
+    put_change(changeset, :username, String.downcase(username))
   end
 
   def downcase_username(changeset), do: changeset

@@ -16,6 +16,7 @@ config :uro,
 
 # Configures the endpoint
 config :uro, UroWeb.Endpoint,
+  load_from_system_env: true,
   url: [host: "localhost"],
   secret_key_base: "bNDe+pg86uL938fQA8QGYCJ4V7fE5RAxoQ8grq9drPpO7mZ0oEMSNapKLiA48smR",
   render_errors: [view: UroWeb.ErrorView, accepts: ~w(html json)],
@@ -40,12 +41,13 @@ config :uro, :pow,
   user: Uro.Accounts.User,
   repo: Uro.Repo,
   web_module: UroWeb,
-  extensions: [PowResetPassword, PowEmailConfirmation],
+  extensions: [PowPersistentSession],
   controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks,
   mailer_backend: UroWeb.Pow.Mailer,
   routes_backend: UroWeb.Pow.Routes,
   web_mailer_module: UroWeb,
-  cache_store_backend: Pow.Store.Backend.MnesiaCache
+  # cache_store_backend: Pow.Store.Backend.MnesiaCache
+  cache_store_backend: UroWeb.Pow.RedisCache
 
 config :uro, :pow_assent,
   user_identities_context: Uro.UserIdentities,
@@ -66,8 +68,8 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :waffle,
-  storage: Waffle.Storage.Local
+# config :waffle,
+#   storage: Waffle.Storage.Local
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason

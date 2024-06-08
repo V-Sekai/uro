@@ -1,7 +1,23 @@
 {
+	"editor.formatOnType": true,
+	"editor.formatOnSave": true,
+	"workbench.editor.customLabels.patterns": {
+		"**/controllers/**/*.ex": "${filename} - controller",
+		"**/helpers/**/*.ex": "${filename} - helper",
+	},
+	"eslint.workingDirectories": [
+		"./frontend"
+	],
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact"
+	],
 	"[elixir]": {
 		"editor.defaultFormatter": "JakeBecker.elixir-ls",
-		"editor.formatOnType": true,
-		"editor.formatOnSave": true
 	},
+	"[javascript]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+	}
 }

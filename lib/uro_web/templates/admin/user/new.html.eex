@@ -1,5 +1,0 @@
-<h1><%= gettext("New User") %></h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.admin_user_path(@conn, :create)) %>
-
-<span><%= link gettext("Back"), to: Routes.admin_user_path(@conn, :index) %></span>

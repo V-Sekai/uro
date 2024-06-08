@@ -24,15 +24,7 @@ config :uro, UroWeb.Endpoint,
   ],
   debug_errors: true,
   code_reloader: true,
-  check_origin: false,
-  watchers: [
-    node: [
-      "node_modules/webpack/bin/webpack.js",
-      "--mode",
-      "development",
-      cd: Path.expand("../assets", __DIR__)
-    ]
-  ]
+  check_origin: false
 
 config :uro, UroWeb.Pow.Mailer, adapter: Swoosh.Adapters.Local
 
@@ -64,18 +56,19 @@ config :uro, UroWeb.Pow.Mailer, adapter: Swoosh.Adapters.Local
 config :uro, UroWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
-      ~r"priv/gettext/.*(po)$",
-      ~r"lib/uro_web/(live|views)/  .*(ex)$",
-      ~r"lib/uro_web/templates/.*(eex)$"
+      ~r"priv/static/.*$",
+      ~r"frontend/.*$"
     ]
   ]
 
 config :waffle,
   storage_dir_prefix: "priv/waffle/private"
 
+config :open_api_spex, :cache_adapter, OpenApiSpex.Plug.NoneCache
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
+config :logger, level: :info
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.

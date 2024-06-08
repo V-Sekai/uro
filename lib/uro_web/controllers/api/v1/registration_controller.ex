@@ -17,7 +17,7 @@ defmodule UroWeb.API.V1.RegistrationController do
 
       user ->
         conn
-        |> json(%{data: %{user: user}})
+        |> json(user)
     end
   end
 

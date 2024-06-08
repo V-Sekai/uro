@@ -1,3 +1,0 @@
-<h1>Dashboard</h1>
-<span><%= link gettext("Avatars"), to: Routes.dashboard_avatar_path(@conn, :index) %></span>
-<span><%= link gettext("Maps"), to: Routes.dashboard_map_path(@conn, :index) %></span>

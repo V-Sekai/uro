@@ -1,6 +1,7 @@
 {
 	"recommendations": [
 		"JakeBecker.elixir-ls",
-		"pantajoe.vscode-elixir-credo"
+		"pantajoe.vscode-elixir-credo",
+		"dbaeumer.vscode-eslint"
 	]
 }

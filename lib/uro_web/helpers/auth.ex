@@ -1,4 +1,8 @@
 defmodule UroWeb.Helpers.Auth do
+  @moduledoc """
+  Session & authentication helper functions.
+  """
+
   require Pow.Phoenix.Router
   require PowEmailConfirmation.Phoenix.Router
 
@@ -16,10 +20,6 @@ defmodule UroWeb.Helpers.Auth do
     end
   end
 
-  def validate_user_params(user_params) do
-    Enum.all?(["username_or_email", "password"], fn x -> Map.has_key?(user_params, x) end)
-  end
-
   def verify_confirmed_or_send_confirmation_email(conn) do
     conn
     |> PowEmailConfirmation.Plug.email_unconfirmed?()
@@ -32,28 +32,6 @@ defmodule UroWeb.Helpers.Auth do
 
       false ->
         {:ok, conn}
-    end
-  end
-
-  def validate_login(conn, user_params) do
-    if validate_user_params(user_params) do
-      user =
-        Uro.Accounts.get_by_username_or_email(
-          user_params["username_or_email"]
-          |> String.downcase()
-        )
-
-      if user do
-        conn
-        |> Pow.Plug.authenticate_user(%{
-          "email" => user.email,
-          "password" => user_params["password"]
-        })
-      else
-        {:error, conn}
-      end
-    else
-      {:error, conn}
     end
   end
 

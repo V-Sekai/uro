@@ -1,5 +1,0 @@
-<h1>Edit Avatar</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.dashboard_avatar_path(@conn, :update, @avatar)) %>
-
-<span><%= link "Back", to: Routes.dashboard_avatar_path(@conn, :index) %></span>
