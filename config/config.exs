@@ -5,7 +5,7 @@
 # is restricted to this project.
 
 # General application configuration
-use Mix.Config
+import Config
 
 config :hammer,
   backend: {Hammer.Backend.ETS, [expiry_ms: 60_000 * 60 * 4, cleanup_interval_ms: 60_000 * 10]}
@@ -53,7 +53,13 @@ config :uro, :pow,
 
 config :uro, :pow_assent,
   user_identities_context: Uro.UserIdentities,
-  providers: []
+  providers: [
+    discord: [
+      client_id: System.get_env("DISCORD_CLIENT_ID", ""),
+      client_secret: System.get_env("DISCORD_CLIENT_SECRET", ""),
+      strategy: Assent.Strategy.Discord
+    ]
+  ]
 
 config :uro, :phoenix_swagger,
   swagger_files: %{
