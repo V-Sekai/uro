@@ -6,7 +6,7 @@ defmodule UroWeb.API.V1.SessionController do
   alias OpenApiSpex.Schema
   alias Plug.Conn
   alias Uro.Plug.Authentication
-  alias UroWeb.Helpers.API.ErrorObject
+  alias UroWeb.Helpers.API.SchemaError
 
   tags(["session"])
   security(default_security())
@@ -20,19 +20,20 @@ defmodule UroWeb.API.V1.SessionController do
     |> json_error("Your e-mail address has not been confirmed.", status: 401)
   end
 
-  defmodule SessionResponse do
+  defmodule SchemaSession do
     @moduledoc false
 
     require OpenApiSpex
+
     alias OpenApiSpex.Schema
-    alias UroWeb.Helpers.User.UserObject
+    alias Uro.Accounts.User
 
     OpenApiSpex.schema(%{
       type: :object,
       title: "Session",
       required: [:user, :access_token, :token_type, :expires_in],
       properties: %{
-        user: UserObject,
+        user: User.Schema,
         access_token: %Schema{
           type: :string
         },
@@ -55,12 +56,12 @@ defmodule UroWeb.API.V1.SessionController do
       ok: {
         "",
         "application/json",
-        SessionResponse
+        SchemaSession
       },
       unauthorized: {
         "Invalid credentials",
         "application/json",
-        ErrorObject
+        SchemaError
       }
     ]
   )
@@ -119,13 +120,14 @@ defmodule UroWeb.API.V1.SessionController do
 
   def validate_credentials(conn, _), do: {:error, conn}
 
-  defmodule LoginCredentials do
+  defmodule SchemaLoginCredentials do
     @moduledoc false
 
     require OpenApiSpex
     alias OpenApiSpex.Schema
 
     OpenApiSpex.schema(%{
+      title: "LoginCredentials",
       oneOf: [
         %Schema{
           type: :object,
@@ -162,18 +164,18 @@ defmodule UroWeb.API.V1.SessionController do
     request_body: {
       "",
       "application/json",
-      LoginCredentials
+      SchemaLoginCredentials
     },
     responses: [
       ok: {
         "",
         "application/json",
-        SessionResponse
+        SchemaSession
       },
       unauthorized: {
         "Invalid credentials",
         "application/json",
-        ErrorObject
+        SchemaError
       }
     ]
   )

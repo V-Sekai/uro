@@ -1,21 +1,20 @@
 defmodule UroWeb.Helpers.Shard do
   @moduledoc false
 
-  import UroWeb.Helpers.User
-
-  defmodule ShardObject do
+  defmodule SchemaShard do
     @moduledoc false
 
     require OpenApiSpex
+
     alias OpenApiSpex.Schema
-    alias UroWeb.Helpers.User.UserObject
+    alias Uro.Accounts.User
 
     OpenApiSpex.schema(%{
       title: "Shard",
       type: :object,
       required: [:id, :username, :display_name],
       properties: %{
-        user: UserObject,
+        user: User.Schema,
         address: %Schema{
           type: :string
         },
@@ -40,7 +39,7 @@ defmodule UroWeb.Helpers.Shard do
 
   def transform_shard(shard) when is_map(shard) do
     %{
-      user: transform_user(shard.user),
+      user: shard.user,
       address: to_string(shard.address),
       port: shard.port,
       map: to_string(shard.map),

@@ -22,7 +22,7 @@ FROM node-base AS node-build
 
 COPY ./frontend ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run build
+# RUN pnpm run build
 
 # Elixir build environment.
 FROM elixir:${ELIXIR_VERSION}-alpine as elixir-base
@@ -56,7 +56,7 @@ RUN mix do deps.get, deps.compile
 # RUN npm install
 
 # COPY --from=node-production-dependencies /app/node_modules /app/frontend/node_modules
-COPY --from=node-build /app/out /app/priv/static
+# COPY --from=node-build /app/out /app/priv/static
 
 # COPY assets/ ./
 # RUN npm run deploy
@@ -71,4 +71,4 @@ RUN mix do compile, phx.digest
 EXPOSE ${PORT}
 
 ENV COMPILE_PHASE=
-ENTRYPOINT mix do ecto.migrate, phx.server
+ENTRYPOINT iex -S mix do ecto.migrate, phx.server

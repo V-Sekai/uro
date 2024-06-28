@@ -115,7 +115,7 @@ export default function AboutPage() {
 							}
 						].map(({ discord, twitter, email }) => (
 							<div
-								className="relative flex flex-col gap-2 overflow-hidden rounded-lg border border-black/10 p-4 hover:bg-black/[1%]"
+								className="relative flex flex-col gap-2 overflow-hidden rounded-lg border border-tertiary-200 p-4 hover:bg-tertiary-50"
 								key={discord.id}
 							>
 								<div

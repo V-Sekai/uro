@@ -7,7 +7,7 @@ defmodule UroWeb.OpenAPIViewer do
   end
 
   @impl Plug
-  def call(conn, config) do
+  def call(conn, _) do
     {spec, _} = OpenApiSpex.Plug.PutApiSpec.get_spec_and_operation_lookup(conn)
 
     conn
@@ -24,10 +24,12 @@ defmodule UroWeb.OpenAPIViewer do
       </head>
       <body style="height: 100svh;">
         <elements-api
-          apiDescriptionUrl="#{config.pathname}"
           layout="responsive"
           router="hash"
         />
+        <script>
+          document.querySelector("elements-api").apiDescriptionDocument = #{Jason.encode!(spec)};
+        </script>
       </body>
     </html>
     """)

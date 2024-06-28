@@ -8,7 +8,7 @@ defmodule UroWeb.Helpers.Auth do
 
   def get_user_privilege_ruleset(user) do
     user
-    |> is_map
+    |> is_map()
     |> case do
       true ->
         user
@@ -28,7 +28,7 @@ defmodule UroWeb.Helpers.Auth do
         Pow.Plug.current_user(conn)
         |> PowEmailConfirmation.Phoenix.ControllerCallbacks.send_confirmation_email(conn)
 
-        {:failed, conn}
+        {:error, conn}
 
       false ->
         {:ok, conn}

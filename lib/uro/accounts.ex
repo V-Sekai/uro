@@ -4,6 +4,8 @@ defmodule Uro.Accounts do
   """
 
   import Ecto.Query, warn: false
+  alias Ecto.Changeset
+  alias Uro.EmailConfirmationToken
   alias Uro.Repo
 
   alias Uro.Accounts.User
@@ -74,9 +76,7 @@ defmodule Uro.Accounts do
   end
 
   def create_associated_entries_for_user(user) do
-    user
-    |> create_user_privilege_ruleset_for_user
-
+    create_user_privilege_ruleset_for_user(user)
     user
   end
 
@@ -84,14 +84,52 @@ defmodule Uro.Accounts do
     conn
     |> Pow.Plug.create_user(attrs)
     |> case do
-      {:ok, user, conn} ->
-        user
-        |> create_associated_entries_for_user
-
+      {:ok, user, _} ->
+        create_associated_entries_for_user(user)
         {:ok, user, conn}
 
-      {:error, changeset, conn} ->
-        {:error, changeset, conn}
+      {:error, changeset, _} ->
+        {:error, changeset}
+    end
+  end
+
+  def send_confirmation_email(%{email_confirmed_at: nil} = user) do
+    {:ok, confirmation_token, _} = EmailConfirmationToken.new(user)
+    confirmed_user = %{user | email_confirmed_at: DateTime.utc_now()}
+
+    {:ok, _} =
+      Uro.Mailer.confirmation_email(confirmation_token)
+      |> Uro.Mailer.deliver_to(confirmed_user)
+
+    :ok
+  end
+
+  def send_confirmation_email(_), do: :ok
+
+  def confirm_email(user, token) do
+    with {:ok, user} <- EmailConfirmationToken.confirm(user, token),
+         %User{} = user <-
+           user
+           |> User.confirm_email_changeset()
+           |> Repo.update() do
+      {:ok, user}
+    end
+  end
+
+  def update_email(%User{} = user, email, send_confirmation: send_confirmation) do
+    user
+    |> User.update_email_changeset(email, send_confirmation: send_confirmation)
+    |> Repo.update()
+    |> case do
+      {:ok, user} ->
+        if send_confirmation do
+          send_confirmation_email(user)
+        end
+
+        {:ok, user}
+
+      {:error, changeset} ->
+        {:error, changeset}
     end
   end
 
@@ -126,13 +164,11 @@ defmodule Uro.Accounts do
   end
 
   def update_current_user(conn, attrs) do
-    conn
-    |> Pow.Plug.update_user(attrs)
+    Pow.Plug.update_user(conn, attrs)
   end
 
   def delete_current_user(conn) do
-    conn
-    |> Pow.Plug.delete_user()
+    Pow.Plug.delete_user(conn)
   end
 
   def change_user(%User{} = user) do

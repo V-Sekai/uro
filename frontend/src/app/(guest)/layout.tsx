@@ -1,14 +1,12 @@
 "use client";
 
 import { redirect, useSearchParams } from "next/navigation";
-import {
-	Suspense,
-	type ComponentProps,
-	type JSXElementConstructor,
-	type PropsWithChildren
-} from "react";
+
+import { withSuspense } from "~/hooks/with-suspense";
 
 import { useOptionalSession } from "../../hooks/session";
+
+import type { PropsWithChildren } from "react";
 
 function GuestLayout({ children }: PropsWithChildren) {
 	const session = useOptionalSession();
@@ -20,14 +18,3 @@ function GuestLayout({ children }: PropsWithChildren) {
 }
 
 export default withSuspense(GuestLayout);
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function withSuspense<T extends JSXElementConstructor<any>>(Component: T) {
-	return function WithSuspense(props: ComponentProps<T>) {
-		return (
-			<Suspense fallback={<span>Loading...</span>}>
-				<Component {...props} />
-			</Suspense>
-		);
-	};
-}

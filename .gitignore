@@ -34,6 +34,7 @@ npm-debug.log
 /priv/static/
 /uploads
 
+
 /Mnesia.*/
 /assets/yarn-error.*
 .*.swp

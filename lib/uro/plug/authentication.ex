@@ -9,6 +9,8 @@ defmodule Uro.Plug.Authentication do
   alias Pow.Config
   alias Pow.Plug
   alias PowPersistentSession.Store.PersistentSessionCache
+  alias Uro.Accounts.User
+  alias Uro.Accounts.UserPrivilegeRuleset
 
   # The lifetime of the session.
   @session_lifetime :timer.hours(168)
@@ -144,7 +146,11 @@ defmodule Uro.Plug.Authentication do
     [backend: backend, pow_config: config]
   end
 
-  def current_user(conn), do: Pow.Plug.current_user(conn)
+  def current_user(conn),
+    do:
+      conn
+      |> Pow.Plug.current_user()
+      |> UserPrivilegeRuleset.associate()
 
   def current_session(conn) do
     with %{
@@ -165,9 +171,13 @@ defmodule Uro.Plug.Authentication do
     end
   end
 
-  def transform_session(%{user: user, access_token: access_token, expires_in: expires_in}) do
+  def transform_session(%{
+        user: user,
+        access_token: access_token,
+        expires_in: expires_in
+      }) do
     %{
-      user: transform_user(user),
+      user: user,
       access_token: access_token,
       expires_in: expires_in,
       token_type: "Bearer"

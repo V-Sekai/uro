@@ -3,21 +3,6 @@ defmodule UroWeb.Router do
   use Plug.ErrorHandler
   use UroWeb.Helpers.API
 
-  import Redirect
-
-  # use PowAssent.Phoenix.Router
-
-  # @view_commands [:index, :show]
-  # @modify_commands [:new, :edit, :create, :update, :delete]
-
-  # defp handle_errors(conn, %{reason: %{message: message}}) do
-  #   json_error(conn, message, status: 500)
-  # end
-  #
-  # defp handle_errors(conn, %{reason: %{description: message}}) do
-  #   json_error(conn, message, status: 500)
-  # end
-
   defp handle_errors(conn, %{reason: reason}) do
     json_error(conn, Exception.message(reason), status: 500)
   end
@@ -79,10 +64,11 @@ defmodule UroWeb.Router do
 
     plug(RemoteIp)
     plug(Uro.Plug.Authentication, otp_app: :uro)
+
+    plug(OpenApiSpex.Plug.PutApiSpec, module: UroWeb.API.V1.Spec)
   end
 
   pipeline :api_v1 do
-    plug(OpenApiSpex.Plug.PutApiSpec, module: UroWeb.API.V1.Spec)
     # plug OpenApiSpex.Plug.CastAndValidate, json_render_error_v2: true
   end
 
@@ -111,43 +97,45 @@ defmodule UroWeb.Router do
     end
   end
 
+  pipe_through([:api])
+
+  get("/", OpenApiSpex.Plug.RenderSpec, [])
+  get("/docs", UroWeb.OpenAPIViewer, pathname: "/api/v1")
+
   scope "/" do
-    get("/", UroWeb.A, :index)
+    pipe_through([:authenticated])
+
+    resources("/session", UroWeb.API.V1.SessionController,
+      singleton: true,
+      only: [:show, :delete]
+    )
   end
 
-  # plug(Plug.Static.IndexHtml, at: "/")
-  # plug(Plug.Static, at: "/", from: :uro)
+  post("/session", UroWeb.API.V1.SessionController, :create)
 
-  scope "/api" do
-    pipe_through([:api])
+  scope "/oauth" do
+    get("/", UroWeb.API.V1.AuthController, :index)
 
-    redirect("/", "/api/v1", :temporary)
+    scope "/:provider" do
+      get("/", UroWeb.API.V1.AuthController, :new)
+      get("/callback", UroWeb.API.V1.AuthController, :callback)
+    end
+  end
 
-    scope "/v1" do
-      pipe_through([:api_v1])
+  resources("/avatars", UserContent.AvatarController, only: [:show])
+  resources("/maps", UroWeb.API.V1.MapController, only: [:show])
 
-      get("/", OpenApiSpex.Plug.RenderSpec, [])
-      get("/docs", UroWeb.OpenAPIViewer, pathname: "/api/v1")
+  resources("/shards", UroWeb.API.V1.ShardController, only: [:index, :create, :update, :delete])
 
-      post("/session", UroWeb.API.V1.SessionController, :create)
+  scope "/users" do
+    resources("/", UroWeb.API.V1.UserController, only: [:show, :create])
 
-      resources("/avatars", UserContent.AvatarController, only: [:show])
-      resources("/maps", UroWeb.API.V1.MapController, only: [:show])
+    scope "/:user_id" do
+      pipe_through([:authenticated])
 
-      resources("/shards", UroWeb.API.V1.ShardController,
-        only: [:index, :create, :update, :delete]
-      )
-
-      resources("/users", UroWeb.API.V1.UserController, only: [:show])
-
-      scope "/" do
-        pipe_through([:authenticated])
-
-        resources("/session", UroWeb.API.V1.SessionController,
-          singleton: true,
-          only: [:show, :delete]
-        )
-      end
+      put "/email", UroWeb.API.V1.UserController, :update_email
+      patch "/email", UroWeb.API.V1.UserController, :resend_confirmation_email
+      post "/email", UroWeb.API.V1.UserController, :confirm_email
     end
   end
 end

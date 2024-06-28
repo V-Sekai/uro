@@ -7,8 +7,10 @@ defmodule UroWeb.Helpers.API do
   @spec default_security() :: [map()]
   def default_security(), do: @default_security
 
-  defmodule ErrorObject do
-    @moduledoc false
+  defmodule SchemaError do
+    @moduledoc """
+    A representation of an error response.
+    """
 
     require OpenApiSpex
     alias OpenApiSpex.Schema
@@ -16,26 +18,48 @@ defmodule UroWeb.Helpers.API do
     OpenApiSpex.schema(%{
       title: "Error",
       type: :object,
-      required: [:status, :message],
+      required: [:message, :status],
       properties: %{
+        message: %Schema{
+          type: :string,
+          description: "A human-readable message describing the error.",
+          example: "Bad request."
+        },
         status: %Schema{
           type: :integer,
           example: 400
         },
-        message: %Schema{
-          type: :string,
-          example: "Bad request"
+        properties: %Schema{
+          type: :object,
+          description: "Property specific errors, in response to invalid requests.",
+          example: %{
+            username: ["should be at least 3 character(s)"],
+            password: ["was already taken"]
+          },
+          additionalProperties: %Schema{
+            type: :array,
+            items: %Schema{
+              type: :string
+            }
+          }
         }
       }
     })
   end
 
   def json_error(conn, message \\ "Bad request.", options \\ []) do
-    status = Keyword.get(options, :status, 400)
+    status = Keyword.get(options, :status, :bad_request)
 
     conn
     |> put_status(status)
-    |> json(%{status: status, message: message})
+    |> json(
+      options
+      |> Enum.into(%{})
+      |> Map.merge(%{
+        message: message,
+        status: Plug.Conn.Status.code(status)
+      })
+    )
   end
 
   @doc false

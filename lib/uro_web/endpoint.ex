@@ -54,5 +54,7 @@ defmodule UroWeb.Endpoint do
   # plug PowPersistentSession.Plug.Cookie
   # persistent_session_cookie_key: "p_session"
 
+  plug(CORSPlug)
+
   plug(UroWeb.Router)
 end

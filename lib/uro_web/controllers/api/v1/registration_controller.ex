@@ -16,23 +16,27 @@ defmodule UroWeb.API.V1.RegistrationController do
         |> json(%{error: %{status: 500, message: gettext("Couldn't get current user")}})
 
       user ->
-        conn
-        |> json(user)
+        json(
+          conn,
+          user
+        )
     end
   end
 
   @spec create(Conn.t(), map()) :: Conn.t()
-  def create(conn, %{"user" => user_params}) do
+  def create(conn, params) do
     conn
-    |> Uro.Accounts.create_user(user_params)
+    |> Uro.Accounts.create_user(params)
     |> case do
       {:ok, _user, conn} ->
         conn
         |> UroWeb.Helpers.Auth.verify_confirmed_or_send_confirmation_email()
         |> case do
           _ ->
-            conn
-            |> json(%{data: %{}})
+            json(
+              conn,
+              %{data: %{}}
+            )
         end
 
       {:error, changeset, conn} ->

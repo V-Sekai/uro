@@ -5,18 +5,19 @@ defmodule UroWeb.FallbackController do
   See `Phoenix.Controller.action_fallback/1` for more details.
   """
   use UroWeb, :controller
+  use UroWeb.Helpers.API
+
+  alias Ecto.Changeset
+  alias UroWeb.ErrorHelpers
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(UroWeb.ChangesetView)
-    |> render("error.json", changeset: changeset)
-  end
+    properties = Changeset.traverse_errors(changeset, &ErrorHelpers.translate_error/1)
 
-  def call(conn, {:error, :not_found}) do
-    conn
-    |> put_status(:not_found)
-    |> put_view(UroWeb.ErrorView)
-    |> render(:"404")
+    json_error(
+      conn,
+      "Unprocessable Entity",
+      status: :unprocessable_entity,
+      properties: properties
+    )
   end
 end

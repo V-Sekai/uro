@@ -3,32 +3,44 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo -H 0.0.0.0 -p 4001",
+    "dev": "next dev -H 0.0.0.0 -p 3000",
     "build": "next build",
     "lint": "next lint"
   },
   "dependencies": {
-    "@hey-api/client-fetch": "^0.1.2",
+    "@ariesclark/extensions": "^0.3.3",
+    "@ariesclark/react-hooks": "^0.1.8",
+    "@hey-api/client-fetch": "^0.1.6",
     "@icons-pack/react-simple-icons": "^9.5.0",
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@tanstack/react-query": "^5.45.1",
+    "@tanstack/react-query-devtools": "^5.45.1",
+    "@tanstack/react-query-next-experimental": "^5.46.0",
     "babel-plugin-react-compiler": "0.0.0-experimental-592953e-20240517",
     "lucide-react": "^0.379.0",
     "next": "14.3.0-canary.70",
+    "postcss-rename": "^0.6.1",
     "react": "19.0.0-rc-3f1436cca1-20240516",
     "react-dom": "19.0.0-rc-3f1436cca1-20240516",
+    "server-only": "^0.0.1",
     "swr": "^2.2.5",
-    "tailwind-merge": "^2.3.0"
+    "tailwind-merge": "^2.3.0",
+    "tailwind-variants": "^0.2.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@ariesclark/eslint-config": "^1.7.2",
-    "@hey-api/openapi-ts": "^0.46.2",
-    "@types/node": "^20.12.12",
+    "@hey-api/openapi-ts": "^0.46.3",
+    "@types/node": "^20.14.8",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.1.4",
     "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.5"
+    "postcss-obfuscator": "^1.6.1",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.5.2"
   }
 }

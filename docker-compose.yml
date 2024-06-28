@@ -21,7 +21,20 @@ services:
       - ./lib:/app/lib
       - ./config:/app/config
       - ./priv:/app/priv
-      - ./frontend/out:/app/priv/static
+      # - ./frontend/out:/app/priv/static
+  nextjs:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
+    volumes:
+      - ./frontend:/app
+    entrypoint: npm run dev
+    # In development, we want to mount the source code into the container, so
+    # that we can see changes in real-time. For other changes, like dependencies,
+    # you must run ``docker compose up nextjs --build`` to apply the changes.
+    user: "root"
   database:
     image: postgres:16.3-alpine
     restart: always
@@ -41,6 +54,24 @@ services:
     - "6379:6379"
     volumes:
       - "./redis:/data"
+  caddy:
+    image: caddy:2.8.4-alpine
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/data:/data
+      - ./caddy/config:/config
+    depends_on:
+      - uro
 networks:
   uro:
     name: "uro"
+volumes:
+  caddy_data:
+  caddy_config:

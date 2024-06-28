@@ -4,8 +4,10 @@ import Config
 config :uro, Uro.Repo,
   adapter: Ecto.Adapaters.Postgres,
   url:
-    "DATABASE_URL"
-    |> System.get_env("postgresql://vsekai:vsekai@database:5432/vsekai?sslmode=disable"),
+    System.get_env(
+      "DATABASE_URL",
+      "postgresql://vsekai:vsekai@database:5432/vsekai?sslmode=disable"
+    ),
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
@@ -16,6 +18,12 @@ config :uro, Uro.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :uro, UroWeb.Endpoint,
+  url: [
+    host: "vsekai.local",
+    port: 443,
+    scheme: "https",
+    path: "/api/v1"
+  ],
   http: [
     port:
       "PORT"
@@ -26,7 +34,13 @@ config :uro, UroWeb.Endpoint,
   code_reloader: true,
   check_origin: false
 
-config :uro, UroWeb.Pow.Mailer, adapter: Swoosh.Adapters.Local
+config :cors_plug,
+  origin: ["https://vsekai.local"],
+  max_age: 86400
+
+config :uro, Uro.Mailer, adapter: Swoosh.Adapters.Local
+
+config :joken, default_signer: "gqawCOER09ZZjaN8W2QM9XT9BeJSZ9qc"
 
 # ## SSL Support
 #
@@ -68,7 +82,7 @@ config :open_api_spex, :cache_adapter, OpenApiSpex.Plug.NoneCache
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
-config :logger, level: :info
+config :logger, level: :debug
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.

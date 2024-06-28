@@ -1,10 +1,6 @@
-"use client";
-
-import Image from "next/image";
-
 import { InlineLink } from "~/components/link";
 import { urls } from "~/environment";
-import Logo from "~/assets/v-sekai.png";
+import { VSekaiMark } from "~/components/vsekai-mark";
 
 import { Section, SectionTitle } from "../section";
 import { Footer } from "../footer";
@@ -14,7 +10,7 @@ export default function LandingPage() {
 		<main className="mx-auto flex w-full max-w-screen-lg flex-col lg:pt-16">
 			<Section className="py-16 pb-32 text-lg lg:items-center lg:text-center">
 				<h1 className="mx-auto flex w-full max-w-screen-md items-center gap-2 px-4 py-6 text-3xl font-medium lg:justify-center">
-					<Image alt="V-Sekai Logo" className="size-12 shrink-0" src={Logo} />
+					<VSekaiMark className="size-12 shrink-0" />
 					<span>V-Sekai</span>
 				</h1>
 				<div className="mx-auto flex max-w-screen-md flex-col gap-4 px-4">

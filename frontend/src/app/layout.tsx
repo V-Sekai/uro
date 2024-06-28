@@ -1,49 +1,48 @@
-"use client";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { HydrationBoundary } from "@tanstack/react-query";
 
-import { Prompt } from "next/font/google";
-import { SWRConfig } from "swr";
-import { twMerge } from "tailwind-merge";
+import { getTheme } from "~/hooks/theme/server";
+import { dehydrateAll, getQueryClient } from "~/query";
+import { getOptionalSession } from "~/data/session";
 
-import { Header } from "./header";
+import { Body, QueryProvider } from "./body";
+import { LoadingIndicator } from "./loading-indicator";
 
-// import type { Metadata } from "next";
+import type { Metadata } from "next";
 
 import "./globals.css";
 
-const montserrat = Prompt({
-	subsets: ["latin"],
-	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"]
-});
-
-/* export const metadata: Metadata = {
+export const metadata: Metadata = {
 	title: "V-Sekai",
 	description: "Your virtual reality platform, on your game engine."
-}; */
+};
 
-export default function RootLayout({
+export default async function RootLayout({
 	children
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const session = await getOptionalSession();
+
+	const queryClient = getQueryClient();
+
+	queryClient.setQueryData(["theme"], getTheme());
+	queryClient.setQueryData(["session"], session);
+
+	if (session)
+		queryClient.setQueryData(["users", session.user.username], session.user);
+
 	return (
 		<html lang="en">
-			<head>
-				<script>{"{{ inject phoenix }}"}</script>
-				<script>{`hello = "world"`}</script>
-			</head>
-			<body
-				className={twMerge("flex min-h-svh flex-col", montserrat.className)}
-			>
-				<SWRConfig
-					value={(...config) => ({
-						...config,
-						suspense: true
-					})}
-				>
-					<Header />
-					{children}
-				</SWRConfig>
-			</body>
+			<QueryProvider>
+				<HydrationBoundary state={dehydrateAll(queryClient)}>
+					<Body>
+						<ReactQueryDevtools />
+						<LoadingIndicator />
+						{children}
+					</Body>
+				</HydrationBoundary>
+			</QueryProvider>
 		</html>
 	);
 }

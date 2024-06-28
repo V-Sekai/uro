@@ -49,6 +49,7 @@ defmodule Uro.MixProject do
       {:redix, "~> 0.9.2"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3"},
+      {:cors_plug, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
       # {:reverse_proxy_plug, "~> 3.0", only: :dev},
       {:redirect, "~> 0.4.0"},
@@ -58,6 +59,7 @@ defmodule Uro.MixProject do
       {:hackney, "~> 1.17"},
       {:httpoison, "~> 2.0"},
       {:jason, "~> 1.2"},
+      {:joken, "~> 2.6"},
       {:plug_cowboy, "~> 2.5"},
       {:plug_static_index_html, "~> 1.0"},
       {:comeonin, "~> 5.3.2"},
@@ -72,6 +74,7 @@ defmodule Uro.MixProject do
       {:remote_ip, "~> 1.0"},
       {:waffle, "~> 1.1"},
       {:waffle_ecto, "~> 0.0.10"},
+      {:ecto_commons, "~> 0.3.4"},
       {:swoosh, "~> 1.3"},
       {:hammer, "~> 6.0"},
       {:scrivener_ecto, "~> 2.7"}

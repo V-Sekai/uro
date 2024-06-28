@@ -6,3 +6,22 @@
   min-width: 0;
   text-rendering: optimizeLegibility;
 }
+
+@layer components {
+  .light {
+    --tertiary-50: white;
+    --tertiary-100: theme(colors.neutral.50);
+    --tertiary-200: theme(colors.neutral.100);
+    --tertiary-300: theme(colors.neutral.200);
+    
+    --secondary-100: theme(colors.neutral.900);
+  }
+  .dark {
+    --tertiary-50: #151515;
+    --tertiary-100: theme(colors.neutral.900);
+    --tertiary-200: theme(colors.neutral.800);
+    --tertiary-300: theme(colors.neutral.700);
+  
+    --secondary-100: theme(colors.neutral.100);
+  }
+}

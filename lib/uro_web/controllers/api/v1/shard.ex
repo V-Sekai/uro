@@ -8,7 +8,7 @@ defmodule UroWeb.API.V1.ShardController do
   alias OpenApiSpex.Schema
   alias Uro.Repo
   alias Uro.VSekai
-  alias UroWeb.Helpers.Shard.ShardObject
+  alias UroWeb.Helpers.Shard.SchemaShard
 
   tags(["shards"])
 
@@ -52,7 +52,7 @@ defmodule UroWeb.API.V1.ShardController do
         "application/json",
         %Schema{
           type: :array,
-          items: ShardObject
+          items: SchemaShard
         }
       }
     ]
@@ -72,7 +72,7 @@ defmodule UroWeb.API.V1.ShardController do
     request_body: {
       "",
       "application/json",
-      ShardObject
+      SchemaShard
     },
     responses: [
       ok: {
@@ -115,11 +115,19 @@ defmodule UroWeb.API.V1.ShardController do
   operation(:update,
     operation_id: "updateShard",
     summary: "Update a specific shard.",
+    parameters: [
+      id: [
+        in: :path,
+        schema: %Schema{
+          type: :string
+        }
+      ]
+    ],
     responses: [
       ok: {
         "",
         "application/json",
-        ShardObject
+        SchemaShard
       }
     ]
   )
@@ -149,6 +157,14 @@ defmodule UroWeb.API.V1.ShardController do
   operation(:delete,
     operation_id: "deleteShard",
     summary: "Delete a specific shard.",
+    parameters: [
+      id: [
+        in: :path,
+        schema: %Schema{
+          type: :string
+        }
+      ]
+    ],
     responses: [
       ok: {
         "",

@@ -1,33 +1,39 @@
+"use client";
+
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { redirect } from "next/dist/client/components/redirect";
-import { usePathname } from "next/navigation";
-import useSWR from "swr";
 
-import { session } from "~/api";
+import { logout as _logout } from "~/api";
+import { getOptionalSession } from "~/data/session";
+import { getQueryClient } from "~/query";
 
-const invalidCredentials = "Invalid credentials.";
+import { useReturnIntent } from "./return-intent";
 
 export const useOptionalSession = () => {
-	const { data } = useSWR(
-		"session",
-		async () => {
-			const { data, error } = await session();
-			if (error?.status === 401 && error?.message === invalidCredentials)
-				return null;
+	const queryClient = useQueryClient();
+	const { data } = useSuspenseQuery({
+		queryKey: ["session"],
+		queryFn: async () => {
+			const data = await getOptionalSession();
+			if (!data) return null;
 
-			if (error) throw error;
-			return data || null;
-		},
-		{ fallbackData: null }
-	);
+			queryClient.setQueryData(["users", data.user.username], data.user);
+			return data;
+		}
+	});
 
 	return data;
 };
 
 export const useSession = () => {
+	const { withReturnIntent } = useReturnIntent();
 	const session = useOptionalSession();
-	const pathname = usePathname();
 
-	if (!session) redirect(`/login?to=${pathname}`);
-
+	if (!session) redirect(withReturnIntent("/login").href);
 	return session;
 };
+
+export async function logout() {
+	getQueryClient().setQueryData(["session"], null);
+	await _logout().catch(() => {});
+}

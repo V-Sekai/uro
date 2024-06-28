@@ -1,28 +1,56 @@
-"use client";
-
-import Link from "next/link";
+import LinkPrimitive from "next/link";
 import { twMerge } from "tailwind-merge";
-import { useEffect, useState, type ComponentProps, type FC } from "react";
+import {
+	type ComponentRef,
+	forwardRef,
+	type ComponentProps,
+	type FC,
+	useMemo
+} from "react";
 
-export const InlineLink: FC<
-	Omit<ComponentProps<typeof Link>, "href"> & { href: string }
-> = ({ href, children, className, ...props }) => {
-	const [external, setExternal] = useState(false);
+import { dataAttribute } from "~/element";
+import { firstPartyOrigins, origin } from "~/environment";
 
-	useEffect(
-		() =>
-			setExternal(
-				new URL(href, window.location.origin).origin !== window.location.origin
-			),
-		[href]
-	);
+export const Link = forwardRef<
+	ComponentRef<typeof LinkPrimitive>,
+	ComponentProps<typeof LinkPrimitive>
+>(({ href: _href, children, className, ...props }, reference) => {
+	const { href, external } = useMemo(() => {
+		const url = new URL(_href.toString(), origin);
+		const href =
+			url.origin === origin ? url.href.replace(origin, "") : url.href;
+
+		const external = !firstPartyOrigins.has(url.origin);
+
+		return { href, external };
+	}, [_href]);
 
 	return (
-		<Link
+		<LinkPrimitive
+			data-external={dataAttribute(external)}
 			href={href}
-			target={external ? "_blank" : undefined}
+			ref={reference}
+			target={dataAttribute(external && "_blank")}
 			className={twMerge(
-				"text-red-500 transition-all hover:text-red-600",
+				"outline-offset-2 outline-current transition-all focus-visible:outline",
+				className
+			)}
+			{...props}
+		>
+			{children}
+		</LinkPrimitive>
+	);
+});
+
+Link.displayName = "Link";
+
+export const InlineLink: FC<
+	Omit<ComponentProps<typeof Link>, "href"> & { href: URL | string }
+> = ({ children, className, ...props }) => {
+	return (
+		<Link
+			className={twMerge(
+				"text-red-500 transition-all hover:text-red-600 dark:text-red-400 dark:hover:text-red-500",
 				className
 			)}
 			{...props}

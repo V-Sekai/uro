@@ -6,4 +6,8 @@ defmodule Uro.UserIdentities do
   def all(user) do
     pow_assent_all(user)
   end
+
+  def create_user(user_identity_params, user_params, user_id_params) do
+    pow_assent_create_user(user_identity_params, user_params, user_id_params)
+  end
 end
