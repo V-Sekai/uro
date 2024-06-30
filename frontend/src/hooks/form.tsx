@@ -1,4 +1,5 @@
 import { unique } from "@ariesclark/extensions";
+import { Slot } from "@radix-ui/react-slot";
 import {
 	useMutation,
 	type UseMutationOptions,
@@ -19,6 +20,7 @@ import { Button, type ButtonProps } from "~/components/button";
 export type MutationFormProps<TVariables, TData = unknown, TError = Error> = {
 	className?: string;
 	defaultVariables: TVariables;
+	asChild?: boolean;
 	children: (
 		context: MutationFormContext<TVariables, TData, TError>
 	) => ReactNode;
@@ -43,6 +45,7 @@ export function MutationForm<TVariables, TData = unknown, TError = Error>({
 	className,
 	children,
 	defaultVariables,
+	asChild = false,
 	...mutationOptions
 }: MutationFormProps<TVariables, TData, TError>) {
 	const mutation = useMutation(mutationOptions);
@@ -104,11 +107,13 @@ export function MutationForm<TVariables, TData = unknown, TError = Error>({
 		)
 	} as unknown as MutationFormContext<TVariables, TData, TError>;
 
+	const Component = asChild ? Slot : "form";
+
 	return (
 		<MutationFormContext.Provider
 			value={context as MutationFormContext<unknown, unknown, Error>}
 		>
-			<form
+			<Component
 				className={className}
 				action={() =>
 					mutation.mutate(variables, {
@@ -122,7 +127,7 @@ export function MutationForm<TVariables, TData = unknown, TError = Error>({
 				}
 			>
 				{children(context)}
-			</form>
+			</Component>
 		</MutationFormContext.Provider>
 	);
 }

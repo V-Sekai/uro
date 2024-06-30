@@ -1,4 +1,4 @@
-defmodule UroWeb.API.V1.AvatarController do
+defmodule UroWeb.AvatarController do
   use UroWeb, :controller
   use UroWeb.Helpers.API
   use OpenApiSpex.ControllerSpecs

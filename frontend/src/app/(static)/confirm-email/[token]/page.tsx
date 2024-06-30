@@ -1,5 +1,6 @@
+import { decode } from "jsonwebtoken";
+
 import { api } from "~/api";
-import { Button } from "~/components/button";
 import { VSekaiMark } from "~/components/vsekai-mark";
 
 export default async function ConfirmEmailPage({
@@ -7,12 +8,16 @@ export default async function ConfirmEmailPage({
 }: {
 	params: { token: string };
 }) {
+	const user_id = decode(token, { json: true })?.sub;
+
 	const {
 		response: { status }
-	} = await api.confirmEmail({
-		path: { id: "@me" },
-		body: { token: token }
-	});
+	} = user_id
+		? await api.confirmEmail({
+				path: { user_id },
+				body: { token: token }
+			})
+		: { response: { status: 400 } };
 
 	return (
 		<div className="flex h-full grow items-center justify-center">
@@ -33,12 +38,10 @@ export default async function ConfirmEmailPage({
 							<VSekaiMark className="inline size-5" /> Email confirmation failed
 						</span>
 						<p className="opacity-75">
-							Something went wrong while confirming your email address. If you
-							copied the link, please make sure you{" "}
-							<span className="font-medium">copied the entire URL</span> and
-							that it is not expired.
+							We were unable to confirm your email address because this link is
+							either invalid or has already expired. Please try again or request
+							a new confirmation email.
 						</p>
-						<Button className="w-fit">Resend</Button>
 					</>
 				)}
 			</div>

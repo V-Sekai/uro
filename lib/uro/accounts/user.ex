@@ -1,44 +1,69 @@
 defmodule Uro.Accounts.User do
+  @moduledoc """
+  The User schema.
+  """
+
   use Ecto.Schema
 
-  use Pow.Ecto.Schema,
-    user_id_field: :email,
-    password_hash_verify: {&Bcrypt.hash_pwd_salt/1, &Bcrypt.verify_pass/2}
+  @pow_config user_id_field: :email,
+              password_hash_verify: {&Bcrypt.hash_pwd_salt/1, &Bcrypt.verify_pass/2}
+
+  def pow_config(), do: @pow_config
+
+  use Pow.Ecto.Schema, @pow_config
 
   use Pow.Extension.Ecto.Schema,
     extensions: [PowResetPassword]
 
   use PowAssent.Ecto.Schema
+
   import Ecto.Query, only: [from: 2]
   import Ecto.Changeset
+  import UroWeb.Helpers.Changeset
+
+  alias Uro.Accounts.User.JSONSchema
+  alias Uro.Accounts.User.Status
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   @derive {Phoenix.Param, key: :id}
 
   @derive {Jason.Encoder,
-           [
-             only: [
-               :id,
-               :username,
-               :display_name,
-               :profile_picture,
-               :email,
-               :email_confirmed_at,
-               :email_notifications,
-               :user_privilege_ruleset,
-               :inserted_at
-             ]
+           only: [
+             :id,
+             :username,
+             :display_name,
+             :icon,
+             :banner,
+             :biography,
+             :status,
+             :status_message,
+             :email,
+             :email_confirmed_at,
+             :email_notifications,
+             :user_privilege_ruleset,
+             :created_at
            ]}
 
   schema "users" do
     field(:username, :string)
     field(:display_name, :string)
+
+    field(:icon, :string)
+    field(:banner, :string)
+
+    field(:biography, :string, default: "")
+
+    field(:status, Ecto.Enum,
+      values: Status.values(),
+      default: :offline
+    )
+
+    field(:status_message, :string)
+
     field(:email, :string)
     field(:email_confirmed_at, :utc_datetime)
     field(:email_notifications, :boolean)
-
-    field(:profile_picture, :string)
 
     has_one(:user_privilege_ruleset, Uro.Accounts.UserPrivilegeRuleset, foreign_key: :user_id)
 
@@ -60,29 +85,17 @@ defmodule Uro.Accounts.User do
 
     pow_user_fields()
 
-    timestamps()
+    timestamps(inserted_at: :created_at)
   end
 
-  defmodule IDSchema do
-    @moduledoc false
+  defmodule JSONSchema do
+    @moduledoc """
+    JSON Schema for the User schema.
+    """
+    use Uro.JSONSchema, []
 
-    require OpenApiSpex
-    alias OpenApiSpex.Schema
-
-    OpenApiSpex.schema(%{
-      title: "UserID",
-      description: "The User ID. Use `@me` to get the current user.",
-      type: :string,
-      example: "b4cfd6bd-16fc-4485-a878-a52fce173177",
-      default: "@me"
-    })
-  end
-
-  defmodule Schema do
-    @moduledoc false
-
-    require OpenApiSpex
-    alias OpenApiSpex.Schema
+    alias Uro.Accounts.User.Status
+    alias Uro.Accounts.UserPrivilegeRuleset
 
     OpenApiSpex.schema(%{
       title: "User",
@@ -91,40 +104,100 @@ defmodule Uro.Accounts.User do
         :id,
         :username,
         :display_name,
+        :icon,
+        :banner,
+        :biography,
+        :status,
+        :status_message,
         :email,
         :email_confirmed_at,
-        :avatar,
+        :email_notifications,
+        :user_privilege_ruleset,
         :created_at
       ],
       properties: %{
-        id: IDSchema,
+        id: %Schema{
+          title: "UserID",
+          type: :string,
+          format: :uuid
+        },
         username: %Schema{
-          type: :string
+          title: "Username",
+          type: :string,
+          minLength: 3,
+          maxLength: 16
         },
         display_name: %Schema{
           type: :string
         },
+        icon: %Schema{
+          type: :string,
+          nullable: true
+        },
+        banner: %Schema{
+          type: :string,
+          nullable: true
+        },
+        biography: %Schema{
+          type: :string
+        },
+        status: Status,
+        status_message: %Schema{
+          type: :string,
+          nullable: true
+        },
         email: %Schema{
           type: :string,
-          format: "email",
-          nullable: true
+          format: :email
         },
         email_confirmed_at: %Schema{
           type: :string,
-          format: "date-time",
+          format: :"date-time",
           nullable: true
         },
-        avatar: %Schema{
-          type: :string,
-          nullable: true
+        email_notifications: %Schema{
+          type: :boolean
         },
+        user_privilege_ruleset: UserPrivilegeRuleset.JSONSchema,
         created_at: %Schema{
           type: :string,
-          format: "date-time"
+          format: :"date-time"
         }
       }
     })
   end
+
+  defmodule LooseKey do
+    @moduledoc """
+    A loose representation of a user, can any of the following:
+
+    * The literal `@me` string, representing the current user,
+    * A user's username,
+    * Or their ID.
+    """
+
+    require OpenApiSpex
+    alias OpenApiSpex.Schema
+    alias Uro.Accounts.User
+
+    OpenApiSpex.schema(%{
+      title: "LooseUserKey",
+      description: @moduledoc,
+      default: "@me",
+      oneOf: [
+        %Schema{
+          title: "@me",
+          type: :string,
+          enum: ["@me"]
+        },
+        User.JSONSchema.shape(:id),
+        User.JSONSchema.shape(:username)
+      ]
+    })
+  end
+
+  def admin?(%{user_privilege_ruleset: %{is_admin: is_admin}}), do: is_admin
+  def admin?(_), do: false
 
   @spec lock_changeset(Schema.t() | Changeset.t()) :: Changeset.t()
   def lock_changeset(user_or_changeset) do
@@ -147,13 +220,36 @@ defmodule Uro.Accounts.User do
     end
   end
 
+  defmodule UpdateJSONSchema do
+    @moduledoc false
+
+    use Uro.JSONSchema, []
+    alias Uro.Accounts.User.JSONSchema
+
+    OpenApiSpex.schema(%{
+      type: :object,
+      properties: %{
+        display_name: JSONSchema.shape(:display_name),
+        username: JSONSchema.shape(:username),
+        biography: JSONSchema.shape(:biography),
+        email_notifications: JSONSchema.shape(:email_notifications),
+        status_message: JSONSchema.shape(:status_message)
+      }
+    })
+  end
+
   def user_custom_changeset(user_or_changeset, attrs) do
     user_or_changeset
-    |> cast(attrs, [:display_name, :username, :email, :password, :email_notifications])
-    |> validate_required([:display_name, :username, :email, :password])
+    |> cast(attrs, [
+      :display_name,
+      :username,
+      :biography,
+      :email_notifications,
+      :status_message
+    ])
+    |> validate_required([:display_name, :username])
     |> validate_display_name(:display_name)
     |> validate_username(:username)
-    |> validate_email(:email)
     |> unique_constraint(:username)
   end
 
@@ -194,12 +290,11 @@ defmodule Uro.Accounts.User do
     )
     |> validate_display_name(:display_name)
     |> put_change(
-      :profile_picture,
-      get_field(changeset, :profile_picture) || userinfo["picture"]
+      :icon,
+      get_field(changeset, :icon) || userinfo["picture"]
     )
   end
 
-  @spec admin_changeset(Schema.t() | Changeset.t(), Map) :: Changeset.t()
   def admin_changeset(user_or_changeset, attrs) do
     user_or_changeset
     |> pow_user_id_field_changeset(attrs)
@@ -219,15 +314,33 @@ defmodule Uro.Accounts.User do
 
   def update_email_changeset(changeset, email, send_confirmation: true) do
     changeset
-    |> change(%{email: email, email_confirmed_at: nil})
+    |> cast(%{email: email}, [:email])
+    |> validate_different(:email)
     |> validate_email(:email)
+    |> put_change(:email_confirmed_at, nil)
   end
 
   def update_email_changeset(changeset, email, send_confirmation: false) do
     changeset
-    |> change(%{email: email})
+    |> cast(%{email: email}, [:email])
+    |> validate_different(:email)
     |> validate_email(:email)
     |> confirm_email_changeset()
+  end
+
+  def validate_current_password(changeset, %{password_hash: password_hash}) do
+    if(password_hash == nil, do: changeset, else: validate_required(changeset, :current_password))
+    |> validate_change(:current_password, fn _, current_password ->
+      Pow.Ecto.Schema.Changeset.verify_password(
+        %{password_hash: password_hash},
+        current_password,
+        pow_config()
+      )
+      |> case do
+        true -> []
+        false -> [{:current_password, "is invalid"}]
+      end
+    end)
   end
 
   def validate_display_name(changeset, field) when is_atom(field) do

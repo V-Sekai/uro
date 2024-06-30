@@ -20,7 +20,7 @@ function transformUsername(username: string): string {
 	return username.replaceAll(/\s/g, "").replaceAll(/_+/g, "_").toLowerCase();
 }
 
-const UsernameInput: FC<InputProps<string>> = ({
+const UsernameInput: FC<Omit<InputProps<string>, "label">> = ({
 	value = "",
 	onChange,
 	errors = [],

@@ -14,7 +14,7 @@ defmodule UroWeb.Helpers.Shard do
       type: :object,
       required: [:id, :username, :display_name],
       properties: %{
-        user: User.Schema,
+        user: User.JSONSchema,
         address: %Schema{
           type: :string
         },

@@ -1,7 +1,7 @@
 "use client";
 
 import { tv, type VariantProps } from "tailwind-variants";
-import { Check, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import { useEffect, useState, type Dispatch, type ReactNode } from "react";
 
@@ -50,7 +50,7 @@ export interface InputProps<T extends string>
 	onChange?: Dispatch<T>;
 	name?: string;
 	defaultValue?: T;
-	label?: ReactNode;
+	label: ReactNode;
 	maxLength?: number;
 	errors?: Array<string>;
 	autoComplete?: InputAutocomplete;

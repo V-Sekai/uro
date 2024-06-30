@@ -1,7 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { getUser } from "~/api";
+import { type api, getUser, type User } from "~/api";
 import { useOptionalSession } from "~/hooks/session";
+import { getQueryClient } from "~/query";
 
 export function useUser(username: string) {
 	const session = useOptionalSession();
@@ -16,7 +17,6 @@ export function useUser(username: string) {
 
 						const { data, error, response } = await getUser({
 							path: { id: username },
-							query: { username: true },
 							signal
 						});
 
@@ -30,11 +30,20 @@ export function useUser(username: string) {
 
 	return {
 		...user,
-		banner: "https://unsplash.it/1600/900/?random",
-		//"https://files.aries.fyi/cdn-cgi/image/width=1600/2024/06/19/6d5d545f74c86002.png",
-		biography:
-			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet ipsa ad saepe esse velit beatae nostrum hic fugit, soluta aspernatur rem similique. Dolorem unde ad nisi maiores tenetur repellendus perspiciatis.",
-		status: "available",
-		statusMessage: "Available"
+		banner: "https://unsplash.it/1600/900/?random"
 	};
+}
+
+export function invalidateUser(user: User) {
+	const queryClient = getQueryClient();
+	const session = queryClient.getQueryData<api.Session>(["session"]);
+
+	queryClient.setQueryData(["users", user.id], user);
+	queryClient.setQueryData(["users", user.username], user);
+
+	if (session && session.user.id === user.id)
+		queryClient.setQueryData(["session"], (previous: api.Session) => ({
+			...previous,
+			user
+		}));
 }

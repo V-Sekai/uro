@@ -1,6 +1,7 @@
 "use client";
-import { twMerge } from "tailwind-merge";
+
 import Image from "next/image";
+import { useState, type FC, type PropsWithChildren } from "react";
 
 import { Input } from "~/components/input";
 import {
@@ -10,61 +11,85 @@ import {
 	DialogTitle
 } from "~/components/dialog";
 import VSekaiRed from "~/assets/v-sekai-red.png";
+import { FormButton, FormErrorMessage, MutationForm } from "~/hooks/form";
+import { api } from "~/api";
 
-import { useUser } from "../data";
+import { invalidateUser, useUser } from "../data";
 
-import type { FC, PropsWithChildren } from "react";
+import { StatusBadge } from "./status-badge";
 
 export const EditProfile: FC<PropsWithChildren<{ userId: string }>> = ({
 	userId,
 	children
 }) => {
 	const user = useUser(userId);
-	if (!user) return null;
 
-	const { username, display_name, avatar, banner, biography } = user;
+	const [dialogOpen, setDialogOpen] = useState(false);
+
+	if (!user) return children;
+	const { icon, banner } = user;
 
 	return (
-		<Dialog>
+		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 			{children}
-			<DialogContent className="light">
-				<DialogHeader>
-					<DialogTitle>Edit profile</DialogTitle>
-					<button
-						type="button"
-						className={twMerge(
-							"-my-4 flex items-center gap-2 rounded-xl border border-black/20 bg-black/5 px-4 py-1"
-						)}
-					>
-						Save
-					</button>
-				</DialogHeader>
-				<div className="-mx-6 flex flex-col">
-					<div
-						className="aspect-[16/4] w-full bg-cover bg-center"
-						style={{
-							backgroundImage: banner ? `url(${banner})` : undefined
-						}}
-					/>
-					<div className="-mt-12 flex items-center gap-4 px-6">
-						<Image
-							priority
-							alt={`${user.display_name}'s profile picture`}
-							className="size-24 shrink-0 rounded-xl"
-							height={144}
-							src={avatar || VSekaiRed.src}
-							width={144}
-						/>
-						<div className="flex h-fit w-28 max-w-fit items-center gap-2 overflow-hidden rounded-xl border border-black/5 bg-white pr-3 transition-all">
-							<div className="aspect-square size-6 shrink-0 rounded-full bg-blue-400" />
-							<span className="whitespace-nowrap text-sm">Available</span>
-						</div>
-					</div>
-				</div>
-				<Input defaultValue={display_name} label="Display Name" />
-				<Input multiline defaultValue={biography} label="Biography" />
-				<Input defaultValue={username} label="Username (cannot be changed)" />
-			</DialogContent>
+			<MutationForm
+				asChild
+				defaultVariables={{
+					display_name: user.display_name,
+					biography: user.biography
+				}}
+				mutationFn={async ({ display_name, biography }) => {
+					const { data, error } = await api.updateUser({
+						path: { user_id: "@me" },
+						body: { display_name, biography }
+					});
+
+					if (error || !data) throw error;
+					return data;
+				}}
+				onSuccess={(user) => {
+					invalidateUser(user);
+					setDialogOpen(false);
+				}}
+			>
+				{({ fields: { display_name, biography } }) => (
+					<DialogContent asChild>
+						<form>
+							<DialogHeader>
+								<DialogTitle>Edit profile</DialogTitle>
+								<FormButton type="light">Save</FormButton>
+							</DialogHeader>
+							<div className="-mx-6 flex flex-col">
+								<div
+									className="aspect-[16/4] w-full bg-cover bg-center"
+									style={{
+										backgroundImage: banner ? `url(${banner})` : undefined
+									}}
+								/>
+								<div className="-mt-12 flex items-center gap-4 px-6">
+									<Image
+										priority
+										alt={`${user.display_name}'s profile picture`}
+										className="size-24 shrink-0 rounded-xl"
+										height={144}
+										src={icon || VSekaiRed.src}
+										width={144}
+									/>
+									<StatusBadge user={user} />
+								</div>
+							</div>
+							<Input {...display_name} label="Display Name" maxLength={32} />
+							<Input
+								{...biography}
+								multiline
+								label="Biography"
+								maxLength={256}
+							/>
+							<FormErrorMessage />
+						</form>
+					</DialogContent>
+				)}
+			</MutationForm>
 		</Dialog>
 	);
 };

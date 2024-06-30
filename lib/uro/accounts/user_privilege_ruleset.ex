@@ -1,7 +1,6 @@
 defmodule Uro.Accounts.UserPrivilegeRuleset do
-  @moduledoc """
-  User privilege ruleset, which defines what a user can do.
-  """
+  @moduledoc false
+
   alias Uro.Accounts.User
   alias Uro.Repo
 
@@ -25,6 +24,33 @@ defmodule Uro.Accounts.UserPrivilegeRuleset do
     field :can_upload_props, :boolean, default: false
 
     timestamps()
+  end
+
+  defmodule JSONSchema do
+    @moduledoc """
+      A user's privilege ruleset, defining what they can do.
+    """
+
+    use Uro.JSONSchema
+    alias OpenApiSpex.Schema
+
+    OpenApiSpex.schema(%{
+      title: "UserPrivilegeRuleset",
+      description: @moduledoc,
+      type: :object,
+      required: [
+        :is_admin,
+        :can_upload_avatars,
+        :can_upload_maps,
+        :can_upload_props
+      ],
+      properties: %{
+        is_admin: %Schema{type: :boolean},
+        can_upload_avatars: %Schema{type: :boolean},
+        can_upload_maps: %Schema{type: :boolean},
+        can_upload_props: %Schema{type: :boolean}
+      }
+    })
   end
 
   def admin_changeset(user_privilege_ruleset_or_changeset, attrs) do

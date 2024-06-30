@@ -4,13 +4,13 @@ defmodule Uro.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias Ecto.Changeset
-  alias Uro.EmailConfirmationToken
-  alias Uro.Repo
+  import Uro.Helpers.UUID
 
+  alias Ecto.Changeset
   alias Uro.Accounts.User
   alias Uro.Accounts.UserPrivilegeRuleset
-  import Uro.Helpers.UUID
+  alias Uro.EmailConfirmationToken
+  alias Uro.Repo
 
   @user_associated_schemas [:user_privilege_ruleset]
 
@@ -135,7 +135,7 @@ defmodule Uro.Accounts do
 
   def update_user(%User{} = user, attrs) do
     user
-    |> User.changeset(attrs)
+    |> User.user_custom_changeset(attrs)
     |> Repo.update()
   end
 

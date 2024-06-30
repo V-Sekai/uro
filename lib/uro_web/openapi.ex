@@ -1,4 +1,4 @@
-defmodule UroWeb.API.V1.Spec do
+defmodule UroWeb.OpenAPI.Specification do
   @moduledoc """
   OpenAPI spec for the Uro API.
   """

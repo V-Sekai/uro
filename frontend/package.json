@@ -18,6 +18,7 @@
     "@tanstack/react-query-devtools": "^5.45.1",
     "@tanstack/react-query-next-experimental": "^5.46.0",
     "babel-plugin-react-compiler": "0.0.0-experimental-592953e-20240517",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.379.0",
     "next": "14.3.0-canary.70",
     "postcss-rename": "^0.6.1",
@@ -27,11 +28,13 @@
     "swr": "^2.2.5",
     "tailwind-merge": "^2.3.0",
     "tailwind-variants": "^0.2.1",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
     "@ariesclark/eslint-config": "^1.7.2",
     "@hey-api/openapi-ts": "^0.46.3",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.8",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",

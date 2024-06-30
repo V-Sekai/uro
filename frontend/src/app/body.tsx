@@ -6,6 +6,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 
 import { ThemeOverride } from "~/hooks/theme";
 import { getQueryClient } from "~/query";
+import { EventProvider } from "~/hooks/event";
 
 import type { FC, PropsWithChildren } from "react";
 
@@ -16,16 +17,18 @@ const prompt = Prompt({
 
 export const Body: FC<PropsWithChildren> = ({ children }) => {
 	return (
-		<ThemeOverride>
-			<body
-				className={twMerge(
-					"flex min-h-svh flex-col bg-tertiary-100 font-normal text-secondary-100",
-					prompt.className
-				)}
-			>
-				{children}
-			</body>
-		</ThemeOverride>
+		<EventProvider>
+			<ThemeOverride>
+				<body
+					className={twMerge(
+						"flex min-h-svh flex-col bg-tertiary-100 font-normal text-secondary-100",
+						prompt.className
+					)}
+				>
+					{children}
+				</body>
+			</ThemeOverride>
+		</EventProvider>
 	);
 };
 

@@ -3,14 +3,12 @@ defmodule Uro.Plug.Authentication do
 
   use Pow.Plug.Base
 
-  import UroWeb.Helpers.User
-
   alias Plug.Conn
   alias Pow.Config
   alias Pow.Plug
   alias PowPersistentSession.Store.PersistentSessionCache
-  alias Uro.Accounts.User
   alias Uro.Accounts.UserPrivilegeRuleset
+  alias Uro.Session
 
   # The lifetime of the session.
   @session_lifetime :timer.hours(168)
@@ -146,11 +144,14 @@ defmodule Uro.Plug.Authentication do
     [backend: backend, pow_config: config]
   end
 
-  def current_user(conn),
-    do:
-      conn
-      |> Pow.Plug.current_user()
-      |> UserPrivilegeRuleset.associate()
+  def current_user(conn) do
+    conn
+    |> Pow.Plug.current_user()
+    |> case do
+      nil -> nil
+      user -> UserPrivilegeRuleset.associate(user)
+    end
+  end
 
   def current_session(conn) do
     with %{
@@ -160,7 +161,7 @@ defmodule Uro.Plug.Authentication do
          when is_binary(access_token) and not is_nil(access_token_expires_in) <-
            conn.private,
          user when is_map(user) <- current_user(conn) do
-      %{
+      %Session{
         access_token: access_token,
         expires_in: access_token_expires_in,
         token_type: "Bearer",
@@ -169,18 +170,5 @@ defmodule Uro.Plug.Authentication do
     else
       _ -> nil
     end
-  end
-
-  def transform_session(%{
-        user: user,
-        access_token: access_token,
-        expires_in: expires_in
-      }) do
-    %{
-      user: user,
-      access_token: access_token,
-      expires_in: expires_in,
-      token_type: "Bearer"
-    }
   end
 end

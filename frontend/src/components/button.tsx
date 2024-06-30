@@ -26,7 +26,8 @@ export const button = tv({
 	variants: {
 		type: {
 			primary: "bg-red-500 text-white hover:bg-red-600",
-			light: "border-white/20 bg-white/5 backdrop-blur hover:bg-white/10",
+			light:
+				"dark:border-white/20 dark:bg-white/5 backdrop-blur dark:hover:bg-white/10 border-black/20 bg-black/5",
 			ghost: "text-secondary-100"
 		},
 		size: {

@@ -14,6 +14,7 @@ import { useUser } from "../data";
 
 import { Navigation, NavigationItem } from "./navigation";
 import { EditProfile } from "./edit-profile";
+import { StatusBadge } from "./status-badge";
 
 import type { FC } from "react";
 
@@ -23,15 +24,7 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 	const user = useUser(userId);
 	if (!user) return null;
 
-	const {
-		username,
-		display_name,
-		avatar,
-		banner,
-		biography,
-		status,
-		statusMessage
-	} = user;
+	const { username, display_name, icon, banner, status, biography } = user;
 
 	return (
 		<div className="w-full">
@@ -63,13 +56,15 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 							alt={`${user.display_name}'s profile picture`}
 							className="size-24 shrink-0 rounded-xl md:size-36"
 							height={144}
-							src={avatar || VSekaiRed.src}
+							src={icon || VSekaiRed.src}
 							width={144}
 						/>
 						<div
 							className={twMerge(
 								"flex w-full flex-col",
-								status ? "gap-3" : "gap-10"
+								status && !["offline", "invisible"].includes(status)
+									? "gap-3"
+									: "gap-10"
 							)}
 						>
 							<div className="flex items-center justify-between gap-8">
@@ -113,18 +108,15 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 									</button>
 								</div>
 							</div>
-							{status && (
-								<div className="flex w-28 max-w-fit items-center gap-2 overflow-hidden rounded-xl border border-tertiary-300 bg-tertiary-50 pr-3 transition-all">
-									<div className="aspect-square size-6 shrink-0 rounded-full bg-blue-400" />
-									<span className="whitespace-nowrap text-sm">
-										{statusMessage}
-									</span>
-								</div>
-							)}
-							<span className="hidden md:inline">{biography}</span>
+							<StatusBadge user={user} />
+							<span className="hidden md:inline">
+								{biography || "No biography available."}
+							</span>
 						</div>
 					</div>
-					<span className="md:hidden">{biography}</span>
+					<span className="md:hidden">
+						{biography || "No biography available."}
+					</span>
 					<pre className="whitespace-pre-wrap rounded-xl border border-tertiary-200 p-4">
 						{JSON.stringify(user, null, 2)}
 					</pre>

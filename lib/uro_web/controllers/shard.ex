@@ -1,4 +1,4 @@
-defmodule UroWeb.API.V1.ShardController do
+defmodule UroWeb.ShardController do
   use UroWeb, :controller
   use UroWeb.Helpers.API
   use OpenApiSpex.ControllerSpecs

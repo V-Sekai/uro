@@ -1,4 +1,4 @@
-defmodule UroWeb.API.V1.MapController do
+defmodule UroWeb.MapController do
   use UroWeb, :controller
   use OpenApiSpex.ControllerSpecs
   use UroWeb.Helpers.API

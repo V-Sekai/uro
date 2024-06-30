@@ -1,7 +1,8 @@
-defmodule UroWeb.API.V1.IdentityProofController do
+defmodule UroWeb.IdentityProofController do
   use UroWeb, :controller
   use UroWeb.Helpers.API
-  alias UroWeb.ErrorHelpers
+
+  alias UroWeb.Error
 
   @spec create(Conn.t(), map()) :: Conn.t()
   def create(conn, %{"identity_proof" => identity_proof_params}) do
@@ -21,7 +22,7 @@ defmodule UroWeb.API.V1.IdentityProofController do
             json(conn, %{id: identity_proof.id})
 
           {:error, %Ecto.Changeset{} = changeset} ->
-            errors = Ecto.Changeset.traverse_errors(changeset, &ErrorHelpers.translate_error/1)
+            errors = Ecto.Changeset.traverse_errors(changeset, &Error.translate/1)
 
             conn
             |> put_status(500)
@@ -42,8 +43,10 @@ defmodule UroWeb.API.V1.IdentityProofController do
     |> Uro.UserRelations.get_identity_proof_as!(conn.assigns[:current_user])
     |> case do
       nil ->
-        conn
-        |> put_status(400)
+        put_status(
+          conn,
+          400
+        )
 
       identity_proof ->
         conn

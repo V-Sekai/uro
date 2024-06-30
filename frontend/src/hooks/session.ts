@@ -8,10 +8,14 @@ import { getOptionalSession } from "~/data/session";
 import { getQueryClient } from "~/query";
 
 import { useReturnIntent } from "./return-intent";
+import { useLocation } from "./location";
 
 export const useOptionalSession = () => {
+	const { withReturnIntent } = useReturnIntent();
+	const { pathname } = useLocation();
 	const queryClient = useQueryClient();
-	const { data } = useSuspenseQuery({
+
+	const { data: session } = useSuspenseQuery({
 		queryKey: ["session"],
 		queryFn: async () => {
 			const data = await getOptionalSession();
@@ -19,10 +23,18 @@ export const useOptionalSession = () => {
 
 			queryClient.setQueryData(["users", data.user.username], data.user);
 			return data;
-		}
+		},
+		refetchOnWindowFocus: "always"
 	});
 
-	return data;
+	if (
+		session &&
+		!session.user.email_confirmed_at &&
+		pathname !== "/confirm-email"
+	)
+		redirect(withReturnIntent("/confirm-email").href);
+
+	return session;
 };
 
 export const useSession = () => {
@@ -30,6 +42,7 @@ export const useSession = () => {
 	const session = useOptionalSession();
 
 	if (!session) redirect(withReturnIntent("/login").href);
+
 	return session;
 };
 

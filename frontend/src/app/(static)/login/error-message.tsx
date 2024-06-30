@@ -15,7 +15,7 @@ export const ErrorMessage: FC<{
 	return (
 		<div
 			className={twMerge(
-				"overflow-hidden whitespace-break-spaces rounded-md border border-red-500/5 bg-red-500/5 px-4 text-sm text-red-500 transition-all",
+				"max-h-48 overflow-hidden overflow-y-auto whitespace-break-spaces rounded-md border border-red-500/5 bg-red-500/5 px-4 text-sm text-red-500 transition-all",
 				className,
 				message ? "py-2 opacity-100" : "h-0 py-0 opacity-0"
 			)}

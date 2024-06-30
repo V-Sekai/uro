@@ -1,10 +1,12 @@
 "use client";
 
-import { Button } from "~/components/button";
 import { VSekaiMark } from "~/components/vsekai-mark";
 import { useReturnIntent } from "~/hooks/return-intent";
 import { restoreReturnIntent } from "~/hooks/return-intent/common";
 import { useSession } from "~/hooks/session";
+
+import { ResendButton } from "./resend";
+import { ChangeEmailButton } from "./change-email";
 
 export default function ConfirmEmailPage() {
 	const session = useSession();
@@ -26,11 +28,9 @@ export default function ConfirmEmailPage() {
 					continue.
 				</p>
 				<div className="flex gap-2">
-					<Button className="w-fit">Resend</Button>
-					<Button className="w-fit" type="ghost">
-						Change Email
-					</Button>
-				</div>{" "}
+					<ResendButton />
+					<ChangeEmailButton />
+				</div>
 			</div>
 		</div>
 	);
