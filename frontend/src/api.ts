@@ -25,7 +25,13 @@ config.baseUrl = apiOrigin;
 config.fetch = async (request: Request) => {
 	if (development)
 		// Simulate network latency in development, encouraging optimistic updates & proper loading states.
-		await new Promise((resolve) => setTimeout(resolve, randomInt(100, 1000)));
+		await new Promise((resolve) =>
+			setTimeout(
+				resolve,
+				// Random latency between 100ms and 1000ms, doubled for non-GET requests.
+				randomInt(100, 1000) * (request.method.toUpperCase() === "GET" ? 1 : 2)
+			)
+		);
 
 	const headers = await getCurrentHeaders();
 

@@ -21,7 +21,9 @@ services:
       - ./lib:/app/lib
       - ./config:/app/config
       - ./priv:/app/priv
-      # - ./frontend/out:/app/priv/static
+    env_file:
+      - .env
+      
   nextjs:
     build:
       context: ./frontend

@@ -13,6 +13,7 @@ import { InlineLink } from "~/components/link";
 import { VSekaiMark } from "~/components/vsekai-mark";
 import { useUser } from "~/app/(public)/user/data";
 import { FormButton, FormErrorMessage, MutationForm } from "~/hooks/form";
+import { Captcha } from "~/components/captcha";
 
 import { OAuth2ButtonGroup } from "../login/oauth2-button";
 
@@ -61,9 +62,12 @@ export const SignUpForm: FC = () => {
 				display_name: "",
 				username: "",
 				email: "",
-				password: ""
+				password: "",
+				captcha: ""
 			}}
 			mutationFn={async (body) => {
+				console.log(body);
+
 				const { data, error } = await api.signup({
 					body
 				});
@@ -79,7 +83,7 @@ export const SignUpForm: FC = () => {
 				});
 			}}
 		>
-			{({ fields: { display_name, username, email, password } }) => (
+			{({ fields: { display_name, username, email, password, captcha } }) => (
 				<div className="flex flex-col gap-8 p-8">
 					<span className="text-xl">
 						<VSekaiMark className="inline size-5" /> Create an Account
@@ -116,6 +120,9 @@ export const SignUpForm: FC = () => {
 							label="Password"
 							type="password"
 						/>
+						<div className="mx-auto">
+							<Captcha {...captcha} />
+						</div>
 					</div>
 					<div className="flex flex-col gap-4">
 						<FormErrorMessage />

@@ -15,6 +15,11 @@ export const apiOrigin = environment<string>(
 	"API_ORIGIN and or NEXT_PUBLIC_API_ORIGIN"
 );
 
+export const turnstileSiteKey = environment<string>(
+	process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY,
+	"NEXT_PUBLIC_TURNSTILE_SITEKEY"
+);
+
 if (development) {
 	process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 }

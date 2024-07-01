@@ -1,6 +1,7 @@
 defmodule UroWeb.UserController do
   @moduledoc false
 
+  alias Uro.Turnstile
   use UroWeb, :controller
   use UroWeb.Helpers.API
   use OpenApiSpex.ControllerSpecs
@@ -68,13 +69,17 @@ defmodule UroWeb.UserController do
            :display_name,
            :username,
            :email,
-           :password
+           :password,
+           :captcha
          ],
          properties: %{
-           display_name: %Schema{type: :string},
-           username: %Schema{type: :string},
-           email: %Schema{type: :string},
-           password: %Schema{type: :string}
+           display_name: User.JSONSchema.shape(:display_name),
+           username: User.JSONSchema.shape(:username),
+           email: User.JSONSchema.shape(:email),
+           password: %Schema{type: :string},
+           captcha: %Schema{
+             type: :string
+           }
          }
        }},
     responses: [
@@ -93,7 +98,8 @@ defmodule UroWeb.UserController do
 
   def create(conn, params) do
     Repo.transaction(fn ->
-      with {:ok, user, conn} <- Accounts.create_user(conn, params),
+      with {:ok, _} <- Turnstile.verify_captcha(conn),
+           {:ok, user, conn} <- Accounts.create_user(conn, params),
            :ok <- Accounts.send_confirmation_email(user),
            conn <- Pow.Plug.create(conn, user) do
         {user, conn}

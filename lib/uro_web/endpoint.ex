@@ -25,7 +25,7 @@ defmodule UroWeb.Endpoint do
     plug(Phoenix.CodeReloader)
   end
 
-  plug(Plug.RequestId)
+  plug(Plug.RequestId, assign_as: :request_id)
   plug(Plug.Telemetry, event_prefix: [:phoenix, :endpoint])
 
   # Max upload size, 200mb

@@ -35,6 +35,9 @@ importers:
       '@tanstack/react-query-next-experimental':
         specifier: ^5.46.0
         version: 5.46.0(@tanstack/react-query@5.45.1(react@19.0.0-rc-3f1436cca1-20240516))(next@14.3.0-canary.70(babel-plugin-react-compiler@0.0.0-experimental-592953e-20240517)(react-dom@19.0.0-rc-3f1436cca1-20240516(react@19.0.0-rc-3f1436cca1-20240516))(react@19.0.0-rc-3f1436cca1-20240516))(react@19.0.0-rc-3f1436cca1-20240516)
+      '@types/cloudflare-turnstile':
+        specifier: ^0.1.5
+        version: 0.1.5
       babel-plugin-react-compiler:
         specifier: 0.0.0-experimental-592953e-20240517
         version: 0.0.0-experimental-592953e-20240517
@@ -656,6 +659,9 @@ packages:
     resolution: {integrity: sha512-mYYfJujKg2kxmkRRjA6nn4YKG3ITsKuH22f1kteJ5IuVQqgKUgbaSQfYwVP0gBS05mhwxO03HVpD0t7BMN7WOA==}
     peerDependencies:
       react: ^18.0.0
+
+  '@types/cloudflare-turnstile@0.1.5':
+    resolution: {integrity: sha512-DA8YspYP0jxpY1QUX5VhKLAPAJh9lxpN1Ym/XZMRqaRIb0lSJMvjTcxLMUv++jAKLFjySfcrweTS19XuRuuOUQ==}
 
   '@types/istanbul-lib-coverage@2.0.6':
     resolution: {integrity: sha512-2QF/t/auWm0lsy8XtKVPG19v3sSOQlJe/YHZgfjb/KBBHOGSV+J2q/S671rcq9uTBrLAXmZpqJiaQbMT+zNU1w==}
@@ -3198,6 +3204,8 @@ snapshots:
     dependencies:
       '@tanstack/query-core': 5.45.0
       react: 19.0.0-rc-3f1436cca1-20240516
+
+  '@types/cloudflare-turnstile@0.1.5': {}
 
   '@types/istanbul-lib-coverage@2.0.6': {}
 

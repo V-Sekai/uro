@@ -46,3 +46,5 @@ redis
 priv/waffle/private/uploads/
 
 
+
+.env

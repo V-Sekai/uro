@@ -37,6 +37,8 @@ config :email_checker,
   smtp_retries: 2,
   timeout_milliseconds: 5000
 
+config :uro, Uro.Turnstile, secret_key: System.get_env("TURNSTILE_SECRET_KEY")
+
 config :uro, :pow,
   user: Uro.Accounts.User,
   repo: Uro.Repo,
