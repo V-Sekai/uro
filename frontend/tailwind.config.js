@@ -11,6 +11,7 @@ export default {
 		extend: {
 			colors: {
 				tertiary: {
+					0: "var(--tertiary-0)",
 					50: "var(--tertiary-50)",
 					100: "var(--tertiary-100)",
 					200: "var(--tertiary-200)",
@@ -24,6 +25,7 @@ export default {
 					950: "var(--tertiary-950)"
 				},
 				secondary: {
+					0: "var(--secondary-0)",
 					100: "var(--secondary-100)"
 				}
 			},

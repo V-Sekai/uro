@@ -9,19 +9,28 @@
 
 @layer components {
   .light {
+    --tertiary-0: white;
     --tertiary-50: white;
     --tertiary-100: theme(colors.neutral.50);
     --tertiary-200: theme(colors.neutral.100);
     --tertiary-300: theme(colors.neutral.200);
     
+    --secondary-0: black;
     --secondary-100: theme(colors.neutral.900);
+
+    @apply text-secondary-100;
   }
   .dark {
+
+    --tertiary-0: black;
     --tertiary-50: #151515;
     --tertiary-100: theme(colors.neutral.900);
     --tertiary-200: theme(colors.neutral.800);
     --tertiary-300: theme(colors.neutral.700);
   
+    --secondary-0: white;
     --secondary-100: theme(colors.neutral.100);
+
+    @apply text-secondary-100;
   }
 }

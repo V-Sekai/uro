@@ -6,7 +6,6 @@ defmodule Uro.Accounts do
   import Ecto.Query, warn: false
   import Uro.Helpers.UUID
 
-  alias Ecto.Changeset
   alias Uro.Accounts.User
   alias Uro.Accounts.UserPrivilegeRuleset
   alias Uro.EmailConfirmationToken

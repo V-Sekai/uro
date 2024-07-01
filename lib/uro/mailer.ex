@@ -27,7 +27,7 @@ defmodule Uro.Mailer do
 
   def confirmation_email(confirmation_token) when is_binary(confirmation_token) do
     confirmation_url =
-      "#{Application.get_env(:uro, :frontend_origin)}/confirm-email/#{confirmation_token}"
+      "#{Application.get_env(:uro, :frontend_url)}/confirm-email/#{confirmation_token}"
 
     create_email(
       subject: "Confirm your email address",

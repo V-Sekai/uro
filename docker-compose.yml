@@ -1,61 +1,62 @@
 version: "3.9"
 services:
-  uro:
-    restart: on-failure
-    build:
-      context: .
-      args:
-        MIX_ENV: dev
-    ports:
-      - "4000:4000"
-    links:
-      - database
-      - redis
-    depends_on:
-      - database
-      - redis
-    volumes:
-      # In development, we want to mount the source code into the container, so
-      # that we can see changes in real-time. For other changes, like dependencies,
-      # you must run ``docker compose up uro --build`` to apply the changes.
-      - ./lib:/app/lib
-      - ./config:/app/config
-      - ./priv:/app/priv
-    env_file:
-      - .env
-      
-  nextjs:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        NODE_ENV: development
-    volumes:
-      - ./frontend:/app
-    entrypoint: npm run dev
-    # In development, we want to mount the source code into the container, so
-    # that we can see changes in real-time. For other changes, like dependencies,
-    # you must run ``docker compose up nextjs --build`` to apply the changes.
-    user: "root"
   database:
     image: postgres:16.3-alpine
     restart: always
     shm_size: 128mb
-    ports:
-    - "5432:5432"
     environment:
       POSTGRES_USER: vsekai
       POSTGRES_PASSWORD: vsekai
     volumes:
       - "./postgres:/var/lib/postgresql/data"
+    healthcheck:
+      test: pg_isready -U vsekai
+      interval: 1s
+      timeout: 5s
+
   redis:
     image: redis:7.2-alpine
     restart: always
     shm_size: 128mb
-    ports:
-    - "6379:6379"
     volumes:
       - "./redis:/data"
+    healthcheck:
+      test: redis-cli ping
+      interval: 1s
+      timeout: 5s
+
+  uro:
+    restart: on-failure
+    build:
+      context: .
+    links:
+      - database
+      - redis
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+      redis:
+        condition: service_healthy
+        restart: true
+    env_file:
+      - .env
+    healthcheck:
+      test: wget -f http://uro:4000 || exit 1
+      interval: 1s
+      timeout: 5s
+
+  nextjs:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    healthcheck:
+      test: wget http://nextjs:3000 || exit 1
+      interval: 1s
+      timeout: 5s
+    depends_on:
+      - uro
+
   caddy:
     image: caddy:2.8.4-alpine
     restart: unless-stopped
@@ -70,10 +71,17 @@ services:
       - ./caddy/data:/data
       - ./caddy/config:/config
     depends_on:
-      - uro
+      uro:
+        condition: service_healthy
+        restart: true
+      nextjs:
+        condition: service_healthy
+        restart: true
+
 networks:
   uro:
     name: "uro"
+
 volumes:
   caddy_data:
   caddy_config:

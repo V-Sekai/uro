@@ -5,7 +5,7 @@ FROM node:22-alpine AS base
 FROM base AS dependencies
 WORKDIR /app
 
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat curl
 
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
@@ -25,6 +25,9 @@ COPY . .
 
 ARG NODE_ENV
 COPY .env.$NODE_ENV .env
+
+COPY src/__generated/openapi.json ./src/__generated/openapi.json
+RUN ./node_modules/.bin/openapi-ts
 
 ENV NODE_ENV=production
 RUN npm run build --no-lint

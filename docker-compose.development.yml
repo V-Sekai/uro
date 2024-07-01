@@ -1,0 +1,54 @@
+version: "3.9"
+services:
+  uro:
+    extends:
+      file: docker-compose.yml
+      service: uro
+    build:
+      args:
+        MIX_ENV: dev
+    volumes:
+      # In development, we want to mount the source code into the container, so
+      # that we can see changes in real-time. For other changes, like dependencies,
+      # you must run ``docker compose up uro --build`` to apply the changes.
+      - ./lib:/app/lib
+      - ./config:/app/config
+      - ./priv:/app/priv
+
+  nextjs:
+    extends:
+      file: docker-compose.yml
+      service: nextjs
+    build:
+      args:
+        NODE_ENV: development
+    volumes:
+      # In development, we want to mount the source code into the container, so
+      # that we can see changes in real-time. For other changes, like dependencies,
+      # you must run ``docker compose up nextjs --build`` to apply the changes.
+      - ./frontend:/app
+    entrypoint: npm run dev
+    user: "root"
+
+  database:
+    extends:
+      file: docker-compose.yml
+      service: database
+
+  redis:
+    extends:
+      file: docker-compose.yml
+      service: redis
+
+  caddy:
+    extends:
+      file: docker-compose.yml
+      service: caddy
+
+networks:
+  uro:
+    name: "uro"
+    
+volumes:
+  caddy_data:
+  caddy_config:

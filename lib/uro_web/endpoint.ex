@@ -1,10 +1,10 @@
 defmodule UroWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :uro
 
-  socket("/socket", UroWeb.UserSocket,
-    websocket: true,
-    longpoll: false
-  )
+  # socket("/socket", UroWeb.UserSocket,
+  #   websocket: true,
+  #   longpoll: false
+  # )
 
   # plug(Plug.Static.IndexHtml, at: "/")
 
@@ -21,7 +21,8 @@ defmodule UroWeb.Endpoint do
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
     socket("/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket)
-    plug(Phoenix.LiveReloader)
+
+    # plug(Phoenix.LiveReloader)
     plug(Phoenix.CodeReloader)
   end
 

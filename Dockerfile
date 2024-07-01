@@ -31,7 +31,7 @@ ARG PORT=4000
 ARG MIX_ENV=prod
 
 ENV MIX_ENV=${MIX_ENV} \
-	COMPILE_PHASE=1 \
+	COMPILE_PHASE=true \
 	PORT=${PORT}
 
 WORKDIR /app
@@ -44,6 +44,7 @@ RUN apk add --no-cache \
 	bash \
 	make \
 	gcc \
+	curl \
 	libc-dev
 
 RUN mix local.hex --force && \
@@ -70,5 +71,5 @@ RUN mix do compile, phx.digest
 
 EXPOSE ${PORT}
 
-ENV COMPILE_PHASE=
+ENV COMPILE_PHASE=false
 ENTRYPOINT iex -S mix do ecto.migrate, phx.server

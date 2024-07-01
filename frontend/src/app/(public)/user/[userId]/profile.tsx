@@ -67,11 +67,11 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 									: "gap-10"
 							)}
 						>
-							<div className="flex items-center justify-between gap-8">
-								<div
-									className={twMerge("flex flex-col", banner && "text-white")}
-								>
-									<span className="text-4xl">{display_name}</span>
+							<div className="dark flex items-center justify-between gap-8">
+								<div className={twMerge("flex flex-col")}>
+									<span className="truncate whitespace-nowrap text-4xl">
+										{display_name}
+									</span>
 									<span className="text-sm leading-none opacity-75">
 										@{username}
 									</span>
@@ -89,7 +89,7 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 										</>
 									) : (
 										<ButtonGroup>
-											<Button className="text-white" type="light">
+											<Button type="light">
 												<UserPlus className="size-4" /> Friend
 											</Button>
 											<Button>
@@ -112,6 +112,9 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 							<span className="hidden md:inline">
 								{biography || "No biography available."}
 							</span>
+							<Button type="light">
+								<UserPlus className="size-4" /> Friend
+							</Button>
 						</div>
 					</div>
 					<span className="md:hidden">

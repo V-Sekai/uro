@@ -78,7 +78,7 @@ export const EditProfile: FC<PropsWithChildren<{ userId: string }>> = ({
 									<StatusBadge user={user} />
 								</div>
 							</div>
-							<Input {...display_name} label="Display Name" maxLength={32} />
+							<Input {...display_name} label="Display Name" maxLength={24} />
 							<Input
 								{...biography}
 								multiline

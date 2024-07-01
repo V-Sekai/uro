@@ -65,7 +65,7 @@ defmodule UroWeb.Router do
     end
   end
 
-  resources("/avatars", UserContent.AvatarController, only: [:show])
+  # resources("/avatars", UserContent.AvatarController, only: [:show])
   resources("/maps", UroWeb.MapController, only: [:show])
 
   resources("/shards", UroWeb.ShardController, only: [:index, :create, :update, :delete])

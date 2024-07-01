@@ -16,7 +16,6 @@ defmodule UroWeb.UserController do
   alias Uro.Plug.Authentication
   alias Uro.Repo
   alias Uro.Session
-  alias UroWeb.AuthenticationController
   alias UroWeb.Error
 
   action_fallback(UroWeb.FallbackController)

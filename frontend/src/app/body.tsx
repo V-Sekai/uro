@@ -21,7 +21,7 @@ export const Body: FC<PropsWithChildren> = ({ children }) => {
 			<ThemeOverride>
 				<body
 					className={twMerge(
-						"flex min-h-svh flex-col bg-tertiary-100 font-normal text-secondary-100",
+						"flex min-h-svh flex-col bg-tertiary-100 font-normal",
 						prompt.className
 					)}
 				>

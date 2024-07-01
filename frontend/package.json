@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "openapi-ts && next dev -H 0.0.0.0 -p 3000",
-    "build": "openapi-ts && next build",
+    "dev": "next dev -H 0.0.0.0 -p 3000",
+    "build": "next build",
     "lint": "next lint"
   },
   "dependencies": {

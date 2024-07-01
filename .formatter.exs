@@ -1,5 +1,5 @@
 [
-  import_deps: [:ecto, :phoenix, :redirect, :open_api_spex],
+  import_deps: [:ecto, :phoenix, :open_api_spex],
   inputs: [
     "*.{ex,exs}",
     "priv/*/seeds.exs",
