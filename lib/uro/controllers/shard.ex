@@ -1,14 +1,14 @@
-defmodule UroWeb.ShardController do
-  use UroWeb, :controller
-  use UroWeb.Helpers.API
+defmodule Uro.ShardController do
+  use Uro, :controller
+  use Uro.Helpers.API
   use OpenApiSpex.ControllerSpecs
 
-  import UroWeb.Helpers.Shard
+  import Uro.Helpers.Shard
 
   alias OpenApiSpex.Schema
+  alias Uro.Helpers.Shard.SchemaShard
   alias Uro.Repo
   alias Uro.VSekai
-  alias UroWeb.Helpers.Shard.SchemaShard
 
   tags(["shards"])
 
@@ -21,8 +21,8 @@ defmodule UroWeb.ShardController do
   end
 
   def ensure_user_is_current_user_or_nil(conn, params) do
-    if UroWeb.Helpers.Auth.signed_in?(conn) do
-      Map.put(params, "user_id", UroWeb.Helpers.Auth.get_current_user(conn).id)
+    if Uro.Helpers.Auth.signed_in?(conn) do
+      Map.put(params, "user_id", Uro.Helpers.Auth.get_current_user(conn).id)
     else
       Map.put(params, "user_id", nil)
     end
@@ -30,8 +30,8 @@ defmodule UroWeb.ShardController do
 
   def can_connection_modify_shard(conn, shard) do
     if shard.user != nil and
-         UroWeb.Helpers.Auth.signed_in?(conn) and
-         shard.user == UroWeb.Helpers.Auth.get_current_user(conn) do
+         Uro.Helpers.Auth.signed_in?(conn) and
+         shard.user == Uro.Helpers.Auth.get_current_user(conn) do
       true
     else
       if shard.user == nil and

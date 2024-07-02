@@ -1,4 +1,4 @@
-defmodule UroWeb.Helpers.Changeset do
+defmodule Uro.Helpers.Changeset do
   @moduledoc """
   Changeset helper functions.
   """

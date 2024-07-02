@@ -1,4 +1,4 @@
-defmodule UroWeb.Error do
+defmodule Uro.Error do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -126,9 +126,9 @@ defmodule UroWeb.Error do
     # should be written to the errors.po file. The :count option is
     # set by Ecto and indicates we should also apply plural rules.
     if count = opts[:count] do
-      Gettext.dngettext(UroWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(Uro.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(UroWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(Uro.Gettext, "errors", msg, opts)
     end
   end
 end

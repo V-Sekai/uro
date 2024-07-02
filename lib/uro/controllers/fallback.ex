@@ -1,15 +1,15 @@
-defmodule UroWeb.FallbackController do
+defmodule Uro.FallbackController do
   @moduledoc """
   Translates controller action results into valid `Plug.Conn` responses.
 
   See `Phoenix.Controller.action_fallback/1` for more details.
   """
 
-  use UroWeb, :controller
-  use UroWeb.Helpers.API
+  use Uro, :controller
+  use Uro.Helpers.API
 
   alias Ecto.Changeset
-  alias UroWeb.Error
+  alias Uro.Error
 
   def call(conn, errors) when is_list(errors) do
     json_error(

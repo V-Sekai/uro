@@ -1,4 +1,8 @@
-defmodule UroWeb.OpenAPIViewer do
+defmodule Uro.OpenAPI.Viewer do
+  @moduledoc """
+  A Plug that renders the OpenAPI spec as an interactive API documentation page.
+  """
+
   @behaviour Plug
 
   @impl Plug

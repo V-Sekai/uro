@@ -8,7 +8,7 @@ defmodule Uro.Plug.RequireAvatarUploadPermission do
   @spec call(Conn.t(), atom()) :: Conn.t()
   def call(conn, handler) do
     conn
-    |> UroWeb.Helpers.UserContentHelper.session_has_avatar_upload_permission?()
+    |> Uro.Helpers.UserContentHelper.session_has_avatar_upload_permission?()
     |> maybe_halt(conn, handler)
   end
 
@@ -20,6 +20,6 @@ defmodule Uro.Plug.RequireAvatarUploadPermission do
     conn
     |> put_status(403)
     |> send_resp(403, "Unauthorized 403")
-    |> halt
+    |> halt()
   end
 end

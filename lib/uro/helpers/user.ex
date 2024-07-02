@@ -1,4 +1,4 @@
-defmodule UroWeb.Helpers.User do
+defmodule Uro.Helpers.User do
   @moduledoc """
   User helper functions.
   """
@@ -59,6 +59,8 @@ defmodule UroWeb.Helpers.User do
   def user_confirmed_email(%User{} = user), do: {:ok, user}
 
   def validate_as_yourself(changeset, user, field_key \\ :user_id) do
-    Ecto.Changeset.validate_inclusion(changeset, field_key, [user.id], message: "must be yourself")
+    Ecto.Changeset.validate_inclusion(changeset, field_key, [user.id],
+      message: "must be yourself"
+    )
   end
 end

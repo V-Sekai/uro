@@ -7,6 +7,7 @@ defmodule Uro.Plug.Authentication do
   alias Pow.Config
   alias Pow.Plug
   alias PowPersistentSession.Store.PersistentSessionCache
+  alias Uro.Accounts.User
   alias Uro.Accounts.UserPrivilegeRuleset
   alias Uro.Session
 
@@ -17,8 +18,7 @@ defmodule Uro.Plug.Authentication do
   @session_renewal @session_lifetime - :timer.hours(1)
 
   @impl true
-  @spec fetch(Conn.t(), Config.t()) :: {Conn.t(), map() | nil}
-  def fetch(conn, config) do
+  def fetch(%Conn{} = conn, config) do
     store_config = store_config(config)
 
     with {:ok, signed_access_token} <- fetch_access_token(conn),
@@ -41,7 +41,7 @@ defmodule Uro.Plug.Authentication do
     end
   end
 
-  defp maybe_renew(conn, {user, metadata}, config) do
+  defp maybe_renew(%Conn{} = conn, {%User{} = user, metadata}, config) do
     expires_in =
       metadata[:expires_at]
       |> DateTime.diff(DateTime.utc_now(), :millisecond)
@@ -55,8 +55,7 @@ defmodule Uro.Plug.Authentication do
   end
 
   @impl true
-  @spec create(Conn.t(), map(), Config.t()) :: {Conn.t(), map()}
-  def create(conn, user, config) do
+  def create(%Conn{} = conn, %User{} = user, config) do
     store_config =
       store_config(config)
       |> Keyword.put(:ttl, @session_lifetime)

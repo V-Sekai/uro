@@ -1,24 +1,24 @@
-defmodule UroWeb.UserController do
+defmodule Uro.UserController do
   @moduledoc false
 
   alias Uro.Turnstile
-  use UroWeb, :controller
-  use UroWeb.Helpers.API
+  use Uro, :controller
+  use Uro.Helpers.API
   use OpenApiSpex.ControllerSpecs
 
   import Ecto.Changeset
-  import UroWeb.Helpers.User
-  import UroWeb.Helpers.Changeset
+  import Uro.Helpers.User
+  import Uro.Helpers.Changeset
 
   alias OpenApiSpex.Schema
   alias Uro.Accounts
   alias Uro.Accounts.User
+  alias Uro.Error
   alias Uro.Plug.Authentication
   alias Uro.Repo
   alias Uro.Session
-  alias UroWeb.Error
 
-  action_fallback(UroWeb.FallbackController)
+  action_fallback(Uro.FallbackController)
   # plug(Uro.Plug.CastAndValidate, render_error: FallbackController)
 
   tags(["users"])

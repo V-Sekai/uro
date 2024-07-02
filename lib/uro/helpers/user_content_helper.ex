@@ -1,8 +1,7 @@
-defmodule UroWeb.Helpers.UserContentHelper do
+defmodule Uro.Helpers.UserContentHelper do
   @doc false
   def merge_map_with_base_user_content(map, user_content) do
-    map
-    |> Map.merge(%{
+    Map.merge(map, %{
       id: to_string(user_content.id),
       name: to_string(user_content.name),
       description: to_string(user_content.description),
@@ -82,22 +81,22 @@ defmodule UroWeb.Helpers.UserContentHelper do
   @doc false
   def has_avatar_upload_permission?(user) do
     user
-    |> UroWeb.Helpers.Auth.get_user_privilege_ruleset()
-    |> has_upload_avatars_field?
+    |> Uro.Helpers.Auth.get_user_privilege_ruleset()
+    |> has_upload_avatars_field?()
   end
 
   @doc false
   def has_map_upload_permission?(user) do
     user
-    |> UroWeb.Helpers.Auth.get_user_privilege_ruleset()
-    |> has_upload_maps_field?
+    |> Uro.Helpers.Auth.get_user_privilege_ruleset()
+    |> has_upload_maps_field?()
   end
 
   @doc false
   def has_prop_upload_permission?(user) do
     user
-    |> UroWeb.Helpers.Auth.get_user_privilege_ruleset()
-    |> has_upload_props_field?
+    |> Uro.Helpers.Auth.get_user_privilege_ruleset()
+    |> has_upload_props_field?()
   end
 
   @spec session_has_avatar_upload_permission?(

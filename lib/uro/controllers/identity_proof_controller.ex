@@ -1,8 +1,8 @@
-defmodule UroWeb.IdentityProofController do
-  use UroWeb, :controller
-  use UroWeb.Helpers.API
+defmodule Uro.IdentityProofController do
+  use Uro, :controller
+  use Uro.Helpers.API
 
-  alias UroWeb.Error
+  alias Uro.Error
 
   @spec create(Conn.t(), map()) :: Conn.t()
   def create(conn, %{"identity_proof" => identity_proof_params}) do

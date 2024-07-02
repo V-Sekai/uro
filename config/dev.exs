@@ -4,7 +4,7 @@ config :uro, Uro.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
-config :uro, UroWeb.Endpoint,
+config :uro, Uro.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false

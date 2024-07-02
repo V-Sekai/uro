@@ -1,4 +1,4 @@
-defmodule UroWeb.Pow.RedisCache do
+defmodule Uro.Pow.RedisCache do
   @moduledoc """
   Redis cache with optimized lookup.
 

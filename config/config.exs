@@ -1,4 +1,5 @@
 import Config
+require Logger
 
 compile_phase? = System.get_env("COMPILE_PHASE") != "false"
 
@@ -33,7 +34,9 @@ config :uro, Uro.Repo,
   adapter: Ecto.Adapaters.Postgres,
   url: get_env.("DATABASE_URL", nil)
 
-config :uro, UroWeb.Endpoint,
+config :uro, Redix, url: get_env.("REDIS_URL", nil)
+
+config :uro, Uro.Endpoint,
   adapter: Bandit.PhoenixAdapter,
   url:
     "URL"
@@ -69,17 +72,21 @@ config :uro, :stale_shard_cutoff,
 # every 30 days
 config :uro, :stale_shard_interval, 30 * 24 * 60 * 60 * 1000
 
-config :uro, Uro.Turnstile, secret_key: get_optional_env.("TURNSTILE_SECRET_KEY")
+config :uro, Uro.Turnstile,
+  secret_key:
+    get_optional_env.("TURNSTILE_SECRET_KEY") ||
+      Logger.warning(
+        "Turnstile (a reCaptcha alternative) is disabled because the environment variable TURNSTILE_SECRET_KEY is not set. For more information, see https://developers.cloudflare.com/turnstile/get-started/."
+      )
 
 config :uro, :pow,
   user: Uro.Accounts.User,
   repo: Uro.Repo,
-  web_module: UroWeb,
+  web_module: Uro,
   extensions: [PowPersistentSession],
   controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks,
-  routes_backend: UroWeb.Pow.Routes,
-  web_mailer_module: UroWeb,
-  cache_store_backend: UroWeb.Pow.RedisCache
+  routes_backend: Uro.Pow.Routes,
+  cache_store_backend: Uro.Pow.RedisCache
 
 config :uro, :pow_assent,
   user_identities_context: Uro.UserIdentities,

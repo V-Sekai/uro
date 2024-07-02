@@ -1,4 +1,4 @@
-defmodule UroWeb.Helpers.API do
+defmodule Uro.Helpers.API do
   @moduledoc """
   API helper functions.
   """

@@ -1,4 +1,4 @@
-defmodule UroWeb.Helpers.Auth do
+defmodule Uro.Helpers.Auth do
   @moduledoc """
   Session & authentication helper functions.
   """

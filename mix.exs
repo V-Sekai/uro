@@ -5,7 +5,7 @@ defmodule Uro.MixProject do
     [
       app: :uro,
       version: "0.1.0",
-      elixir: ">= 1.11.4",
+      elixir: ">= 1.16.3",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,

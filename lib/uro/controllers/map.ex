@@ -1,7 +1,7 @@
-defmodule UroWeb.MapController do
-  use UroWeb, :controller
+defmodule Uro.MapController do
+  use Uro, :controller
   use OpenApiSpex.ControllerSpecs
-  use UroWeb.Helpers.API
+  use Uro.Helpers.API
 
   alias OpenApiSpex.Schema
   alias Uro.UserContent
@@ -16,7 +16,7 @@ defmodule UroWeb.MapController do
     |> json(%{
       data: %{
         maps:
-          UroWeb.Helpers.UserContentHelper.get_api_user_content_list(maps, %{
+          Uro.Helpers.UserContentHelper.get_api_user_content_list(maps, %{
             merge_uploader_id: true
           })
       }
@@ -57,7 +57,7 @@ defmodule UroWeb.MapController do
         |> json(%{
           data: %{
             map:
-              UroWeb.Helpers.UserContentHelper.get_api_user_content(
+              Uro.Helpers.UserContentHelper.get_api_user_content(
                 map,
                 %{merge_uploader_id: true, merge_is_public: true}
               )

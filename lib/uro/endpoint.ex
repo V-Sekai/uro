@@ -1,7 +1,7 @@
-defmodule UroWeb.Endpoint do
+defmodule Uro.Endpoint do
   use Phoenix.Endpoint, otp_app: :uro
 
-  # socket("/socket", UroWeb.UserSocket,
+  # socket("/socket", Uro.UserSocket,
   #   websocket: true,
   #   longpoll: false
   # )
@@ -57,5 +57,5 @@ defmodule UroWeb.Endpoint do
 
   plug(CORSPlug)
 
-  plug(UroWeb.Router)
+  plug(Uro.Router)
 end

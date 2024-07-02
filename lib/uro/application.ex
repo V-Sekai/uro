@@ -12,7 +12,7 @@ defmodule Uro.Application do
       Uro.Repo,
 
       # Start the endpoint when the application starts
-      UroWeb.Endpoint,
+      Uro.Endpoint,
       Uro.VSekai.ShardJanitor,
 
       # Starts a worker by calling: Uro.Worker.start_link(arg)
@@ -23,7 +23,7 @@ defmodule Uro.Application do
       # # Or in a distributed system:
       # {Pow.Store.Backend.MnesiaCache, extra_db_nodes: Node.list()},
       # Pow.Store.Backend.MnesiaCache.Unsplit # Recover from netsplit
-      {Redix, {"redis://redis:6379", [name: :redix]}},
+      {Redix, {Application.get_env(:uro, Redix)[:url], [name: :redix]}},
       {Phoenix.PubSub, [name: Uro.PubSub, adapter: Phoenix.PubSub.PG2]}
     ]
 
@@ -36,7 +36,7 @@ defmodule Uro.Application do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    UroWeb.Endpoint.config_change(changed, removed)
+    Uro.Endpoint.config_change(changed, removed)
     :ok
   end
 end

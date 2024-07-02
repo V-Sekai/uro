@@ -1,12 +1,12 @@
-defmodule UroWeb do
+defmodule Uro do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use UroWeb, :controller
-      use UroWeb, :view
+      use Uro, :controller
+      use Uro, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -21,7 +21,7 @@ defmodule UroWeb do
     quote do
       use Phoenix.View,
         root: "lib/uro_web/templates",
-        namespace: UroWeb
+        namespace: Uro
 
       use Phoenix.HTML
     end
@@ -29,11 +29,11 @@ defmodule UroWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: UroWeb
+      use Phoenix.Controller, namespace: Uro
 
       import Plug.Conn
-      import UroWeb.Gettext
-      alias UroWeb.Router.Helpers, as: Routes
+      import Uro.Gettext
+      alias Uro.Router.Helpers, as: Routes
     end
   end
 
@@ -41,7 +41,7 @@ defmodule UroWeb do
     quote do
       use Phoenix.View,
         root: "lib/uro_web/templates",
-        namespace: UroWeb
+        namespace: Uro
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
@@ -49,9 +49,9 @@ defmodule UroWeb do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import UroWeb.ErrorHelpers
-      import UroWeb.Gettext
-      alias UroWeb.Router.Helpers, as: Routes
+      import Uro.ErrorHelpers
+      import Uro.Gettext
+      alias Uro.Router.Helpers, as: Routes
     end
   end
 
@@ -66,7 +66,7 @@ defmodule UroWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import UroWeb.Gettext
+      import Uro.Gettext
     end
   end
 

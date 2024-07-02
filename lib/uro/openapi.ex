@@ -1,4 +1,4 @@
-defmodule UroWeb.OpenAPI.Specification do
+defmodule Uro.OpenAPI.Specification do
   @moduledoc """
   OpenAPI spec for the Uro API.
   """
@@ -9,8 +9,8 @@ defmodule UroWeb.OpenAPI.Specification do
   alias OpenApiSpex.Paths
   alias OpenApiSpex.SecurityScheme
   alias OpenApiSpex.Server
-  alias UroWeb.Endpoint
-  alias UroWeb.Router
+  alias Uro.Endpoint
+  alias Uro.Router
 
   @behaviour OpenApi
 
@@ -22,7 +22,7 @@ defmodule UroWeb.OpenAPI.Specification do
         version: "1"
       },
       servers: [
-        Server.from_endpoint(Endpoint)
+        Server.from_endpoint(Endpoint) |> IO.inspect(label: "from_endpoint")
       ],
       paths: Paths.from_router(Router),
       components: %Components{

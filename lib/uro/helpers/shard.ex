@@ -1,4 +1,4 @@
-defmodule UroWeb.Helpers.Shard do
+defmodule Uro.Helpers.Shard do
   @moduledoc false
 
   defmodule SchemaShard do

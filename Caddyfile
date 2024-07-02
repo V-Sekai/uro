@@ -1,21 +1,9 @@
 vsekai.local {
 	handle_path /api/v1/* {
-		log api {
-			format console
-		}
-
 		reverse_proxy uro:4000
 	}
 
 	handle_path /* {
-		log frontend {
-			format console
-		}
-
 		reverse_proxy nextjs:3000
 	}
-
-	
-
 }
-

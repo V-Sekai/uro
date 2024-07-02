@@ -26,9 +26,9 @@ services:
       timeout: 5s
 
   uro:
-    restart: on-failure
     build:
       context: .
+    restart: always
     links:
       - database
       - redis
@@ -42,7 +42,7 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: wget -f http://uro:4000 || exit 1
+      test: curl --fail http://uro:4000/health || exit 1
       interval: 1s
       timeout: 5s
 
@@ -51,7 +51,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     healthcheck:
-      test: wget http://nextjs:3000 || exit 1
+      test: curl --fail http://nextjs:3000/health || exit 1
       interval: 1s
       timeout: 5s
     depends_on:

@@ -1,6 +1,6 @@
-defmodule UroWeb.AvatarController do
-  use UroWeb, :controller
-  use UroWeb.Helpers.API
+defmodule Uro.AvatarController do
+  use Uro, :controller
+  use Uro.Helpers.API
   use OpenApiSpex.ControllerSpecs
 
   alias Uro.UserContent
@@ -13,7 +13,7 @@ defmodule UroWeb.AvatarController do
     |> json(%{
       data: %{
         avatars:
-          UroWeb.Helpers.UserContentHelper.get_api_user_content_list(avatars, %{
+          Uro.Helpers.UserContentHelper.get_api_user_content_list(avatars, %{
             merge_uploader_id: true
           })
       }
@@ -30,7 +30,7 @@ defmodule UroWeb.AvatarController do
         |> json(%{
           data: %{
             avatar:
-              UroWeb.Helpers.UserContentHelper.get_api_user_content(
+              Uro.Helpers.UserContentHelper.get_api_user_content(
                 avatar,
                 %{merge_uploader_id: true, merge_is_public: true}
               )

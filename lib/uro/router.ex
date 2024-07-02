@@ -1,7 +1,7 @@
-defmodule UroWeb.Router do
-  use UroWeb, :router
+defmodule Uro.Router do
+  use Uro, :router
   use Plug.ErrorHandler
-  use UroWeb.Helpers.API
+  use Uro.Helpers.API
 
   defp handle_errors(conn, %{reason: reason}) do
     json_error(conn,
@@ -21,11 +21,11 @@ defmodule UroWeb.Router do
     plug(RemoteIp)
     plug(Uro.Plug.Authentication, otp_app: :uro)
 
-    plug(OpenApiSpex.Plug.PutApiSpec, module: UroWeb.OpenAPI.Specification)
+    plug(OpenApiSpex.Plug.PutApiSpec, module: Uro.OpenAPI.Specification)
   end
 
   pipeline :authenticated do
-    plug(Pow.Plug.RequireAuthenticated, error_handler: UroWeb.FallbackController)
+    plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
   end
 
   if Mix.env() == :dev do
@@ -46,43 +46,45 @@ defmodule UroWeb.Router do
 
   pipe_through([:api])
 
-  get("/", OpenApiSpex.Plug.RenderSpec, [])
-  get("/docs", UroWeb.OpenAPIViewer, pathname: "/api/v1")
+  get("/health", Uro.HealthController, :index)
 
-  post("/session", UroWeb.AuthenticationController, :login)
+  get("/", OpenApiSpex.Plug.RenderSpec, [])
+  get("/docs", Uro.OpenAPI.Viewer, pathname: "/api/v1")
+
+  post("/session", Uro.AuthenticationController, :login)
 
   scope "/session" do
     pipe_through([:authenticated])
 
-    get("/", UroWeb.AuthenticationController, :current_session)
-    delete("/", UroWeb.AuthenticationController, :logout)
+    get("/", Uro.AuthenticationController, :current_session)
+    delete("/", Uro.AuthenticationController, :logout)
   end
 
   scope "/oauth" do
     scope "/:provider" do
-      get("/", UroWeb.AuthenticationController, :login_with_provider)
-      get("/callback", UroWeb.AuthenticationController, :provider_callback)
+      get("/", Uro.AuthenticationController, :login_with_provider)
+      get("/callback", Uro.AuthenticationController, :provider_callback)
     end
   end
 
   # resources("/avatars", UserContent.AvatarController, only: [:show])
-  resources("/maps", UroWeb.MapController, only: [:show])
+  resources("/maps", Uro.MapController, only: [:show])
 
-  resources("/shards", UroWeb.ShardController, only: [:index, :create, :update, :delete])
+  resources("/shards", Uro.ShardController, only: [:index, :create, :update, :delete])
 
   scope "/users" do
-    resources("/", UroWeb.UserController, only: [:show, :create])
+    resources("/", Uro.UserController, only: [:show, :create])
 
     scope "/:user_id" do
-      post "/email", UroWeb.UserController, :confirm_email
+      post "/email", Uro.UserController, :confirm_email
 
       scope "/" do
         pipe_through([:authenticated])
 
-        patch "/", UroWeb.UserController, :update
+        patch "/", Uro.UserController, :update
 
-        put "/email", UroWeb.UserController, :update_email
-        patch "/email", UroWeb.UserController, :resend_confirmation_email
+        put "/email", Uro.UserController, :update_email
+        patch "/email", Uro.UserController, :resend_confirmation_email
       end
     end
   end

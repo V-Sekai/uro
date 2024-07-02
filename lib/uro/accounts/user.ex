@@ -19,7 +19,7 @@ defmodule Uro.Accounts.User do
 
   import Ecto.Query, only: [from: 2]
   import Ecto.Changeset
-  import UroWeb.Helpers.Changeset
+  import Uro.Helpers.Changeset
 
   alias Uro.Accounts.User.JSONSchema
   alias Uro.Accounts.User.Status
@@ -210,7 +210,6 @@ defmodule Uro.Accounts.User do
     end
   end
 
-  @spec unlock_changeset(Schema.t() | Changeset.t()) :: Changeset.t()
   def unlock_changeset(user_or_changeset) do
     changeset = change(user_or_changeset)
 
@@ -227,6 +226,7 @@ defmodule Uro.Accounts.User do
     alias Uro.Accounts.User.JSONSchema
 
     OpenApiSpex.schema(%{
+      title: "UserUpdate",
       type: :object,
       properties: %{
         display_name: JSONSchema.shape(:display_name),

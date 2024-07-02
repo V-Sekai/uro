@@ -1,8 +1,8 @@
-defmodule UroWeb.AuthenticationController do
+defmodule Uro.AuthenticationController do
   @moduledoc false
 
-  use UroWeb, :controller
-  use UroWeb.Helpers.API
+  use Uro, :controller
+  use Uro.Helpers.API
   use OpenApiSpex.ControllerSpecs
 
   alias OpenApiSpex.Schema
@@ -10,9 +10,9 @@ defmodule UroWeb.AuthenticationController do
   alias PowAssent.Plug
   alias Uro.Accounts
   alias Uro.Accounts.User
+  alias Uro.Endpoint
+  alias Uro.Error
   alias Uro.Session
-  alias UroWeb.Endpoint
-  alias UroWeb.Error
 
   tags(["authentication"])
 
@@ -151,7 +151,7 @@ defmodule UroWeb.AuthenticationController do
         {_, username_error_options} = Keyword.get(changeset.errors, :username)
         :unique = Keyword.get(username_error_options, :constraint)
 
-        suffix = for(_ <- 1..4, into: "", do: <<Enum.random('0123456789abcdef')>>)
+        suffix = for(_ <- 1..4, into: "", do: <<Enum.random(~c"0123456789abcdef")>>)
         user_params = %{user_params | "username" => "#{user_params["username"]}_#{suffix}"}
 
         {:ok, _, conn} = Plug.create_user(conn, user_identity_params, user_params)
