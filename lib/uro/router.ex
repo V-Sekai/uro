@@ -37,7 +37,7 @@ defmodule Uro.Router do
       plug(:put_secure_browser_headers)
     end
 
-    scope "/-" do
+    scope "/" do
       pipe_through([:browser])
 
       forward("/mailbox", Plug.Swoosh.MailboxPreview)

@@ -1,11 +1,14 @@
 ARG NODE_ENV=production
 
 FROM node:22-alpine AS base
+RUN apk add --no-cache curl
+
+ENV NEXT_TELEMETRY_DISABLED=1
 
 FROM base AS dependencies
 WORKDIR /app
 
-RUN apk add --no-cache libc6-compat curl
+RUN apk add --no-cache libc6-compat
 
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
@@ -24,7 +27,7 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 
 ARG NODE_ENV
-COPY .env.$NODE_ENV .env
+COPY .env.$NODE_ENV* .env
 
 COPY src/__generated/openapi.json ./src/__generated/openapi.json
 RUN ./node_modules/.bin/openapi-ts

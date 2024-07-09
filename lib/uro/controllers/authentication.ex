@@ -14,16 +14,16 @@ defmodule Uro.AuthenticationController do
   alias Uro.Error
   alias Uro.Session
 
+  action_fallback(Uro.FallbackController)
+
   tags(["authentication"])
 
-  @pow_assent Application.compile_env(:uro, :pow_assent)
-
-  @supported_providers @pow_assent[:providers]
-  @supported_provider_names @supported_providers
-                            |> Keyword.keys()
-                            |> Enum.map(&Atom.to_string/1)
-
-  def supported_providers(), do: @supported_provider_names
+  # @pow_assent Application.compile_env(:uro, :pow_assent)
+  # @supported_providers @pow_assent[:providers]
+  # @supported_provider_names @supported_providers
+  #                           |> Keyword.keys()
+  #                           |> Enum.map(&Atom.to_string/1)
+  # def supported_providers(), do: @supported_provider_names
 
   defmodule ProviderID do
     @moduledoc """
@@ -87,8 +87,7 @@ defmodule Uro.AuthenticationController do
     )
   end
 
-  def login_with_provider(conn, %{"provider" => provider})
-      when is_binary(provider) and provider in @supported_provider_names do
+  def login_with_provider(conn, %{"provider" => provider}) when is_binary(provider) do
     redirect_url = redirect_uri(conn)
     {:ok, url, conn} = Plug.authorize_url(conn, provider, redirect_url)
 
@@ -182,9 +181,7 @@ defmodule Uro.AuthenticationController do
   end
 
   defp redirect_uri(%{params: %{"provider" => provider}}) do
-    Endpoint.url()
-    |> URI.merge("/api/v1/oauth/#{provider}/callback")
-    |> URI.to_string()
+    Endpoint.public_url("oauth/#{provider}/callback")
   end
 
   operation(:current_session,

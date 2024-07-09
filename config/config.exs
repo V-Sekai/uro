@@ -23,26 +23,34 @@ end
 config :hammer,
   backend: {Hammer.Backend.ETS, [expiry_ms: 60_000 * 60 * 4, cleanup_interval_ms: 60_000 * 10]}
 
+url =
+  "URL"
+  |> get_env.("https://example.com/api/")
+  |> URI.new!()
+
+root_origin =
+  "ROOT_ORIGIN"
+  |> get_env.("https://example.com")
+  |> URI.new!()
+
 config :uro,
   ecto_repos: [Uro.Repo],
+  url: url,
   frontend_url:
     "FRONTEND_URL"
     |> get_env.("https://example.com/")
-    |> URI.new!()
+    |> URI.new!(),
+  root_origin: root_origin
 
 config :uro, Uro.Repo,
-  adapter: Ecto.Adapaters.Postgres,
+  adapter: Ecto.Adapters.Postgres,
   url: get_env.("DATABASE_URL", nil)
 
 config :uro, Redix, url: get_env.("REDIS_URL", nil)
 
 config :uro, Uro.Endpoint,
   adapter: Bandit.PhoenixAdapter,
-  url:
-    "URL"
-    |> get_env.("https://example.com/api/")
-    |> URI.new!()
-    |> Map.take([:scheme, :host, :path]),
+  url: Map.take(url, [:scheme, :host, :path]),
   http: [
     port:
       "PORT"
@@ -50,14 +58,6 @@ config :uro, Uro.Endpoint,
       |> String.to_integer()
   ],
   secret_key_base: get_env.("PHOENIX_KEY_BASE", nil)
-
-# pubsub_server: Uro.PubSub,
-# live_view: [signing_salt: "0dBPUwA2"]
-
-root_origin =
-  "ROOT_ORIGIN"
-  |> get_env.("https://example.com")
-  |> URI.new!()
 
 config :cors_plug,
   origin: [URI.to_string(root_origin)],
@@ -69,7 +69,6 @@ config :uro, :stale_shard_cutoff,
   amount: 3,
   calendar_type: "month"
 
-# every 30 days
 config :uro, :stale_shard_interval, 30 * 24 * 60 * 60 * 1000
 
 config :uro, Uro.Turnstile,
@@ -90,22 +89,33 @@ config :uro, :pow,
 
 config :uro, :pow_assent,
   user_identities_context: Uro.UserIdentities,
-  providers: [
-    discord: [
-      label: "Discord",
-      client_id: "1253978304478974012",
-      client_secret: "DSLc-oy-6Mvglw1Zn_NIhVB3aFEZppUV",
-      strategy: Assent.Strategy.Discord
-    ],
-    github: [
-      label: "GitHub",
-      client_id: "Ov23li7vYcdEBxL5ybI3",
-      client_secret: "bf4fbfa43a2ea8eaf9eedbc23feb7b4a046c1b80",
-      strategy: Assent.Strategy.Github
-    ]
-  ]
+  providers:
+    (case(compile_phase?) do
+       true ->
+         []
 
-# Configures Elixir's Logger
+       false ->
+         System.get_env()
+         |> Map.filter(fn {k, _} -> String.match?(k, ~r/^OAUTH2_.+_STRATEGY/) end)
+         |> Enum.map(fn {key, module_name} ->
+           key =
+             key
+             |> String.replace("OAUTH2_", "")
+             |> String.replace("_STRATEGY", "")
+
+           {
+             key
+             |> String.downcase()
+             |> String.to_atom(),
+             [
+               client_id: get_env.("OAUTH2_#{key}_CLIENT_ID", nil),
+               client_secret: get_env.("OAUTH2_#{key}_CLIENT_SECRET", nil),
+               strategy: Module.concat([module_name])
+             ]
+           }
+         end)
+     end)
+
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]

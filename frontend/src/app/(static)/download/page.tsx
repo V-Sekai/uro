@@ -2,7 +2,7 @@
 
 import { InlineLink } from "~/components/link";
 import { urls } from "~/environment";
-import { Section, SectionTitle } from "~/app/section";
+import { Section, SectionTitle } from "~/app/(static)/section";
 import { Footer } from "~/app/footer";
 
 export default function AboutPage() {

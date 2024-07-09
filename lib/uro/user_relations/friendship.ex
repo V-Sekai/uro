@@ -1,4 +1,8 @@
 defmodule Uro.UserRelations.Friendship do
+  @moduledoc """
+  A friendship between two users.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

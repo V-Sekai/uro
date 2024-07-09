@@ -29,6 +29,6 @@ defmodule Uro.HealthController do
   )
 
   def index(conn, _params) do
-    json(conn, %{services: %{uro: "ok"}})
+    json(conn, %{services: %{uro: "healthy"}})
   end
 end

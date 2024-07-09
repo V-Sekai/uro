@@ -17,6 +17,8 @@ import {
 import { ErrorMessage } from "~/app/(static)/login/error-message";
 import { Button, type ButtonProps } from "~/components/button";
 
+import type { Error } from "~/api";
+
 export type MutationFormProps<TVariables, TData = unknown, TError = Error> = {
 	className?: string;
 	defaultVariables: TVariables;
@@ -132,12 +134,17 @@ export function MutationForm<TVariables, TData = unknown, TError = Error>({
 	);
 }
 
-export const FormErrorMessage: FC = () => {
+export const FormErrorMessage: FC<{ messageOverride?: string | null }> = ({
+	messageOverride
+}) => {
 	const { error } = use(MutationFormContext);
 
 	return (
 		<ErrorMessage
-			message={error && !("properties" in error) ? error?.message : null}
+			message={
+				messageOverride ||
+				(error && !("properties" in error) ? error?.message : null)
+			}
 		/>
 	);
 };

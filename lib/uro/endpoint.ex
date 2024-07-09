@@ -1,28 +1,11 @@
 defmodule Uro.Endpoint do
   use Phoenix.Endpoint, otp_app: :uro
 
-  # socket("/socket", Uro.UserSocket,
-  #   websocket: true,
-  #   longpoll: false
-  # )
+  def public_url(pathname \\ "") do
+    URI.to_string(Application.fetch_env!(:uro, :url)) <> pathname
+  end
 
-  # plug(Plug.Static.IndexHtml, at: "/")
-
-  # plug(Plug.Static,
-  #   at: "/",
-  #   from: :uro
-  # )
-
-  # plug Plug.Static,
-  #   at: "/uploads",
-  #   from: Path.expand("./uploads")
-
-  # Code reloading can be explicitly enabled under the
-  # :code_reloader configuration of your endpoint.
-  if code_reloading? do
-    socket("/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket)
-
-    # plug(Phoenix.LiveReloader)
+  if Mix.env() == :dev do
     plug(Phoenix.CodeReloader)
   end
 
@@ -46,16 +29,6 @@ defmodule Uro.Endpoint do
     signing_salt: "5DeFKvbM"
   )
 
-  # plug Pow.Plug.Session,
-  #   otp_app: :uro
-
-  # session_ttl_renewal: :timer.minutes(5),
-  # credentials_cache_store: {Pow.Store.CredentialsCache, ttl: :timer.hours(48)}
-
-  # plug PowPersistentSession.Plug.Cookie
-  # persistent_session_cookie_key: "p_session"
-
   plug(CORSPlug)
-
   plug(Uro.Router)
 end

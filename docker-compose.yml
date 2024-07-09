@@ -11,7 +11,7 @@ services:
       - "./postgres:/var/lib/postgresql/data"
     healthcheck:
       test: pg_isready -U vsekai
-      interval: 1s
+      interval: 5s
       timeout: 5s
 
   redis:
@@ -22,7 +22,7 @@ services:
       - "./redis:/data"
     healthcheck:
       test: redis-cli ping
-      interval: 1s
+      interval: 5s
       timeout: 5s
 
   uro:
@@ -43,7 +43,7 @@ services:
       - .env
     healthcheck:
       test: curl --fail http://uro:4000/health || exit 1
-      interval: 1s
+      interval: 5s
       timeout: 5s
 
   nextjs:
@@ -52,7 +52,7 @@ services:
       dockerfile: Dockerfile
     healthcheck:
       test: curl --fail http://nextjs:3000/health || exit 1
-      interval: 1s
+      interval: 5s
       timeout: 5s
     depends_on:
       - uro
