@@ -33,8 +33,8 @@ export const LoginForm: FC = () => {
 			className="grid w-[32rem] overflow-hidden rounded-xl border border-tertiary-300 bg-tertiary-50"
 			mutationKey={["login"]}
 			defaultVariables={{
-				username_or_email: email || "",
-				password: ""
+				password: "",
+				username_or_email: email || ""
 			}}
 			mutationFn={async (body: LoginCredentials) => {
 				const { data, error } = await api.login({ body });

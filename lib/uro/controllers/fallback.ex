@@ -6,7 +6,6 @@ defmodule Uro.FallbackController do
   """
 
   use Uro, :controller
-  use Uro.Helpers.API
 
   alias Ecto.Changeset
   alias Uro.Error

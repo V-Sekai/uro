@@ -1,14 +1,10 @@
 defmodule Uro.ShardController do
   use Uro, :controller
-  use Uro.Helpers.API
-  use OpenApiSpex.ControllerSpecs
-
-  import Uro.Helpers.Shard
 
   alias OpenApiSpex.Schema
-  alias Uro.Helpers.Shard.SchemaShard
   alias Uro.Repo
   alias Uro.VSekai
+  alias Uro.VSekai.Shard
 
   tags(["shards"])
 
@@ -45,14 +41,14 @@ defmodule Uro.ShardController do
 
   operation(:index,
     operation_id: "listShards",
-    summary: "List all shards.",
+    summary: "List Shards",
     responses: [
       ok: {
         "",
         "application/json",
         %Schema{
           type: :array,
-          items: SchemaShard
+          items: Shard.json_schema()
         }
       }
     ]
@@ -63,16 +59,16 @@ defmodule Uro.ShardController do
 
     conn
     |> put_status(200)
-    |> json(transform_shard(shards))
+    |> json(shards)
   end
 
   operation(:create,
     operation_id: "createShard",
-    summary: "Create a new shard.",
+    summary: "Create Shard",
     request_body: {
       "",
       "application/json",
-      SchemaShard
+      Shard.json_schema()
     },
     responses: [
       ok: {
@@ -114,7 +110,7 @@ defmodule Uro.ShardController do
 
   operation(:update,
     operation_id: "updateShard",
-    summary: "Update a specific shard.",
+    summary: "Update Shard",
     parameters: [
       id: [
         in: :path,
@@ -127,7 +123,7 @@ defmodule Uro.ShardController do
       ok: {
         "",
         "application/json",
-        SchemaShard
+        Shard.json_schema()
       }
     ]
   )
@@ -140,7 +136,7 @@ defmodule Uro.ShardController do
         {:ok, shard} ->
           conn
           |> put_status(200)
-          |> json(%{data: %{id: to_string(shard.id)}})
+          |> json(shard)
 
         {:error, %Ecto.Changeset{}} ->
           json_error(conn)
@@ -156,7 +152,7 @@ defmodule Uro.ShardController do
 
   operation(:delete,
     operation_id: "deleteShard",
-    summary: "Delete a specific shard.",
+    summary: "Delete Shard",
     parameters: [
       id: [
         in: :path,
@@ -169,7 +165,7 @@ defmodule Uro.ShardController do
       ok: {
         "",
         "application/json",
-        %Schema{}
+        success_json_schema()
       }
     ]
   )

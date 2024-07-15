@@ -7,25 +7,25 @@ const statusMetadata: Record<
 	api.UserStatus,
 	{ message: string; className: string }
 > = {
-	online: {
-		message: "Online",
-		className: "bg-green-500"
-	},
-	offline: {
-		message: "Offline",
-		className: "bg-gray-500"
-	},
 	away: {
-		message: "Away",
-		className: "bg-yellow-500"
+		className: "bg-yellow-500",
+		message: "Away"
 	},
 	busy: {
-		message: "Busy",
-		className: "bg-red-500"
+		className: "bg-red-500",
+		message: "Busy"
 	},
 	invisible: {
-		message: "Offline",
-		className: "bg-gray-500"
+		className: "bg-gray-500",
+		message: "Offline"
+	},
+	offline: {
+		className: "bg-gray-500",
+		message: "Offline"
+	},
+	online: {
+		className: "bg-green-500",
+		message: "Online"
 	}
 };
 

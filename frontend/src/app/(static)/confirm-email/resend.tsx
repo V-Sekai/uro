@@ -12,7 +12,7 @@ export const ResendButton: FC = () => {
 	const { mutate, isPending, status } = useMutation({
 		mutationFn: async () => {
 			const { error } = await api.resendConfirmationEmail({
-				path: { user_id: "@me" }
+				path: { user_id: "me" }
 			});
 
 			if (error) throw error;

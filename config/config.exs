@@ -11,7 +11,7 @@ get_env = fn key, example ->
     false ->
       System.get_env(key) ||
         raise """
-        Environment variable #{key} is required but not set.
+        Environment variable "#{key}" is required but not set.
         """
   end
 end
@@ -25,12 +25,12 @@ config :hammer,
 
 url =
   "URL"
-  |> get_env.("https://example.com/api/")
+  |> get_env.("https://vsekai.local/api/v1/")
   |> URI.new!()
 
 root_origin =
   "ROOT_ORIGIN"
-  |> get_env.("https://example.com")
+  |> get_env.("https://vsekai.local")
   |> URI.new!()
 
 config :uro,
@@ -38,15 +38,15 @@ config :uro,
   url: url,
   frontend_url:
     "FRONTEND_URL"
-    |> get_env.("https://example.com/")
+    |> get_env.("https://vsekai.local/")
     |> URI.new!(),
   root_origin: root_origin
 
 config :uro, Uro.Repo,
   adapter: Ecto.Adapters.Postgres,
-  url: get_env.("DATABASE_URL", nil)
+  url: get_env.("DATABASE_URL", "postgresql://vsekai:vsekai@database:5432/vsekai")
 
-config :uro, Redix, url: get_env.("REDIS_URL", nil)
+config :uro, Redix, url: get_env.("REDIS_URL", "redis://redis:6379")
 
 config :uro, Uro.Endpoint,
   adapter: Bandit.PhoenixAdapter,
@@ -57,13 +57,17 @@ config :uro, Uro.Endpoint,
       |> get_env.("4000")
       |> String.to_integer()
   ],
-  secret_key_base: get_env.("PHOENIX_KEY_BASE", nil)
+  secret_key_base:
+    get_env.(
+      "PHOENIX_KEY_BASE",
+      "bNDe+pg86uL938fQA8QGYCJ4V7fE5RAxoQ8grq9drPpO7mZ0oEMSNapKLiA48smR"
+    )
 
 config :cors_plug,
   origin: [URI.to_string(root_origin)],
   max_age: 86400
 
-config :joken, default_signer: get_env.("JOKEN_SIGNER", nil)
+config :joken, default_signer: get_env.("JOKEN_SIGNER", "gqawCOER09ZZjaN8W2QM9XT9BeJSZ9qc")
 
 config :uro, :stale_shard_cutoff,
   amount: 3,
@@ -80,6 +84,7 @@ config :uro, Uro.Turnstile,
 
 config :uro, :pow,
   user: Uro.Accounts.User,
+  users_context: Uro.Accounts,
   repo: Uro.Repo,
   web_module: Uro,
   extensions: [PowPersistentSession],

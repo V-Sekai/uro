@@ -1,7 +1,5 @@
 defmodule Uro.AvatarController do
   use Uro, :controller
-  use Uro.Helpers.API
-  use OpenApiSpex.ControllerSpecs
 
   alias Uro.UserContent
 

@@ -22,9 +22,9 @@ export function useReturnIntent() {
 			returnIntent = null;
 
 		return {
-			returnIntent,
 			restoreReturnIntent: (fallback: string = "/") =>
 				router.push(returnIntent?.toString() || fallback),
+			returnIntent,
 			withReturnIntent: (pathname: string) => {
 				const url = new URL(pathname, origin);
 				url.searchParams.set(

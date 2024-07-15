@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "next dev -H 0.0.0.0 -p 3000",
-    "build": "next build",
+    "dev": "openapi-ts && next dev -H 0.0.0.0 -p 3000",
+    "build": "openapi-ts && next build",
     "lint": "next lint"
   },
   "dependencies": {
@@ -34,14 +34,16 @@
     "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
-    "@ariesclark/eslint-config": "^1.7.2",
+    "@ariesclark/eslint-config": "^2.0.0",
+    "@eslint/compat": "^1.1.1",
+    "@eslint/eslintrc": "^3.1.0",
     "@hey-api/openapi-ts": "^0.46.3",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.8",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.19",
-    "eslint": "^8.57.0",
+    "eslint": "^9.7.0",
     "eslint-config-next": "14.1.4",
     "postcss": "^8.4.38",
     "postcss-obfuscator": "^1.6.1",

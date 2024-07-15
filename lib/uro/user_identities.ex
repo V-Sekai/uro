@@ -3,11 +3,22 @@ defmodule Uro.UserIdentities do
     repo: Uro.Repo,
     user: Uro.Accounts.User
 
-  def all(user) do
-    pow_assent_all(user)
-  end
+  alias Uro.Accounts
+  alias Uro.Repo
 
   def create_user(user_identity_params, user_params, user_id_params) do
-    pow_assent_create_user(user_identity_params, user_params, user_id_params)
+    Repo.transaction(fn ->
+      with {:ok, user} <-
+             pow_assent_create_user(user_identity_params, user_params, user_id_params),
+           {:ok, user} <- Accounts.create_user_associations(user) do
+        user
+      else
+        {:error, reason} ->
+          Repo.rollback(reason)
+
+        any ->
+          Repo.rollback(any)
+      end
+    end)
   end
 end

@@ -97,12 +97,12 @@ export function MutationForm<TVariables, TData = unknown, TError = Error>({
 				return [
 					key,
 					{
-						name: key,
-						value,
-						onChange: setValue,
 						errors: touched
 							? []
-							: errorProperties[key as keyof typeof errorProperties] || []
+							: errorProperties[key as keyof typeof errorProperties] || [],
+						name: key,
+						onChange: setValue,
+						value
 					}
 				];
 			})
@@ -113,7 +113,7 @@ export function MutationForm<TVariables, TData = unknown, TError = Error>({
 
 	return (
 		<MutationFormContext.Provider
-			value={context as MutationFormContext<unknown, unknown, Error>}
+			value={context as MutationFormContext<unknown>}
 		>
 			<Component
 				className={className}

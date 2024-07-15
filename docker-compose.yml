@@ -9,6 +9,8 @@ services:
       POSTGRES_PASSWORD: vsekai
     volumes:
       - "./postgres:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
     healthcheck:
       test: pg_isready -U vsekai
       interval: 5s
@@ -41,19 +43,19 @@ services:
         restart: true
     env_file:
       - .env
-    healthcheck:
-      test: curl --fail http://uro:4000/health || exit 1
-      interval: 5s
-      timeout: 5s
+    # healthcheck:
+    #   test: curl --fail http://uro:4000/health || exit 1
+    #   interval: 5s
+    #   timeout: 5s
 
   nextjs:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    healthcheck:
-      test: curl --fail http://nextjs:3000/health || exit 1
-      interval: 5s
-      timeout: 5s
+    # healthcheck:
+    #   test: curl --fail http://nextjs:3000/health || exit 1
+    #   interval: 5s
+    #   timeout: 5s
     depends_on:
       - uro
 
@@ -71,12 +73,14 @@ services:
       - ./caddy/data:/data
       - ./caddy/config:/config
     depends_on:
-      uro:
-        condition: service_healthy
-        restart: true
-      nextjs:
-        condition: service_healthy
-        restart: true
+      - uro
+      - nextjs
+      # uro:
+      #   condition: service_healthy
+      #   restart: true
+      # nextjs:
+      #   condition: service_healthy
+      #   restart: true
 
 networks:
   uro:

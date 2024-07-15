@@ -16,8 +16,8 @@ export function useTheme() {
 	});
 
 	const { mutate: set } = useMutation({
-		mutationKey: ["theme"],
 		mutationFn: setTheme,
+		mutationKey: ["theme"],
 		onMutate: optimisticMutation(["theme"])
 	});
 
@@ -26,7 +26,7 @@ export function useTheme() {
 		[theme, set]
 	);
 
-	return { theme, set, toggle };
+	return { set, theme, toggle };
 }
 
 export const ThemeOverride: FC<PropsWithChildren<{ theme?: Theme }>> = ({

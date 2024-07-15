@@ -1,8 +1,5 @@
 defmodule Uro.IdentityProofController do
   use Uro, :controller
-  use Uro.Helpers.API
-
-  alias Uro.Error
 
   @spec create(Conn.t(), map()) :: Conn.t()
   def create(conn, %{"identity_proof" => identity_proof_params}) do

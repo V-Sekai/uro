@@ -2,8 +2,6 @@ defmodule Uro.AuthenticationController do
   @moduledoc false
 
   use Uro, :controller
-  use Uro.Helpers.API
-  use OpenApiSpex.ControllerSpecs
 
   alias OpenApiSpex.Schema
   alias Plug.Conn
@@ -11,34 +9,20 @@ defmodule Uro.AuthenticationController do
   alias Uro.Accounts
   alias Uro.Accounts.User
   alias Uro.Endpoint
-  alias Uro.Error
   alias Uro.Session
 
   action_fallback(Uro.FallbackController)
 
   tags(["authentication"])
 
-  # @pow_assent Application.compile_env(:uro, :pow_assent)
-  # @supported_providers @pow_assent[:providers]
-  # @supported_provider_names @supported_providers
-  #                           |> Keyword.keys()
-  #                           |> Enum.map(&Atom.to_string/1)
-  # def supported_providers(), do: @supported_provider_names
+  @provider_id_json_schema %Schema{
+    title: "ProviderID",
+    description: "An ID representing an OAuth2 provider.",
+    type: :string,
+    example: "github"
+  }
 
-  defmodule ProviderID do
-    @moduledoc """
-    An ID representing an OAuth2 provider.`.
-    """
-
-    use Uro.JSONSchema
-
-    OpenApiSpex.schema(%{
-      title: "ProviderID",
-      description: @moduledoc,
-      type: :string,
-      example: "github"
-    })
-  end
+  def provider_id_json_schema, do: @provider_id_json_schema
 
   operation(:login_with_provider,
     operation_id: "loginWithProvider",
@@ -47,11 +31,7 @@ defmodule Uro.AuthenticationController do
     parameters: [
       provider: [
         in: :path,
-        schema: ProviderID
-      ],
-      state: [
-        in: :query,
-        schema: %Schema{type: :string}
+        schema: @provider_id_json_schema
       ]
     ],
     responses: %{
@@ -104,12 +84,17 @@ defmodule Uro.AuthenticationController do
     do: {:error, code: :bad_request, message: "Unknown provider"}
 
   operation(:provider_callback,
-    operation_id: "providerCallback",
-    summary: "OAuth2 Provider Callback",
+    operation_id: "loginProviderCallback",
+    summary: "Login Provider Callback",
+    description: """
+    This endpoint is called by the provider after the user has authenticated. The provider will include a code in the query string if the user has successfully authenticated, or an error if the user has not.
+
+    You should not call this endpoint directly. Instead, you should redirect the user to the URL returned by the `loginWithProvider` endpoint.
+    """,
     parameters: [
       provider: [
         in: :path,
-        schema: ProviderID
+        schema: @provider_id_json_schema
       ]
     ],
     responses: %{
@@ -181,10 +166,10 @@ defmodule Uro.AuthenticationController do
   end
 
   defp redirect_uri(%{params: %{"provider" => provider}}) do
-    Endpoint.public_url("oauth/#{provider}/callback")
+    Endpoint.public_url("login/#{provider}/callback")
   end
 
-  operation(:current_session,
+  operation(:get_session,
     operation_id: "session",
     summary: "Current Session",
     description: "Get the current session.",
@@ -192,24 +177,23 @@ defmodule Uro.AuthenticationController do
       ok: {
         "",
         "application/json",
-        Session.JSONSchema
+        Session.json_schema()
       },
       unauthorized: {
         "",
         "application/json",
-        Error.JSONSchema
+        error_json_schema()
       }
     ]
   )
 
-  def current_session(conn, _),
-    do:
-      json(
-        conn,
-        Uro.Plug.Authentication.current_session(conn)
-      )
+  def get_session(conn, _) do
+    with {:ok, session} <- current_session(conn) do
+      json(conn, Session.to_json_schema(session))
+    end
+  end
 
-  def validate_credentials(conn, %{"username" => username, "password" => password}) do
+  defp validate_credentials(conn, %{"username" => username, "password" => password}) do
     Accounts.get_by_username(username)
     |> case do
       %User{email: email} ->
@@ -220,10 +204,10 @@ defmodule Uro.AuthenticationController do
     end
   end
 
-  def validate_credentials(conn, %{
-        "username_or_email" => username_or_email,
-        "password" => password
-      }) do
+  defp validate_credentials(conn, %{
+         "username_or_email" => username_or_email,
+         "password" => password
+       }) do
     Accounts.get_by_username_or_email(username_or_email)
     |> case do
       %User{email: email} ->
@@ -234,11 +218,11 @@ defmodule Uro.AuthenticationController do
     end
   end
 
-  def validate_credentials(conn, %{"email" => email, "password" => password}) do
+  defp validate_credentials(conn, %{"email" => email, "password" => password}) do
     Pow.Plug.authenticate_user(conn, %{"email" => email, "password" => password})
   end
 
-  def validate_credentials(conn, _), do: {:error, conn}
+  defp validate_credentials(conn, _), do: {:error, conn}
 
   operation(:login,
     operation_id: "login",
@@ -256,7 +240,7 @@ defmodule Uro.AuthenticationController do
             type: :object,
             required: [:username, :password],
             properties: %{
-              username: User.JSONSchema.shape(:username),
+              username: User.sensitive_json_schema().properties.username,
               password: %Schema{type: :string}
             }
           },
@@ -265,7 +249,7 @@ defmodule Uro.AuthenticationController do
             type: :object,
             required: [:email, :password],
             properties: %{
-              email: User.JSONSchema.shape(:email),
+              email: User.sensitive_json_schema().properties.email,
               password: %Schema{type: :string}
             }
           },
@@ -285,12 +269,12 @@ defmodule Uro.AuthenticationController do
       ok: {
         "",
         "application/json",
-        Session.JSONSchema
+        Session.json_schema()
       },
       unauthorized: {
         "Invalid credentials",
         "application/json",
-        Error.JSONSchema
+        error_json_schema()
       }
     ]
   )

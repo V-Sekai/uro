@@ -14,8 +14,8 @@ export default async function ConfirmEmailPage({
 		response: { status }
 	} = user_id
 		? await api.confirmEmail({
-				path: { user_id },
-				body: { token: token }
+				body: { token: token },
+				path: { user_id }
 			})
 		: { response: { status: 400 } };
 

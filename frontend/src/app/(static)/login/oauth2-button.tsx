@@ -19,12 +19,12 @@ export const providerMetadata: Record<
 	}
 > = {
 	discord: {
-		name: "Discord",
-		Icon: SiDiscord
+		Icon: SiDiscord,
+		name: "Discord"
 	},
 	github: {
-		name: "GitHub",
-		Icon: SiGithub
+		Icon: SiGithub,
+		name: "GitHub"
 	}
 };
 
@@ -32,8 +32,8 @@ export const OAuth2Button: FC<{ providerId: ProviderID }> = ({
 	providerId
 }) => {
 	const { name, Icon } = providerMetadata[providerId] || {
-		name: providerId,
-		Icon: ExternalLink
+		Icon: ExternalLink,
+		name: providerId
 	};
 
 	const { returnIntent } = useReturnIntent();

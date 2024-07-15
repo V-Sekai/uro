@@ -17,6 +17,41 @@ import { UserImage } from "./user-image";
 
 import type { FC } from "react";
 
+const ProfileActionNavigation: FC<{ userId: string }> = ({ userId }) => {
+	const session = useOptionalSession();
+
+	const user = useUser(userId);
+	if (!user) return null;
+
+	return (
+		<div className="flex gap-2">
+			{session?.user.id === user.id ? (
+				<>
+					<EditProfile userId={userId}>
+						<DialogTrigger asChild>
+							<Button type="light">
+								<Pencil className="size-4" /> Edit profile
+							</Button>
+						</DialogTrigger>
+					</EditProfile>
+				</>
+			) : (
+				<ButtonGroup>
+					<Button type="light">
+						<UserPlus className="size-4" /> Friend
+					</Button>
+					<Button>
+						<Rss className="size-4" /> Follow
+					</Button>
+				</ButtonGroup>
+			)}
+			<Button iconOnly type="ghost">
+				<Ellipsis className="size-4" />
+			</Button>
+		</div>
+	);
+};
+
 export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 	const session = useOptionalSession();
 
@@ -96,37 +131,7 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 										@{username}
 									</span>
 								</div>
-								<div className="flex gap-2">
-									{session?.user.id === user.id ? (
-										<>
-											<EditProfile userId={userId}>
-												<DialogTrigger asChild>
-													<Button type="light">
-														<Pencil className="size-4" /> Edit profile
-													</Button>
-												</DialogTrigger>
-											</EditProfile>
-										</>
-									) : (
-										<ButtonGroup>
-											<Button type="light">
-												<UserPlus className="size-4" /> Friend
-											</Button>
-											<Button>
-												<Rss className="size-4" /> Follow
-											</Button>
-										</ButtonGroup>
-									)}
-									<button
-										type="button"
-										className={twMerge(
-											"flex items-center gap-2 rounded-xl px-4 py-1",
-											banner && "text-white"
-										)}
-									>
-										<Ellipsis className="inline size-5" />
-									</button>
-								</div>
+								<ProfileActionNavigation userId={user.id} />
 							</div>
 							<StatusBadge user={user} />
 							<span className="hidden md:inline">

@@ -22,7 +22,7 @@ export const Link = forwardRef<
 
 		const external = !firstPartyOrigins.has(url.origin);
 
-		return { href, external };
+		return { external, href };
 	}, [_href]);
 
 	return (

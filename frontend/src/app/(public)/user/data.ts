@@ -8,7 +8,6 @@ export function useUser(username: string) {
 	const session = useOptionalSession();
 
 	const { data: user = null } = useSuspenseQuery({
-		queryKey: ["users", username],
 		queryFn:
 			session?.user.username === username
 				? () => session.user
@@ -16,14 +15,15 @@ export function useUser(username: string) {
 						if (!username) return null;
 
 						const { data, error, response } = await getUser({
-							path: { id: username },
+							path: { user_id: username },
 							signal
 						});
 
 						if (response.status === 404) return null;
 						if (error) throw error;
 						return data;
-					}
+					},
+		queryKey: ["users", username]
 	});
 
 	if (!user) return null;

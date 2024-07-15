@@ -10,38 +10,37 @@ import { ErrorMessage } from "~/app/(static)/login/error-message";
 import { Button } from "./button";
 
 const tvInput = tv({
+	defaultVariants: {
+		disabled: false,
+		multiline: false,
+		status: "idle"
+	},
 	slots: {
-		base: "relative flex w-full flex-col cursor-text group rounded-xl border border-tertiary-300 bg-tertiary-50 focus-within:bg-tertiary-100 outline-current focus-within:outline transition-all",
-		header:
-			"text-sm flex justify-between opacity-75 transition-all pointer-events-none px-4 pt-3",
+		base: "group relative flex w-full cursor-text flex-col rounded-xl border border-tertiary-300 bg-tertiary-50 outline-current transition-all focus-within:bg-tertiary-100 focus-within:outline",
 		content: "relative flex gap-2 px-4 pb-3",
-		input: "bg-transparent outline-none w-full"
+		header:
+			"pointer-events-none flex justify-between px-4 pt-3 text-sm opacity-75 transition-all",
+		input: "w-full bg-transparent outline-none"
 	},
 	variants: {
-		status: {
-			idle: {},
-			success: {},
-			error: {
-				base: "border-red-500/50"
-			}
-		},
 		disabled: {
 			true: {
-				base: "opacity-50 cursor-default"
+				base: "cursor-default opacity-50"
 			}
 		},
 		multiline: {
 			true: {}
+		},
+		status: {
+			error: {
+				base: "border-red-500/50"
+			},
+			idle: {},
+			success: {}
 		}
-	},
-	defaultVariants: {
-		status: "idle",
-		disabled: false,
-		multiline: false
 	}
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type InputAutocomplete = "off" | (string & {});
 
 export interface InputProps<T extends string>
@@ -51,9 +50,9 @@ export interface InputProps<T extends string>
 	name?: string;
 	defaultValue?: T;
 	label: ReactNode;
+	autoComplete?: InputAutocomplete;
 	maxLength?: number;
 	errors?: Array<string>;
-	autoComplete?: InputAutocomplete;
 	type?: "text" | "password" | "email";
 	rows?: number;
 	endContent?: ReactNode;

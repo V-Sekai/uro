@@ -8,8 +8,6 @@ defmodule Uro.Plug.Authentication do
   alias Pow.Plug
   alias PowPersistentSession.Store.PersistentSessionCache
   alias Uro.Accounts.User
-  alias Uro.Accounts.UserPrivilegeRuleset
-  alias Uro.Session
 
   # The lifetime of the session.
   @session_lifetime :timer.hours(168)
@@ -24,13 +22,13 @@ defmodule Uro.Plug.Authentication do
     with {:ok, signed_access_token} <- fetch_access_token(conn),
          {:ok, access_token} <- verify_token(conn, signed_access_token, config),
          {user, metadata} <-
-           PersistentSessionCache.get(store_config, access_token),
+           PersistentSessionCache.get(store_config, access_token) |> IO.inspect(),
          expires_in <- metadata[:expires_at] |> DateTime.diff(DateTime.utc_now(), :millisecond),
          conn <-
            conn
-           |> Conn.put_private(:access_token, signed_access_token)
-           |> Conn.put_private(:access_token_unsigned, access_token)
-           |> Conn.put_private(
+           |> Conn.assign(:access_token, signed_access_token)
+           |> Conn.assign(:access_token_unsigned, access_token)
+           |> Conn.assign(
              :access_token_expires_in,
              expires_in
            ),
@@ -65,9 +63,9 @@ defmodule Uro.Plug.Authentication do
 
     conn =
       conn
-      |> Conn.put_private(:access_token, signed_access_token)
-      |> Conn.put_private(:access_token_unsigned, access_token)
-      |> Conn.put_private(:access_token_expires_in, store_config[:ttl])
+      |> Conn.assign(:access_token, signed_access_token)
+      |> Conn.assign(:access_token_unsigned, access_token)
+      |> Conn.assign(:access_token_expires_in, store_config[:ttl])
       |> Conn.put_resp_cookie(
         "session",
         signed_access_token,
@@ -141,33 +139,5 @@ defmodule Uro.Plug.Authentication do
   defp store_config(config) do
     backend = Config.get(config, :cache_store_backend)
     [backend: backend, pow_config: config]
-  end
-
-  def current_user(conn) do
-    conn
-    |> Pow.Plug.current_user()
-    |> case do
-      nil -> nil
-      user -> UserPrivilegeRuleset.associate(user)
-    end
-  end
-
-  def current_session(conn) do
-    with %{
-           access_token: access_token,
-           access_token_expires_in: access_token_expires_in
-         }
-         when is_binary(access_token) and not is_nil(access_token_expires_in) <-
-           conn.private,
-         user when is_map(user) <- current_user(conn) do
-      %Session{
-        access_token: access_token,
-        expires_in: access_token_expires_in,
-        token_type: "Bearer",
-        user: user
-      }
-    else
-      _ -> nil
-    end
   end
 end

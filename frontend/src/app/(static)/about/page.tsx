@@ -94,24 +94,24 @@ export default function AboutPage() {
 									id: "293462873508937728",
 									name: "lyuma"
 								},
-								twitter: "Lyuma2d",
-								email: "xn.lyuma@gmail.com"
+								email: "xn.lyuma@gmail.com",
+								twitter: "Lyuma2d"
 							},
 							{
 								discord: {
 									id: "286756637446766602",
 									name: "saracenone"
 								},
-								twitter: "SaracenGameDev",
-								email: "saracenone@gmail.com"
+								email: "saracenone@gmail.com",
+								twitter: "SaracenGameDev"
 							},
 							{
 								discord: {
 									id: "399349882432782356",
 									name: "mmmaellon"
 								},
-								twitter: "MMMaellon",
-								email: "mmmaellon@gmail.com"
+								email: "mmmaellon@gmail.com",
+								twitter: "MMMaellon"
 							}
 						].map(({ discord, twitter, email }) => (
 							<div
