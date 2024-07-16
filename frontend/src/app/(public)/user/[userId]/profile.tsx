@@ -1,26 +1,83 @@
 "use client";
 
 import { twMerge } from "tailwind-merge";
-import { Ellipsis, Pencil, Rss, UserPlus } from "lucide-react";
+import {
+	Ellipsis,
+	Pencil,
+	Rss,
+	UserCheck,
+	UserPlus,
+	UserX
+} from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { useOptionalSession } from "~/hooks/session";
 import { DialogTrigger } from "~/components/dialog";
-import { Button, ButtonGroup } from "~/components/button";
+import { Button, ButtonGroup, type ButtonProps } from "~/components/button";
 import { VSekaiMark } from "~/components/vsekai-mark";
+import { api } from "~/api";
+import { MutationButton } from "~/hooks/form";
+import { optimisticMutation } from "~/query";
 
-import { useUser } from "../data";
+import { friendshipQueryKey, useFriendship, useUser } from "../data";
 
 import { Navigation, NavigationItem } from "./navigation";
 import { EditProfile } from "./edit-profile";
 import { StatusBadge } from "./status-badge";
 import { UserImage } from "./user-image";
 
-import type { FC } from "react";
+import type { FC, PropsWithChildren } from "react";
+
+const FriendButton: FC<PropsWithChildren<ButtonProps & { userId: string }>> = ({
+	userId,
+	children,
+	...props
+}) => (
+	<MutationButton
+		type="light"
+		{...props}
+		variables={{ userId }}
+		mutationFn={async ({ userId }) => {
+			const { data, error } = await api.friend({
+				path: { user_id: userId }
+			});
+
+			if (error || !data) throw error;
+			return data;
+		}}
+		onSuccess={optimisticMutation(friendshipQueryKey(userId))}
+	>
+		{children}
+	</MutationButton>
+);
+
+const UnfriendButton: FC<
+	PropsWithChildren<ButtonProps & { userId: string }>
+> = ({ userId, children, ...props }) => (
+	<MutationButton
+		type="light"
+		{...props}
+		variables={{ userId }}
+		mutationFn={async ({ userId }) => {
+			const { data, error } = await api.unfriend({
+				path: { user_id: userId }
+			});
+
+			if (error || !data) throw error;
+			return data;
+		}}
+		onSuccess={optimisticMutation(friendshipQueryKey(userId))}
+	>
+		{children}
+	</MutationButton>
+);
 
 const ProfileActionNavigation: FC<{ userId: string }> = ({ userId }) => {
 	const session = useOptionalSession();
 
 	const user = useUser(userId);
+	const friendship = useFriendship(userId);
+
 	if (!user) return null;
 
 	return (
@@ -36,14 +93,56 @@ const ProfileActionNavigation: FC<{ userId: string }> = ({ userId }) => {
 					</EditProfile>
 				</>
 			) : (
-				<ButtonGroup>
-					<Button type="light">
-						<UserPlus className="size-4" /> Friend
-					</Button>
-					<Button>
-						<Rss className="size-4" /> Follow
-					</Button>
-				</ButtonGroup>
+				<>
+					{friendship?.status === "received" && (
+						<ButtonGroup className="w-48">
+							<FriendButton
+								userId={userId}
+								type="ghost"
+								className="peer w-full gap-0 overflow-hidden bg-green-600"
+							>
+								<UserCheck className="size-4 shrink-0" />
+								<span className="ml-0 w-0 opacity-0 transition-all group-data-[button]:group-hover:ml-2 group-data-[button]:group-hover:w-fit group-data-[button]:group-hover:opacity-100">
+									Accept
+								</span>
+							</FriendButton>
+							<UnfriendButton
+								userId={userId}
+								type="ghost"
+								className="w-0 gap-0 overflow-hidden bg-red-600 hover:w-full"
+							>
+								<UserX className="size-4 shrink-0" />
+								<span className="ml-0 w-0 opacity-0 transition-all group-data-[button]:group-hover:ml-2 group-data-[button]:group-hover:w-fit group-data-[button]:group-hover:opacity-100">
+									Reject
+								</span>
+							</UnfriendButton>
+						</ButtonGroup>
+					)}
+					<ButtonGroup>
+						{friendship &&
+							{
+								accepted: (
+									<UnfriendButton userId={userId}>
+										<UserX className="size-4 shrink-0" /> Unfriend
+									</UnfriendButton>
+								),
+								none: (
+									<FriendButton userId={userId}>
+										<UserPlus className="size-4 shrink-0" /> Friend
+									</FriendButton>
+								),
+								received: null,
+								sent: (
+									<UnfriendButton userId={userId}>
+										<UserX className="size-4 shrink-0" /> Cancel request
+									</UnfriendButton>
+								)
+							}[friendship.status]}
+						<Button>
+							<Rss className="size-4" /> Follow
+						</Button>
+					</ButtonGroup>
+				</>
 			)}
 			<Button iconOnly type="ghost">
 				<Ellipsis className="size-4" />
@@ -56,6 +155,7 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 	const session = useOptionalSession();
 
 	const user = useUser(userId);
+
 	if (!user) return null;
 
 	const { username, display_name, banner, status, biography } = user;
@@ -142,7 +242,7 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 					<span className="md:hidden">
 						{biography || "No biography available."}
 					</span>
-					<pre className="whitespace-pre-wrap rounded-xl border border-tertiary-200 p-4">
+					<pre className="whitespace-pre-wrap rounded-xl border border-tertiary-300 bg-tertiary-50 p-4">
 						{JSON.stringify(user, null, 2)}
 					</pre>
 				</div>

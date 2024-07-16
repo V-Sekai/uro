@@ -48,13 +48,13 @@ defmodule Uro.Router do
 
   get("/health", Uro.HealthController, :index)
 
-  get("/", OpenApiSpex.Plug.RenderSpec, [])
-  get("/docs", Uro.OpenAPI.Viewer, pathname: "/api/v1")
+  get("/openapi", OpenApiSpex.Plug.RenderSpec, [])
+  get("/docs", Uro.OpenAPI.Viewer, [])
 
   scope "/session" do
     pipe_through([:authenticated])
 
-    get("/", Uro.AuthenticationController, :get_session)
+    get("/", Uro.AuthenticationController, :get_current_session)
     delete("/", Uro.AuthenticationController, :logout)
   end
 

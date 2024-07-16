@@ -1,21 +1,29 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { skipToken, useSuspenseQuery } from "@tanstack/react-query";
 
-import { type api, getUser, type User } from "~/api";
+import {
+	type api,
+	getUser,
+	type User,
+	type LooseUserKey,
+	friendStatus
+} from "~/api";
 import { useOptionalSession } from "~/hooks/session";
 import { getQueryClient } from "~/query";
 
-export function useUser(username: string) {
+export function useUser(userId: LooseUserKey) {
 	const session = useOptionalSession();
 
 	const { data: user = null } = useSuspenseQuery({
 		queryFn:
-			session?.user.username === username
-				? () => session.user
-				: async ({ queryKey: [, username], signal }) => {
-						if (!username) return null;
+			userId === "me" ||
+			userId === session?.user.id ||
+			userId === session?.user.username
+				? () => session?.user || null
+				: async ({ queryKey: [, userId], signal }) => {
+						if (!userId) return null;
 
 						const { data, error, response } = await getUser({
-							path: { user_id: username },
+							path: { user_id: userId },
 							signal
 						});
 
@@ -23,7 +31,7 @@ export function useUser(username: string) {
 						if (error) throw error;
 						return data;
 					},
-		queryKey: ["users", username]
+		queryKey: ["users", userId]
 	});
 
 	if (!user) return null;
@@ -32,6 +40,42 @@ export function useUser(username: string) {
 		...user,
 		banner: "https://unsplash.it/1600/900/?random"
 	};
+}
+
+export const friendshipQueryKey = (userId: LooseUserKey) => [
+	"users",
+	userId,
+	"friendship"
+];
+
+export function useFriendship(userId: LooseUserKey) {
+	const session = useOptionalSession();
+
+	const { data: data = null } = useSuspenseQuery({
+		queryFn:
+			session &&
+			!(
+				userId === "me" ||
+				userId === session?.user.id ||
+				userId === session?.user.username
+			)
+				? async ({ queryKey: [, userId], signal }) => {
+						if (!userId) return null;
+
+						const { data, error, response } = await friendStatus({
+							path: { user_id: userId },
+							signal
+						});
+
+						if (response.status === 404) return null;
+						if (error) throw error;
+						return data;
+					}
+				: () => null,
+		queryKey: friendshipQueryKey(userId)
+	});
+
+	return data;
 }
 
 export function invalidateUser(user: User) {

@@ -50,7 +50,7 @@ export const InlineLink: FC<
 	return (
 		<Link
 			className={twMerge(
-				"text-red-500 transition-all hover:text-red-600 dark:text-red-400 dark:hover:text-red-500",
+				"text-blue-500 transition-all hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500",
 				className
 			)}
 			{...props}

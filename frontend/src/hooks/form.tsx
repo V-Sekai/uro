@@ -8,6 +8,7 @@ import {
 import {
 	createContext,
 	use,
+	useCallback,
 	useState,
 	type Dispatch,
 	type FC,
@@ -111,26 +112,48 @@ export function MutationForm<TVariables, TData = unknown, TError = Error>({
 
 	const Component = asChild ? Slot : "form";
 
+	const action = useCallback(
+		() =>
+			mutation.mutate(variables, {
+				onSettled: (data, error) => {
+					if (error) setError(error);
+					else setError(null);
+
+					setTouchedRecently([]);
+				}
+			}),
+		[mutation, variables]
+	);
+
 	return (
 		<MutationFormContext.Provider
 			value={context as MutationFormContext<unknown>}
 		>
-			<Component
-				className={className}
-				action={() =>
-					mutation.mutate(variables, {
-						onSettled: (data, error) => {
-							if (error) setError(error);
-							else setError(null);
-
-							setTouchedRecently([]);
-						}
-					})
-				}
-			>
+			<Component className={className} action={action}>
 				{children(context)}
 			</Component>
 		</MutationFormContext.Provider>
+	);
+}
+
+export function MutationButton<TVariables, TData = unknown, TError = Error>({
+	children,
+	variables = {} as TVariables,
+	...props
+}: Omit<ButtonProps, "action" | "actionType"> & {
+	variables?: TVariables;
+} & UseMutationOptions<TData, TError, TVariables>) {
+	return (
+		<MutationForm
+			defaultVariables={variables}
+			asChild
+			{...props}
+			children={({ isPending }) => (
+				<Button pending={isPending} {...props}>
+					{children}
+				</Button>
+			)}
+		/>
 	);
 }
 

@@ -25,7 +25,7 @@ export function useEvent(event: string, _callback: () => void) {
 
 export const EventProvider: FC<PropsWithChildren> = ({ children }) => {
 	const [subscribers, setSubscribers] = useState<Record<string, string>>({});
-	console.log(subscribers);
+	// console.log(subscribers);
 
 	const listen = useCallback((id: string, event: string) => {
 		setSubscribers((previous) => ({ ...previous, [id]: event }));

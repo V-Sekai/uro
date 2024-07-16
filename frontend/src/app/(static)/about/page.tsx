@@ -119,7 +119,7 @@ export default function AboutPage() {
 								key={discord.id}
 							>
 								<div
-									className="absolute right-0 top-0 size-4 bg-red-500"
+									className="absolute right-0 top-0 size-4 bg-blue-500"
 									style={{ clipPath: "polygon(100% 0, 100% 100%, 0 0)" }}
 								/>
 								<InlineLink

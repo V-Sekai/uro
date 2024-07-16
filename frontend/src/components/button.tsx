@@ -7,6 +7,7 @@ import {
 	useState,
 	type ButtonHTMLAttributes,
 	type ForwardedRef,
+	type MouseEventHandler,
 	type PropsWithChildren
 } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
@@ -17,7 +18,7 @@ import { Link } from "./link";
 
 export const button = tv({
 	base: [
-		"flex items-center justify-center whitespace-nowrap transition-all",
+		"group flex items-center justify-center whitespace-nowrap transition-all",
 		"outline-offset-2 outline-current focus-visible:outline",
 		"rounded-xl group-data-[button-group]:rounded-none group-data-[button-group]:first:rounded-l-xl group-data-[button-group]:last:rounded-r-xl",
 		"border border-transparent group-data-[button-group]:border-x-0 group-data-[button-group]:first:border-l group-data-[button-group]:last:border-r",
@@ -48,8 +49,8 @@ export const button = tv({
 		type: {
 			ghost: "text-secondary-100",
 			light:
-				"border-secondary-0/20 bg-secondary-0/5 text-secondary-0 backdrop-blur",
-			primary: "bg-red-500 text-white hover:bg-red-600"
+				"border-tertiary-300/20 bg-tertiary-100/5 text-secondary-100 backdrop-blur",
+			primary: "bg-blue-500 text-white hover:bg-blue-600"
 		}
 	}
 });
@@ -57,7 +58,8 @@ export const button = tv({
 export type ButtonProps = PropsWithChildren<
 	VariantProps<typeof button> & {
 		href?: string | URL;
-		onClick?: () => void;
+		onClick?: MouseEventHandler<HTMLElement>;
+		action?: () => void;
 		className?: string;
 		actionType?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
 	}
@@ -65,7 +67,15 @@ export type ButtonProps = PropsWithChildren<
 
 export const Button = forwardRef<HTMLElement, ButtonProps>(
 	(
-		{ onClick, href, actionType = "button", disabled, children, ...tvProps },
+		{
+			onClick,
+			action,
+			href,
+			actionType = "button",
+			disabled,
+			children,
+			...tvProps
+		},
 		reference
 	) => {
 		const [pressed, setPressed] = useState(false);
@@ -77,10 +87,16 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(
 				className={button({ disabled, ...tvProps })}
 				data-pressed={dataAttribute(pressed)}
 				disabled={disabled}
+				data-button=""
 				href={href!}
 				ref={reference as ForwardedRef<any>}
 				type={actionType}
-				onClick={onClick}
+				onClick={(event) => {
+					if (disabled) return;
+
+					onClick?.(event);
+					action?.();
+				}}
 				onPointerDown={() => setPressed(true)}
 				onPointerOut={() => setPressed(false)}
 				onPointerUp={() => setPressed(false)}

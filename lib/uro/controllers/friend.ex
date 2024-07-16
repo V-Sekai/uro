@@ -21,7 +21,7 @@ defmodule Uro.FriendController do
       ok: {
         "",
         "application/json",
-        success_json_schema()
+        Friendship.json_schema()
       }
     ]
   )
@@ -34,16 +34,10 @@ defmodule Uro.FriendController do
              do: {:error, :bad_request},
              else: :ok
            ),
-         {:ok, response} <- Friendship.add_friend(self, friend) do
+         {:ok, friendship} <- Friendship.add_friend(self, friend) do
       conn
       |> put_status(:ok)
-      |> json(%{
-        message:
-          case response do
-            :sent -> "Friend request sent"
-            :accepted -> "Friend request accepted"
-          end
-      })
+      |> json(friendship)
     else
       {:error, :already_friends} ->
         json_error(conn, code: :conflict, message: "Already friends")
@@ -69,7 +63,7 @@ defmodule Uro.FriendController do
       ok: {
         "",
         "application/json",
-        success_json_schema()
+        Friendship.json_schema()
       }
     ]
   )
@@ -82,16 +76,10 @@ defmodule Uro.FriendController do
              do: {:error, :bad_request},
              else: :ok
            ),
-         {:ok, response} <- Friendship.remove_friend(self, friend) do
+         {:ok, friendship} <- Friendship.remove_friend(self, friend) do
       conn
       |> put_status(:ok)
-      |> json(%{
-        message:
-          case response do
-            :unfriended -> "Friend removed"
-            :revoked_request -> "Revoked friend request"
-          end
-      })
+      |> json(friendship)
     else
       {:error, :not_friends} ->
         json_error(conn, code: :bad_request)

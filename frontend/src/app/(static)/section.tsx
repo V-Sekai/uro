@@ -25,7 +25,7 @@ export const SectionTitle: FC<ComponentProps<"h2">> = ({
 			className
 		)}
 	>
-		<div className="size-5 rounded-full bg-red-500" />
+		<div className="size-5 rounded-full bg-blue-500" />
 		{children}
 	</h2>
 );

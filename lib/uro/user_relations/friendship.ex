@@ -6,7 +6,6 @@ defmodule Uro.UserRelations.Friendship do
   use Ecto.Schema
 
   import Ecto.Changeset
-  import Ecto.Query
 
   alias OpenApiSpex.Schema
   alias Uro.Accounts.User
@@ -54,10 +53,7 @@ defmodule Uro.UserRelations.Friendship do
       :accepted_at
     ],
     properties: %{
-      status: %Schema{
-        type: :string,
-        enum: [:accepted]
-      },
+      status: @friend_status_json_schema,
       accepted_at: %Schema{
         format: "date-time",
         type: :string,
@@ -98,34 +94,37 @@ defmodule Uro.UserRelations.Friendship do
   def friend_status(_, nil), do: :sent
   def friend_status(_, _), do: :accepted
 
+  defp put_status(a, b),
+    do: Map.put(a || %Friendship{}, :status, friend_status(a, b))
+
   def get_friendship(%User{} = self, %User{} = friend) do
     {a, b} = associations(self, friend)
-    Map.put(a || %Friendship{}, :status, friend_status(a, b))
+    put_status(a, b)
   end
 
   def add_friend(self, friend) do
     Repo.transaction(fn ->
-      case friend_status(self, friend) do
+      {a, b} = associations(self, friend)
+
+      case friend_status(a, b) do
         :none ->
           %Friendship{}
           |> changeset(%{user_id: self.id, friend_id: friend.id})
           |> Repo.insert!()
-
-          :sent
+          |> put_status(b)
 
         :received ->
           accepted_at = DateTime.truncate(DateTime.utc_now(), :second)
 
+          {:ok, b} =
+            b
+            |> changeset(%{accepted_at: accepted_at})
+            |> Repo.update()
+
           %Friendship{}
           |> changeset(%{user_id: self.id, friend_id: friend.id, accepted_at: accepted_at})
           |> Repo.insert!()
-
-          {1, nil} =
-            Friendship
-            |> where([f], f.user_id == ^friend.id and f.friend_id == ^self.id)
-            |> Repo.update_all(set: [accepted_at: accepted_at])
-
-          :accepted
+          |> put_status(b)
 
         :sent ->
           Repo.rollback(:already_sent)
@@ -138,22 +137,14 @@ defmodule Uro.UserRelations.Friendship do
 
   def remove_friend(self, friend) do
     Repo.transaction(fn ->
-      case friend_status(self, friend) do
-        :accepted ->
-          {1, nil} =
-            Friendship
-            |> where([f], f.user_id == ^self.id and f.friend_id == ^friend.id)
-            |> Repo.delete_all()
+      {a, b} = associations(self, friend)
 
-          :unfriended
+      case friend_status(a, b) do
+        status when status in [:accepted, :sent, :received] ->
+          a && Repo.delete!(a)
+          b && Repo.delete!(b)
 
-        :sent ->
-          {1, nil} =
-            Friendship
-            |> where([f], f.user_id == ^self.id and f.friend_id == ^friend.id)
-            |> Repo.delete_all()
-
-          :revoked_request
+          put_status(nil, nil)
 
         _ ->
           Repo.rollback(:not_friends)

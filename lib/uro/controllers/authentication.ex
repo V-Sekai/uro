@@ -187,7 +187,7 @@ defmodule Uro.AuthenticationController do
     ]
   )
 
-  def get_session(conn, _) do
+  def get_current_session(conn, _) do
     with {:ok, session} <- current_session(conn) do
       json(conn, Session.to_json_schema(session))
     end
@@ -284,7 +284,7 @@ defmodule Uro.AuthenticationController do
     |> validate_credentials(credentials)
     |> case do
       {:ok, conn} ->
-        current_session(conn, nil)
+        get_current_session(conn, nil)
 
       {:error, _} ->
         {:error, :invalid_credentials}
