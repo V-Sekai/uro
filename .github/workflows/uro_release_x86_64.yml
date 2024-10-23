@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: hexpm/elixir:1.16.2-erlang-24.3.4.17-ubuntu-focal-20240216
+      image: elixir:1.16.3-otp-26
 
     steps:
       - uses: actions/checkout@v2
@@ -70,7 +70,7 @@ jobs:
           mix test | tee test_output.txt; test ${PIPESTATUS[0]} -eq 0
 
       - name: Upload test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: test_output.txt

@@ -15,7 +15,6 @@ defmodule Uro.UserRelations.IdentityProof do
 
   @doc false
   def changeset(identity_proof, attrs) do
-    identity_proof
-    |> cast(attrs, [:user_from_id, :user_to_id])
+    cast(identity_proof, attrs, [:user_from_id, :user_to_id])
   end
 end
