@@ -1,7 +1,8 @@
 # lib/my_app_web/ensure_user_not_locked_plug.ex
 defmodule Uro.EnsureUserNotLockedPlug do
   alias Plug.Conn
-  alias Pow.{Config, Plug}
+  alias Pow.Config
+  alias Pow.Plug
 
   @doc false
   @spec init(Config.t()) :: atom()

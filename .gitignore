@@ -49,3 +49,4 @@ priv/waffle/private/uploads/
 
 .env
 config/local.exs
+result
