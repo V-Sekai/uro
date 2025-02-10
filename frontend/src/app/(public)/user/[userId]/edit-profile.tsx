@@ -35,13 +35,13 @@ export const EditProfile: FC<PropsWithChildren<{ userId: string }>> = ({
 			<MutationForm
 				asChild
 				defaultVariables={{
-					display_name: user.display_name,
-					biography: user.biography
+					biography: user.biography,
+					display_name: user.display_name
 				}}
 				mutationFn={async ({ display_name, biography }) => {
 					const { data, error } = await api.updateUser({
-						path: { user_id: "@me" },
-						body: { display_name, biography }
+						body: { biography, display_name },
+						path: { user_id: "me" }
 					});
 
 					if (error || !data) throw error;

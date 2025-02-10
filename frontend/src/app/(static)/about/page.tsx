@@ -5,7 +5,7 @@ import { SiDiscord, SiX } from "@icons-pack/react-simple-icons";
 
 import { InlineLink } from "~/components/link";
 import { urls } from "~/environment";
-import { Section, SectionTitle } from "~/app/section";
+import { Section, SectionTitle } from "~/app/(static)/section";
 import { Footer } from "~/app/footer";
 
 export default function AboutPage() {
@@ -94,24 +94,24 @@ export default function AboutPage() {
 									id: "293462873508937728",
 									name: "lyuma"
 								},
-								twitter: "Lyuma2d",
-								email: "xn.lyuma@gmail.com"
+								email: "xn.lyuma@gmail.com",
+								twitter: "Lyuma2d"
 							},
 							{
 								discord: {
 									id: "286756637446766602",
 									name: "saracenone"
 								},
-								twitter: "SaracenGameDev",
-								email: "saracenone@gmail.com"
+								email: "saracenone@gmail.com",
+								twitter: "SaracenGameDev"
 							},
 							{
 								discord: {
 									id: "399349882432782356",
 									name: "mmmaellon"
 								},
-								twitter: "MMMaellon",
-								email: "mmmaellon@gmail.com"
+								email: "mmmaellon@gmail.com",
+								twitter: "MMMaellon"
 							}
 						].map(({ discord, twitter, email }) => (
 							<div
@@ -119,7 +119,7 @@ export default function AboutPage() {
 								key={discord.id}
 							>
 								<div
-									className="absolute right-0 top-0 size-4 bg-red-500"
+									className="absolute right-0 top-0 size-4 bg-blue-500"
 									style={{ clipPath: "polygon(100% 0, 100% 100%, 0 0)" }}
 								/>
 								<InlineLink

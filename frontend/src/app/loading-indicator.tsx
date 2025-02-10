@@ -1,12 +1,19 @@
 "use client";
 
-import { useIsFetching } from "@tanstack/react-query";
+import {
+	useIsFetching,
+	useIsMutating,
+	useIsRestoring
+} from "@tanstack/react-query";
 
 import type { FC } from "react";
 
 export const LoadingIndicator: FC = () => {
-	const loading = useIsFetching();
-	if (!loading) return null;
+	const fetching = useIsFetching();
+	const mutating = useIsMutating();
+	const restoring = useIsRestoring();
+
+	if (!fetching || !mutating || !restoring) return null;
 
 	return (
 		<div className="pointer-events-none fixed inset-x-0 top-0 z-50 h-1">

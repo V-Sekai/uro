@@ -8,7 +8,7 @@ export function useLocalStorage<T>(
 
 	useEffect(() => {
 		const raw = localStorage.getItem(key);
-		setValue(raw ? JSON.parse(raw) : fallback ?? initial);
+		setValue(raw ? (JSON.parse(raw) as T) : fallback ?? initial);
 	}, [key, fallback, initial]);
 
 	const set = useCallback(

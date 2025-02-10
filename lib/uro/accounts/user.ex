@@ -21,29 +21,28 @@ defmodule Uro.Accounts.User do
   import Ecto.Changeset
   import Uro.Helpers.Changeset
 
-  alias Uro.Accounts.User.JSONSchema
-  alias Uro.Accounts.User.Status
+  alias OpenApiSpex.Schema
+  alias Uro.Accounts.UserPrivilegeRuleset
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   @derive {Phoenix.Param, key: :id}
-
-  @derive {Jason.Encoder,
+  @derive {Inspect,
            only: [
              :id,
              :username,
-             :display_name,
-             :icon,
-             :banner,
-             :biography,
-             :status,
-             :status_message,
-             :email,
-             :email_confirmed_at,
-             :email_notifications,
-             :user_privilege_ruleset,
-             :created_at
+             :display_name
            ]}
+
+  @user_statuses [
+    :online,
+    :offline,
+    :away,
+    :busy,
+    :invisible
+  ]
+
+  def user_statuses(), do: @user_statuses
 
   schema "users" do
     field(:username, :string)
@@ -55,7 +54,7 @@ defmodule Uro.Accounts.User do
     field(:biography, :string, default: "")
 
     field(:status, Ecto.Enum,
-      values: Status.values(),
+      values: @user_statuses,
       default: :offline
     )
 
@@ -73,7 +72,7 @@ defmodule Uro.Accounts.User do
 
     many_to_many(:friendships, Uro.UserRelations.Friendship,
       join_through: "friendships",
-      join_keys: [user: :id, friend: :id]
+      join_keys: [user_id: :id, friend_id: :id]
     )
 
     has_many(:hosted_shards, Uro.VSekai.Shard, foreign_key: :user_id)
@@ -88,118 +87,189 @@ defmodule Uro.Accounts.User do
     timestamps(inserted_at: :created_at)
   end
 
-  defmodule JSONSchema do
-    @moduledoc """
-    JSON Schema for the User schema.
-    """
-    use Uro.JSONSchema, []
+  @user_status_json_schema %Schema{
+    title: "UserStatus",
+    type: :string,
+    enum: @user_statuses
+  }
 
-    alias Uro.Accounts.User.Status
-    alias Uro.Accounts.UserPrivilegeRuleset
+  def user_status_json_schema(), do: @user_status_json_schema
 
-    OpenApiSpex.schema(%{
-      title: "User",
-      type: :object,
-      required: [
-        :id,
-        :username,
-        :display_name,
-        :icon,
-        :banner,
-        :biography,
-        :status,
-        :status_message,
-        :email,
-        :email_confirmed_at,
-        :email_notifications,
-        :user_privilege_ruleset,
-        :created_at
-      ],
-      properties: %{
-        id: %Schema{
-          title: "UserID",
-          type: :string,
-          format: :uuid
-        },
-        username: %Schema{
-          title: "Username",
-          type: :string,
-          minLength: 3,
-          maxLength: 16
-        },
-        display_name: %Schema{
-          type: :string
-        },
-        icon: %Schema{
-          type: :string,
-          nullable: true
-        },
-        banner: %Schema{
-          type: :string,
-          nullable: true
-        },
-        biography: %Schema{
-          type: :string
-        },
-        status: Status,
-        status_message: %Schema{
-          type: :string,
-          nullable: true
-        },
-        email: %Schema{
-          type: :string,
-          format: :email
-        },
-        email_confirmed_at: %Schema{
-          type: :string,
-          format: :"date-time",
-          nullable: true
-        },
-        email_notifications: %Schema{
-          type: :boolean
-        },
-        user_privilege_ruleset: UserPrivilegeRuleset.JSONSchema,
-        created_at: %Schema{
-          type: :string,
-          format: :"date-time"
-        }
+  @sensitive_json_schema %Schema{
+    title: "SensitiveUser",
+    description: "A user, with sensitive information.",
+    type: :object,
+    required: [
+      :id,
+      :username,
+      :display_name,
+      :icon,
+      :banner,
+      :biography,
+      :status,
+      :status_message,
+      :email,
+      :email_confirmed_at,
+      :email_notifications,
+      :user_privilege_ruleset,
+      :created_at
+    ],
+    properties: %{
+      id: %Schema{
+        title: "UserID",
+        type: :string,
+        format: :uuid
+      },
+      username: %Schema{
+        title: "Username",
+        type: :string,
+        minLength: 3,
+        maxLength: 16
+      },
+      display_name: %Schema{
+        type: :string
+      },
+      icon: %Schema{
+        type: :string,
+        nullable: true
+      },
+      banner: %Schema{
+        type: :string,
+        nullable: true
+      },
+      biography: %Schema{
+        type: :string
+      },
+      status: @user_status_json_schema,
+      status_message: %Schema{
+        type: :string,
+        nullable: true
+      },
+      email: %Schema{
+        type: :string,
+        format: :email
+      },
+      email_confirmed_at: %Schema{
+        type: :string,
+        format: :"date-time",
+        nullable: true
+      },
+      email_notifications: %Schema{
+        type: :boolean
+      },
+      user_privilege_ruleset: UserPrivilegeRuleset.json_schema(),
+      created_at: %Schema{
+        type: :string,
+        format: :"date-time"
       }
-    })
-  end
+    }
+  }
 
-  defmodule LooseKey do
-    @moduledoc """
-    A loose representation of a user, can any of the following:
+  def sensitive_json_schema(), do: @sensitive_json_schema
 
-    * The literal `@me` string, representing the current user,
-    * A user's username,
-    * Or their ID.
-    """
+  def to_sensitive_json_schema(%__MODULE__{} = user),
+    do: %{
+      id: user.id,
+      username: user.username,
+      display_name: user.display_name,
+      icon: user.icon,
+      banner: user.banner,
+      biography: user.biography,
+      status: user.status,
+      status_message: user.status_message,
+      email: user.email,
+      email_confirmed_at: user.email_confirmed_at,
+      email_notifications: user.email_notifications,
+      user_privilege_ruleset: UserPrivilegeRuleset.to_json_schema(user.user_privilege_ruleset),
+      created_at: user.created_at
+    }
 
-    require OpenApiSpex
-    alias OpenApiSpex.Schema
-    alias Uro.Accounts.User
+  def to_sensitive_json_schema(_), do: nil
 
-    OpenApiSpex.schema(%{
+  @limited_json_schema %Schema{
+    title: "LimitedUser",
+    description: "A user object for public consumption, excluding sensitive information.",
+    type: :object,
+    required: [
+      :id,
+      :username,
+      :display_name,
+      :icon,
+      :banner,
+      :biography,
+      :status,
+      :status_message,
+      :created_at
+    ],
+    properties: %{
+      id: @sensitive_json_schema.properties[:id],
+      username: @sensitive_json_schema.properties[:username],
+      display_name: @sensitive_json_schema.properties[:display_name],
+      icon: @sensitive_json_schema.properties[:icon],
+      banner: @sensitive_json_schema.properties[:banner],
+      biography: @sensitive_json_schema.properties[:biography],
+      status: @sensitive_json_schema.properties[:status],
+      status_message: @sensitive_json_schema.properties[:status_message],
+      created_at: @sensitive_json_schema.properties[:created_at]
+    }
+  }
+
+  def limited_json_schema(), do: @limited_json_schema
+
+  def to_limited_json_schema(nil), do: nil
+
+  def to_limited_json_schema(%__MODULE__{} = user),
+    do: %{
+      id: user.id,
+      username: user.username,
+      display_name: user.display_name,
+      icon: user.icon,
+      banner: user.banner,
+      biography: user.biography,
+      status: user.status,
+      status_message: user.status_message,
+      created_at: user.created_at
+    }
+
+  @json_schema %Schema{
+    title: "User",
+    oneOf: [
+      @limited_json_schema,
+      @sensitive_json_schema
+    ]
+  }
+
+  def json_schema(), do: @json_schema
+
+  def to_json_schema(nil, _), do: nil
+  def to_json_schema(list, conn) when is_list(list), do: Enum.map(list, &to_json_schema(&1, conn))
+
+  def to_json_schema(%__MODULE__{id: user_id} = user, %{assigns: %{current_user: %{id: user_id}}}),
+    do: to_sensitive_json_schema(user)
+
+  def to_json_schema(%__MODULE__{} = user, _), do: to_limited_json_schema(user)
+
+  def loose_key_json_schema(),
+    do: %Schema{
       title: "LooseUserKey",
-      description: @moduledoc,
-      default: "@me",
+      description: """
+      A loose representation of a user, can any of the following:
+
+      * The literal `me` string, representing the current user,
+      * A user's username,
+      * Or their ID.
+      """,
+      default: "me",
       oneOf: [
-        %Schema{
-          title: "@me",
-          type: :string,
-          enum: ["@me"]
-        },
-        User.JSONSchema.shape(:id),
-        User.JSONSchema.shape(:username)
+        %Schema{type: :string, enum: ["me"]},
+        @sensitive_json_schema.properties[:id],
+        @sensitive_json_schema.properties[:username]
       ]
-    })
-  end
+    }
 
   def admin?(%{user_privilege_ruleset: %{is_admin: is_admin}}), do: is_admin
   def admin?(_), do: false
 
-  @spec lock_changeset(Schema.t() | Changeset.t()) :: Changeset.t()
   def lock_changeset(user_or_changeset) do
     changeset = change(user_or_changeset)
     locked_at = DateTime.truncate(DateTime.utc_now(), :second)
@@ -219,24 +289,18 @@ defmodule Uro.Accounts.User do
     end
   end
 
-  defmodule UpdateJSONSchema do
-    @moduledoc false
+  @update_json_schema %Schema{
+    type: :object,
+    properties: %{
+      display_name: @sensitive_json_schema.properties[:display_name],
+      username: @sensitive_json_schema.properties[:username],
+      biography: @sensitive_json_schema.properties[:biography],
+      email_notifications: @sensitive_json_schema.properties[:email_notifications],
+      status_message: @sensitive_json_schema.properties[:status_message]
+    }
+  }
 
-    use Uro.JSONSchema, []
-    alias Uro.Accounts.User.JSONSchema
-
-    OpenApiSpex.schema(%{
-      title: "UserUpdate",
-      type: :object,
-      properties: %{
-        display_name: JSONSchema.shape(:display_name),
-        username: JSONSchema.shape(:username),
-        biography: JSONSchema.shape(:biography),
-        email_notifications: JSONSchema.shape(:email_notifications),
-        status_message: JSONSchema.shape(:status_message)
-      }
-    })
-  end
+  def update_json_schema(), do: @update_json_schema
 
   def user_custom_changeset(user_or_changeset, attrs) do
     user_or_changeset

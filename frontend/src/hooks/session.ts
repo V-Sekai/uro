@@ -16,7 +16,6 @@ export const useOptionalSession = () => {
 	const queryClient = useQueryClient();
 
 	const { data: session } = useSuspenseQuery({
-		queryKey: ["session"],
 		queryFn: async () => {
 			const data = await getOptionalSession();
 			if (!data) return null;
@@ -24,6 +23,7 @@ export const useOptionalSession = () => {
 			queryClient.setQueryData(["users", data.user.username], data.user);
 			return data;
 		},
+		queryKey: ["session"],
 		refetchOnWindowFocus: "always"
 	});
 

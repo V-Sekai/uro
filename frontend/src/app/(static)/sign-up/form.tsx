@@ -3,7 +3,6 @@
 import { useDeferredValue, type FC } from "react";
 import { Check } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 
 import { api } from "~/api";
 import { Input, type InputProps } from "~/components/input";
@@ -50,7 +49,6 @@ const UsernameInput: FC<Omit<InputProps<string>, "label">> = ({
 };
 
 export const SignUpForm: FC = () => {
-	const router = useRouter();
 	const { withReturnIntent } = useReturnIntent();
 	const queryClient = useQueryClient();
 
@@ -59,15 +57,13 @@ export const SignUpForm: FC = () => {
 			className="grid w-[32rem] overflow-hidden rounded-xl border border-tertiary-300 bg-tertiary-50"
 			mutationKey={["signup"]}
 			defaultVariables={{
+				captcha: "",
 				display_name: "",
-				username: "",
 				email: "",
 				password: "",
-				captcha: ""
+				username: ""
 			}}
 			mutationFn={async (body) => {
-				console.log(body);
-
 				const { data, error } = await api.signup({
 					body
 				});
@@ -75,10 +71,9 @@ export const SignUpForm: FC = () => {
 				if (error || !data) throw error;
 
 				queryClient.setQueryData(["session"], data);
-				router.push(withReturnIntent("/confirm-email").href);
 			}}
 			onSettled={async () => {
-				return queryClient.invalidateQueries({
+				await queryClient.invalidateQueries({
 					predicate: ({ queryKey }) => queryKey[0] === "users"
 				});
 			}}

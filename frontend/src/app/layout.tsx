@@ -13,8 +13,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-	title: "V-Sekai",
-	description: "Your virtual reality platform, on your game engine."
+	description: "Your virtual reality platform, on your game engine.",
+	title: "V-Sekai"
 };
 
 export default async function RootLayout({

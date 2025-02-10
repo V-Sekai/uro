@@ -3,6 +3,10 @@ defmodule Uro.Accounts do
   The Accounts context.
   """
 
+  use Pow.Ecto.Context,
+    repo: Uro.Repo,
+    user: Uro.Accounts.User
+
   import Ecto.Query, warn: false
   import Uro.Helpers.UUID
 
@@ -12,6 +16,34 @@ defmodule Uro.Accounts do
   alias Uro.Repo
 
   @user_associated_schemas [:user_privilege_ruleset]
+
+  def get_by(params) do
+    params
+    |> pow_get_by()
+    |> Repo.preload(@user_associated_schemas)
+  end
+
+  def create(params) do
+    Repo.transaction(fn ->
+      with {:ok, user} <- pow_create(params),
+           {:ok, user} <- create_user_associations(user) do
+        user
+      else
+        {:error, reason} ->
+          Repo.rollback(reason)
+
+        any ->
+          Repo.rollback(any)
+      end
+    end)
+  end
+
+  def create_user_associations(user) do
+    with {:ok, user_privilege_ruleset} <-
+           Ecto.build_assoc(user, :user_privilege_ruleset) |> Repo.insert() do
+      {:ok, Map.put(user, :user_privilege_ruleset, user_privilege_ruleset)}
+    end
+  end
 
   def get_by_username(username) when is_nil(username) do
     nil
@@ -68,29 +100,27 @@ defmodule Uro.Accounts do
 
   def get_user!(_), do: nil
 
-  def create_user_privilege_ruleset_for_user(user, attrs \\ %{}) do
-    user
-    |> Ecto.build_assoc(:user_privilege_ruleset, attrs)
-    |> Repo.insert()
-  end
+  # def create_user_privilege_ruleset_for_user(user, attrs \\ %{}) do
+  #   user
+  #   |> Ecto.build_assoc(:user_privilege_ruleset, attrs)
+  #   |> Repo.insert()
+  # end
+  # def create_associated_entries_for_user(user) do
+  #   create_user_privilege_ruleset_for_user(user)
+  #   user
+  # end
 
-  def create_associated_entries_for_user(user) do
-    create_user_privilege_ruleset_for_user(user)
-    user
-  end
-
-  def create_user(conn, attrs) do
-    conn
-    |> Pow.Plug.create_user(attrs)
-    |> case do
-      {:ok, user, _} ->
-        create_associated_entries_for_user(user)
-        {:ok, user, conn}
-
-      {:error, changeset, _} ->
-        {:error, changeset}
-    end
-  end
+  # def create_user(conn, attrs) do
+  #   conn
+  #   |> Pow.Plug.create_user(attrs)
+  #   |> case do
+  #     {:ok, user, _} ->
+  #       create_associated_entries_for_user(user)
+  #       {:ok, user, conn}
+  #     {:error, changeset, _} ->
+  #       {:error, changeset}
+  #   end
+  # end
 
   def send_confirmation_email(%{email_confirmed_at: nil} = user) do
     {:ok, confirmation_token, _} = EmailConfirmationToken.new(user)

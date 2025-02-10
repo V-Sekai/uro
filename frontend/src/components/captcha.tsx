@@ -1,4 +1,5 @@
 import { useLatest } from "@ariesclark/react-hooks";
+import { useMutationState } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 import {
@@ -13,6 +14,7 @@ import {
 import { twMerge } from "tailwind-merge";
 
 import { turnstileSiteKey } from "~/environment";
+import { MutationFormContext } from "~/hooks/form";
 import { useTheme } from "~/hooks/theme";
 
 interface CaptchaProps {
@@ -33,13 +35,22 @@ const CaptchaContent: FC<
 		if (!element) return;
 
 		turnstile.render(element, {
-			sitekey: turnstileSiteKey,
 			callback: (value) => onChange.current?.(value),
+			sitekey: turnstileSiteKey,
 			theme
 		});
 
 		return () => turnstile.remove(element);
 	}, [onChange, turnstile, theme]);
+
+	const { status: formStatus } = use(MutationFormContext) || {};
+
+	useEffect(() => {
+		const { current: element } = reference;
+		if (!element || formStatus === "pending") return;
+
+		turnstile.reset(element);
+	}, [formStatus]);
 
 	return (
 		<div
@@ -88,6 +99,6 @@ const _Captcha: FC<CaptchaProps> = (props) => {
 };
 
 export const Captcha = dynamic(() => Promise.resolve(_Captcha), {
-	ssr: false,
-	loading: () => <CaptchaContentSkeleton />
+	loading: () => <CaptchaContentSkeleton />,
+	ssr: false
 });

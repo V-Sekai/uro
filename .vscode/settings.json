@@ -19,5 +19,11 @@
 	},
 	"[javascript]": {
 		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
-	}
+	},
+	"tailwindCSS.experimental.classRegex": [
+		[
+			"([\"'`][^\"'`]*.*?[\"'`])",
+			"[\"'`]([^\"'`]*).*?[\"'`]"
+		]
+	]
 }

@@ -1,10 +1,7 @@
 defmodule Uro.UserController do
   @moduledoc false
 
-  alias Uro.Turnstile
   use Uro, :controller
-  use Uro.Helpers.API
-  use OpenApiSpex.ControllerSpecs
 
   import Ecto.Changeset
   import Uro.Helpers.User
@@ -13,13 +10,11 @@ defmodule Uro.UserController do
   alias OpenApiSpex.Schema
   alias Uro.Accounts
   alias Uro.Accounts.User
-  alias Uro.Error
-  alias Uro.Plug.Authentication
   alias Uro.Repo
   alias Uro.Session
+  alias Uro.Turnstile
 
   action_fallback(Uro.FallbackController)
-  # plug(Uro.Plug.CastAndValidate, render_error: FallbackController)
 
   tags(["users"])
   security(default_security())
@@ -28,38 +23,60 @@ defmodule Uro.UserController do
 
   operation(:show,
     operation_id: "getUser",
-    summary: "Get a specific user.",
+    summary: "Get User",
     parameters: [
-      id: [
+      user_id: [
         in: :path,
-        schema: User.LooseKey
+        schema: User.loose_key_json_schema()
       ]
     ],
     responses: [
       ok: {
         "",
         "application/json",
-        User.JSONSchema
+        User.json_schema()
       },
       not_found: {
         "User not found",
         "application/json",
-        Error.JSONSchema
+        error_json_schema()
       }
     ]
   )
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"user_id" => id}) do
     with {:ok, user} <- user_from_key(conn, id) do
       conn
-      |> put_status(200)
-      |> json(user)
+      |> put_status(:ok)
+      |> json(User.to_json_schema(user, conn))
     end
+  end
+
+  operation(:index,
+    operation_id: "listUsers",
+    summary: "List Users",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        %Schema{
+          type: :array,
+          items: User.json_schema()
+        }
+      }
+    ]
+  )
+
+  def index(conn, _) do
+    json(
+      conn,
+      User.to_json_schema(Accounts.list_users_admin(), conn)
+    )
   end
 
   operation(:create,
     operation_id: "signup",
-    summary: "Create a new user.",
+    summary: "Create an Account",
     request_body:
       {"", "application/json",
        %Schema{
@@ -72,9 +89,9 @@ defmodule Uro.UserController do
            :captcha
          ],
          properties: %{
-           display_name: User.JSONSchema.shape(:display_name),
-           username: User.JSONSchema.shape(:username),
-           email: User.JSONSchema.shape(:email),
+           display_name: User.sensitive_json_schema().properties.display_name,
+           username: User.sensitive_json_schema().properties.username,
+           email: User.sensitive_json_schema().properties.email,
            password: %Schema{type: :string},
            captcha: %Schema{
              type: :string
@@ -85,12 +102,12 @@ defmodule Uro.UserController do
       ok: {
         "",
         "application/json",
-        Session.JSONSchema
+        Session.json_schema()
       },
       unprocessable_entity: {
         "",
         "application/json",
-        Error.JSONSchema
+        error_json_schema()
       }
     ]
   )
@@ -98,22 +115,22 @@ defmodule Uro.UserController do
   def create(conn, params) do
     Repo.transaction(fn ->
       with {:ok, _} <- Turnstile.verify_captcha(conn),
-           {:ok, user, conn} <- Accounts.create_user(conn, params),
+           {:ok, user} <- Accounts.create(params),
            :ok <- Accounts.send_confirmation_email(user),
            conn <- Pow.Plug.create(conn, user) do
         {user, conn}
       else
-        reason ->
-          Repo.rollback(reason)
+        any ->
+          Repo.rollback(any)
       end
     end)
     |> case do
       {:ok, {_, conn}} ->
-        session = Uro.Plug.Authentication.current_session(conn)
+        {:ok, session} = current_session(conn)
 
         json(
           conn,
-          session
+          Session.to_json_schema(session)
         )
 
       {:error, conn} ->
@@ -123,18 +140,18 @@ defmodule Uro.UserController do
 
   operation(:resend_confirmation_email,
     operation_id: "resendConfirmationEmail",
-    summary: "Resend a confirmation email.",
+    summary: "Resend Confirmation Email",
     parameters: [
       user_id: [
         in: :path,
-        schema: User.LooseKey
+        schema: User.loose_key_json_schema()
       ]
     ],
     responses: [
       accepted: {
         "",
         "application/json",
-        %Schema{type: :object}
+        success_json_schema()
       }
     ]
   )
@@ -152,17 +169,19 @@ defmodule Uro.UserController do
          :ok <- Accounts.send_confirmation_email(user) do
       conn
       |> put_status(:accepted)
-      |> json(%{})
+      |> json(%{
+        message: "Confirmation email sent"
+      })
     end
   end
 
   operation(:update_email,
     operation_id: "updateEmail",
-    summary: "Update a user's email address.",
+    summary: "Update Email Address",
     parameters: [
       user_id: [
         in: :path,
-        schema: User.LooseKey
+        schema: User.loose_key_json_schema()
       ]
     ],
     request_body:
@@ -193,7 +212,7 @@ defmodule Uro.UserController do
       ok: {
         "",
         "application/json",
-        User.JSONSchema
+        User.json_schema()
       }
     ]
   )
@@ -239,17 +258,17 @@ defmodule Uro.UserController do
            end)
            |> apply_action(nil),
          {:ok, user} <- Accounts.update_email(user, email, send_confirmation: send_confirmation) do
-      json(conn, user)
+      json(conn, User.to_json_schema(user, conn))
     end
   end
 
   operation(:confirm_email,
     operation_id: "confirmEmail",
-    summary: "Confirm a user's email address.",
+    summary: "Confirm Email Address",
     parameters: [
       user_id: [
         in: :path,
-        schema: User.LooseKey
+        schema: User.loose_key_json_schema()
       ]
     ],
     request_body:
@@ -270,7 +289,7 @@ defmodule Uro.UserController do
       ok: {
         "",
         "application/json",
-        User.JSONSchema
+        User.json_schema()
       }
     ]
   )
@@ -278,7 +297,7 @@ defmodule Uro.UserController do
   def confirm_email(conn, %{"user_id" => user_id, "token" => token}) do
     with {:ok, user} <- user_from_key(conn, user_id),
          {:ok, user} <- Accounts.confirm_email(user, token) do
-      json(conn, user)
+      json(conn, User.to_json_schema(user, conn))
     end
   end
 
@@ -286,19 +305,19 @@ defmodule Uro.UserController do
 
   operation(:update,
     operation_id: "updateUser",
-    summary: "Update a user.",
+    summary: "Update User",
     parameters: [
       user_id: [
         in: :path,
-        schema: User.LooseKey
+        schema: User.loose_key_json_schema()
       ]
     ],
-    request_body: {"", "application/json", User.UpdateJSONSchema},
+    request_body: {"", "application/json", User.update_json_schema()},
     responses: [
       ok: {
         "",
         "application/json",
-        User.JSONSchema
+        User.json_schema()
       }
     ]
   )
@@ -309,12 +328,11 @@ defmodule Uro.UserController do
           "user_id" => user_id
         } = params
       ) do
-    with {:ok, current_user} <-
-           Authentication.current_user(conn)
-           |> user_confirmed_email(),
+    with {:ok, self} <- current_user(conn),
+         {:ok, self} <- user_confirmed_email(self),
          {:ok, user} <- user_from_key(conn, user_id),
          true <-
-           User.admin?(current_user) or user.id == current_user.id ||
+           User.admin?(self) or user.id == self.id ||
              {
                :error,
                :unauthorized,
@@ -323,7 +341,7 @@ defmodule Uro.UserController do
          {:ok, user} <- Accounts.update_user(user, params) do
       conn
       |> put_status(:ok)
-      |> json(user)
+      |> json(User.to_json_schema(user, conn))
     end
   end
 end

@@ -6,26 +6,16 @@ defmodule Uro.Application do
   use Application
 
   def start(_type, _args) do
-    # List all child processes to be supervised
-    children = [
-      # Start the Ecto repository
-      Uro.Repo,
-
-      # Start the endpoint when the application starts
-      Uro.Endpoint,
-      Uro.VSekai.ShardJanitor,
-
-      # Starts a worker by calling: Uro.Worker.start_link(arg)
-      # {Uro.Worker, arg},
-
-      # Starts Pow's Mnesia-backed cache store
-      # Pow.Store.Backend.MnesiaCache,
-      # # Or in a distributed system:
-      # {Pow.Store.Backend.MnesiaCache, extra_db_nodes: Node.list()},
-      # Pow.Store.Backend.MnesiaCache.Unsplit # Recover from netsplit
-      {Redix, {Application.get_env(:uro, Redix)[:url], [name: :redix]}},
-      {Phoenix.PubSub, [name: Uro.PubSub, adapter: Phoenix.PubSub.PG2]}
-    ]
+    children =
+      if System.get_env("MINIMAL_START") == "true",
+        do: [],
+        else: [
+          Uro.Repo,
+          Uro.Endpoint,
+          Uro.VSekai.ShardJanitor,
+          {Redix, {Application.get_env(:uro, Redix)[:url], [name: :redix]}},
+          {Phoenix.PubSub, [name: Uro.PubSub, adapter: Phoenix.PubSub.PG2]}
+        ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

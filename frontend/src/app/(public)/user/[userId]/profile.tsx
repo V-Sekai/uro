@@ -1,35 +1,169 @@
 "use client";
 
-import Image from "next/image";
 import { twMerge } from "tailwind-merge";
-import { Ellipsis, Pencil, Rss, UserPlus } from "lucide-react";
+import {
+	Ellipsis,
+	Pencil,
+	Rss,
+	UserCheck,
+	UserPlus,
+	UserX
+} from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
-import VSekaiRed from "~/assets/v-sekai-red.png";
 import { useOptionalSession } from "~/hooks/session";
 import { DialogTrigger } from "~/components/dialog";
-import { Button, ButtonGroup } from "~/components/button";
+import { Button, ButtonGroup, type ButtonProps } from "~/components/button";
 import { VSekaiMark } from "~/components/vsekai-mark";
+import { api } from "~/api";
+import { MutationButton } from "~/hooks/form";
+import { optimisticMutation } from "~/query";
 
-import { useUser } from "../data";
+import { friendshipQueryKey, useFriendship, useUser } from "../data";
 
 import { Navigation, NavigationItem } from "./navigation";
 import { EditProfile } from "./edit-profile";
 import { StatusBadge } from "./status-badge";
+import { UserImage } from "./user-image";
 
-import type { FC } from "react";
+import type { FC, PropsWithChildren } from "react";
+
+const FriendButton: FC<PropsWithChildren<ButtonProps & { userId: string }>> = ({
+	userId,
+	children,
+	...props
+}) => (
+	<MutationButton
+		type="light"
+		{...props}
+		variables={{ userId }}
+		mutationFn={async ({ userId }) => {
+			const { data, error } = await api.friend({
+				path: { user_id: userId }
+			});
+
+			if (error || !data) throw error;
+			return data;
+		}}
+		onSuccess={optimisticMutation(friendshipQueryKey(userId))}
+	>
+		{children}
+	</MutationButton>
+);
+
+const UnfriendButton: FC<
+	PropsWithChildren<ButtonProps & { userId: string }>
+> = ({ userId, children, ...props }) => (
+	<MutationButton
+		type="light"
+		{...props}
+		variables={{ userId }}
+		mutationFn={async ({ userId }) => {
+			const { data, error } = await api.unfriend({
+				path: { user_id: userId }
+			});
+
+			if (error || !data) throw error;
+			return data;
+		}}
+		onSuccess={optimisticMutation(friendshipQueryKey(userId))}
+	>
+		{children}
+	</MutationButton>
+);
+
+const ProfileActionNavigation: FC<{ userId: string }> = ({ userId }) => {
+	const session = useOptionalSession();
+
+	const user = useUser(userId);
+	const friendship = useFriendship(userId);
+
+	if (!user) return null;
+
+	return (
+		<div className="flex gap-2">
+			{session?.user.id === user.id ? (
+				<>
+					<EditProfile userId={userId}>
+						<DialogTrigger asChild>
+							<Button type="light">
+								<Pencil className="size-4" /> Edit profile
+							</Button>
+						</DialogTrigger>
+					</EditProfile>
+				</>
+			) : (
+				<>
+					{friendship?.status === "received" && (
+						<ButtonGroup className="w-48">
+							<FriendButton
+								userId={userId}
+								type="ghost"
+								className="peer w-full gap-0 overflow-hidden bg-green-600"
+							>
+								<UserCheck className="size-4 shrink-0" />
+								<span className="ml-0 w-0 opacity-0 transition-all group-data-[button]:group-hover:ml-2 group-data-[button]:group-hover:w-fit group-data-[button]:group-hover:opacity-100">
+									Accept
+								</span>
+							</FriendButton>
+							<UnfriendButton
+								userId={userId}
+								type="ghost"
+								className="w-0 gap-0 overflow-hidden bg-red-600 hover:w-full"
+							>
+								<UserX className="size-4 shrink-0" />
+								<span className="ml-0 w-0 opacity-0 transition-all group-data-[button]:group-hover:ml-2 group-data-[button]:group-hover:w-fit group-data-[button]:group-hover:opacity-100">
+									Reject
+								</span>
+							</UnfriendButton>
+						</ButtonGroup>
+					)}
+					<ButtonGroup>
+						{friendship &&
+							{
+								accepted: (
+									<UnfriendButton userId={userId}>
+										<UserX className="size-4 shrink-0" /> Unfriend
+									</UnfriendButton>
+								),
+								none: (
+									<FriendButton userId={userId}>
+										<UserPlus className="size-4 shrink-0" /> Friend
+									</FriendButton>
+								),
+								received: null,
+								sent: (
+									<UnfriendButton userId={userId}>
+										<UserX className="size-4 shrink-0" /> Cancel request
+									</UnfriendButton>
+								)
+							}[friendship.status]}
+						<Button>
+							<Rss className="size-4" /> Follow
+						</Button>
+					</ButtonGroup>
+				</>
+			)}
+			<Button iconOnly type="ghost">
+				<Ellipsis className="size-4" />
+			</Button>
+		</div>
+	);
+};
 
 export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 	const session = useOptionalSession();
 
 	const user = useUser(userId);
+
 	if (!user) return null;
 
-	const { username, display_name, icon, banner, status, biography } = user;
+	const { username, display_name, banner, status, biography } = user;
 
 	return (
 		<div className="w-full">
 			<div className="absolute z-10 w-full">
-				<div className="mx-auto flex max-w-screen-xl gap-4 p-4 xl:gap-8">
+				<div className="mx-auto flex max-w-screen-xl justify-between gap-4 p-4 xl:gap-8">
 					<NavigationItem
 						invert
 						className="shrink-0 xl:w-72"
@@ -38,7 +172,29 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 					>
 						V-Sekai
 					</NavigationItem>
-					<Button className="w-full" type="light" />
+					{session && (
+						<Button
+							className="flex items-center gap-4 p-0 text-white"
+							href={`/@${session.user.username}`}
+							type="ghost"
+						>
+							<div className="flex flex-col items-end">
+								<span className="truncate whitespace-nowrap">
+									{session.user.display_name}
+								</span>
+								<span className="text-sm leading-none opacity-75">
+									@{session.user.username}
+								</span>
+							</div>
+							<UserImage
+								priority
+								className="size-10"
+								height={40}
+								user={session.user}
+								width={40}
+							/>
+						</Button>
+					)}
 				</div>
 			</div>
 			<div
@@ -51,12 +207,11 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 				<Navigation />
 				<div className="flex w-full flex-col gap-4">
 					<div className="flex gap-4 md:gap-8">
-						<Image
+						<UserImage
 							priority
-							alt={`${user.display_name}'s profile picture`}
-							className="size-24 shrink-0 rounded-xl md:size-36"
+							className="size-24 md:size-36"
 							height={144}
-							src={icon || VSekaiRed.src}
+							user={user}
 							width={144}
 						/>
 						<div
@@ -76,51 +231,18 @@ export const UserProfile: FC<{ userId: string }> = ({ userId }) => {
 										@{username}
 									</span>
 								</div>
-								<div className="flex gap-2">
-									{session?.user.id === user.id ? (
-										<>
-											<EditProfile userId={userId}>
-												<DialogTrigger asChild>
-													<Button type="light">
-														<Pencil className="size-4" /> Edit profile
-													</Button>
-												</DialogTrigger>
-											</EditProfile>
-										</>
-									) : (
-										<ButtonGroup>
-											<Button type="light">
-												<UserPlus className="size-4" /> Friend
-											</Button>
-											<Button>
-												<Rss className="size-4" /> Follow
-											</Button>
-										</ButtonGroup>
-									)}
-									<button
-										type="button"
-										className={twMerge(
-											"flex items-center gap-2 rounded-xl px-4 py-1",
-											banner && "text-white"
-										)}
-									>
-										<Ellipsis className="inline size-5" />
-									</button>
-								</div>
+								<ProfileActionNavigation userId={user.id} />
 							</div>
 							<StatusBadge user={user} />
 							<span className="hidden md:inline">
 								{biography || "No biography available."}
 							</span>
-							<Button type="light">
-								<UserPlus className="size-4" /> Friend
-							</Button>
 						</div>
 					</div>
 					<span className="md:hidden">
 						{biography || "No biography available."}
 					</span>
-					<pre className="whitespace-pre-wrap rounded-xl border border-tertiary-200 p-4">
+					<pre className="whitespace-pre-wrap rounded-xl border border-tertiary-300 bg-tertiary-50 p-4">
 						{JSON.stringify(user, null, 2)}
 					</pre>
 				</div>

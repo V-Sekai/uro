@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 "use client";
 
 import {
@@ -7,6 +7,7 @@ import {
 	useState,
 	type ButtonHTMLAttributes,
 	type ForwardedRef,
+	type MouseEventHandler,
 	type PropsWithChildren
 } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
@@ -17,47 +18,48 @@ import { Link } from "./link";
 
 export const button = tv({
 	base: [
-		"flex items-center justify-center whitespace-nowrap transition-all",
-		"outline-current outline-offset-2 focus-visible:outline",
+		"group flex items-center justify-center whitespace-nowrap transition-all",
+		"outline-offset-2 outline-current focus-visible:outline",
 		"rounded-xl group-data-[button-group]:rounded-none group-data-[button-group]:first:rounded-l-xl group-data-[button-group]:last:rounded-r-xl",
-		"border border-transparent group-data-[button-group]:first:border-l group-data-[button-group]:border-x-0 group-data-[button-group]:last:border-r",
+		"border border-transparent group-data-[button-group]:border-x-0 group-data-[button-group]:first:border-l group-data-[button-group]:last:border-r",
 		"data-[pressed]:scale-[.97] group-data-[button-group]:first:origin-right group-data-[button-group]:last:origin-left"
 	],
+	defaultVariants: {
+		disabled: false,
+		iconOnly: false,
+		pending: false,
+		size: "medium",
+		type: "primary"
+	},
 	variants: {
-		type: {
-			primary: "bg-red-500 text-white hover:bg-red-600",
-			light:
-				"border-secondary-0/20 bg-secondary-0/5 text-secondary-0 backdrop-blur aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-			ghost: "text-secondary-100"
-		},
-		size: {
-			small: "text-sm gap-2 px-2 py-1",
-			medium: "text-base px-4 gap-2 py-1",
-			large: "text-base px-6 gap-3 py-3"
+		disabled: {
+			true: "pointer-events-none opacity-50"
 		},
 		iconOnly: {
 			true: "!p-2"
 		},
-		disabled: {
-			true: "opacity-50 pointer-events-none"
-		},
 		pending: {
-			true: "animate-pulse pointer-events-none"
+			true: "pointer-events-none animate-pulse"
+		},
+		size: {
+			large: "gap-3 px-6 py-3 text-base",
+			medium: "gap-2 px-4 py-1 text-base",
+			small: "gap-2 px-2 py-1 text-sm"
+		},
+		type: {
+			ghost: "text-secondary-100",
+			light:
+				"border-tertiary-300/20 bg-tertiary-100/5 text-secondary-100 backdrop-blur",
+			primary: "bg-blue-500 text-white hover:bg-blue-600"
 		}
-	},
-	defaultVariants: {
-		type: "primary",
-		size: "medium",
-		iconOnly: false,
-		disabled: false,
-		pending: false
 	}
 });
 
 export type ButtonProps = PropsWithChildren<
 	VariantProps<typeof button> & {
 		href?: string | URL;
-		onClick?: () => void;
+		onClick?: MouseEventHandler<HTMLElement>;
+		action?: () => void;
 		className?: string;
 		actionType?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
 	}
@@ -65,7 +67,15 @@ export type ButtonProps = PropsWithChildren<
 
 export const Button = forwardRef<HTMLElement, ButtonProps>(
 	(
-		{ onClick, href, actionType = "button", disabled, children, ...tvProps },
+		{
+			onClick,
+			action,
+			href,
+			actionType = "button",
+			disabled,
+			children,
+			...tvProps
+		},
 		reference
 	) => {
 		const [pressed, setPressed] = useState(false);
@@ -77,10 +87,16 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(
 				className={button({ disabled, ...tvProps })}
 				data-pressed={dataAttribute(pressed)}
 				disabled={disabled}
+				data-button=""
 				href={href!}
 				ref={reference as ForwardedRef<any>}
 				type={actionType}
-				onClick={onClick}
+				onClick={(event) => {
+					if (disabled) return;
+
+					onClick?.(event);
+					action?.();
+				}}
 				onPointerDown={() => setPressed(true)}
 				onPointerOut={() => setPressed(false)}
 				onPointerUp={() => setPressed(false)}
@@ -95,14 +111,14 @@ Button.displayName = "Button";
 
 export const buttonGroup = tv({
 	base: "group flex rounded-xl",
+	defaultVariants: {
+		direction: "horizontal"
+	},
 	variants: {
 		direction: {
 			horizontal: "flex-row",
 			vertical: "flex-col"
 		}
-	},
-	defaultVariants: {
-		direction: "horizontal"
 	}
 });
 

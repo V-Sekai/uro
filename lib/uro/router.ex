@@ -37,7 +37,7 @@ defmodule Uro.Router do
       plug(:put_secure_browser_headers)
     end
 
-    scope "/-" do
+    scope "/" do
       pipe_through([:browser])
 
       forward("/mailbox", Plug.Swoosh.MailboxPreview)
@@ -48,19 +48,19 @@ defmodule Uro.Router do
 
   get("/health", Uro.HealthController, :index)
 
-  get("/", OpenApiSpex.Plug.RenderSpec, [])
-  get("/docs", Uro.OpenAPI.Viewer, pathname: "/api/v1")
-
-  post("/session", Uro.AuthenticationController, :login)
+  get("/openapi", OpenApiSpex.Plug.RenderSpec, [])
+  get("/docs", Uro.OpenAPI.Viewer, [])
 
   scope "/session" do
     pipe_through([:authenticated])
 
-    get("/", Uro.AuthenticationController, :current_session)
+    get("/", Uro.AuthenticationController, :get_current_session)
     delete("/", Uro.AuthenticationController, :logout)
   end
 
-  scope "/oauth" do
+  scope "/login" do
+    post("/", Uro.AuthenticationController, :login)
+
     scope "/:provider" do
       get("/", Uro.AuthenticationController, :login_with_provider)
       get("/callback", Uro.AuthenticationController, :provider_callback)
@@ -73,9 +73,15 @@ defmodule Uro.Router do
   resources("/shards", Uro.ShardController, only: [:index, :create, :update, :delete])
 
   scope "/users" do
-    resources("/", Uro.UserController, only: [:show, :create])
+    post "/", Uro.UserController, :create
+
+    scope "/" do
+      pipe_through([:authenticated])
+      get "/", Uro.UserController, :index
+    end
 
     scope "/:user_id" do
+      get "/", Uro.UserController, :show
       post "/email", Uro.UserController, :confirm_email
 
       scope "/" do
@@ -85,6 +91,11 @@ defmodule Uro.Router do
 
         put "/email", Uro.UserController, :update_email
         patch "/email", Uro.UserController, :resend_confirmation_email
+
+        resources("/friend", Uro.FriendController,
+          singleton: true,
+          only: [:show, :create, :delete]
+        )
       end
     end
   end

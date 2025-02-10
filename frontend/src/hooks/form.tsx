@@ -8,6 +8,7 @@ import {
 import {
 	createContext,
 	use,
+	useCallback,
 	useState,
 	type Dispatch,
 	type FC,
@@ -16,6 +17,8 @@ import {
 
 import { ErrorMessage } from "~/app/(static)/login/error-message";
 import { Button, type ButtonProps } from "~/components/button";
+
+import type { Error } from "~/api";
 
 export type MutationFormProps<TVariables, TData = unknown, TError = Error> = {
 	className?: string;
@@ -95,12 +98,12 @@ export function MutationForm<TVariables, TData = unknown, TError = Error>({
 				return [
 					key,
 					{
-						name: key,
-						value,
-						onChange: setValue,
 						errors: touched
 							? []
-							: errorProperties[key as keyof typeof errorProperties] || []
+							: errorProperties[key as keyof typeof errorProperties] || [],
+						name: key,
+						onChange: setValue,
+						value
 					}
 				];
 			})
@@ -109,35 +112,62 @@ export function MutationForm<TVariables, TData = unknown, TError = Error>({
 
 	const Component = asChild ? Slot : "form";
 
+	const action = useCallback(
+		() =>
+			mutation.mutate(variables, {
+				onSettled: (data, error) => {
+					if (error) setError(error);
+					else setError(null);
+
+					setTouchedRecently([]);
+				}
+			}),
+		[mutation, variables]
+	);
+
 	return (
 		<MutationFormContext.Provider
-			value={context as MutationFormContext<unknown, unknown, Error>}
+			value={context as MutationFormContext<unknown>}
 		>
-			<Component
-				className={className}
-				action={() =>
-					mutation.mutate(variables, {
-						onSettled: (data, error) => {
-							if (error) setError(error);
-							else setError(null);
-
-							setTouchedRecently([]);
-						}
-					})
-				}
-			>
+			<Component className={className} action={action}>
 				{children(context)}
 			</Component>
 		</MutationFormContext.Provider>
 	);
 }
 
-export const FormErrorMessage: FC = () => {
+export function MutationButton<TVariables, TData = unknown, TError = Error>({
+	children,
+	variables = {} as TVariables,
+	...props
+}: Omit<ButtonProps, "action" | "actionType"> & {
+	variables?: TVariables;
+} & UseMutationOptions<TData, TError, TVariables>) {
+	return (
+		<MutationForm
+			defaultVariables={variables}
+			asChild
+			{...props}
+			children={({ isPending }) => (
+				<Button pending={isPending} {...props}>
+					{children}
+				</Button>
+			)}
+		/>
+	);
+}
+
+export const FormErrorMessage: FC<{ messageOverride?: string | null }> = ({
+	messageOverride
+}) => {
 	const { error } = use(MutationFormContext);
 
 	return (
 		<ErrorMessage
-			message={error && !("properties" in error) ? error?.message : null}
+			message={
+				messageOverride ||
+				(error && !("properties" in error) ? error?.message : null)
+			}
 		/>
 	);
 };

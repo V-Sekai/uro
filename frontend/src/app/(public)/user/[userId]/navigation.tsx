@@ -22,7 +22,6 @@ export const NavigationItem: FC<
 
 	return (
 		<Component
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			href={href!}
 			className={twMerge(
 				"flex cursor-pointer gap-4 px-4 py-4 first:rounded-t-xl last:rounded-b-xl md:px-6",

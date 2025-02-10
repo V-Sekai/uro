@@ -10,8 +10,8 @@ export interface OAuth2State {
 
 export function setOAuth2State(nonce: string, data: OAuth2State) {
 	cookies().set(`oauth2.${nonce}`, JSON.stringify(data), {
-		maxAge: Math.floor(ms("30m") / 1000),
 		httpOnly: true,
+		maxAge: Math.floor(ms("30m") / 1000),
 		secure: true
 	});
 }

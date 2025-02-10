@@ -30,6 +30,7 @@ defmodule Uro.OpenAPI.Viewer do
         <elements-api
           layout="responsive"
           router="hash"
+          tryItCredentialsPolicy="include"
         />
         <script>
           document.querySelector("elements-api").apiDescriptionDocument = #{Jason.encode!(spec)};

@@ -28,8 +28,8 @@ config.fetch = async (request: Request) => {
 		await new Promise((resolve) =>
 			setTimeout(
 				resolve,
-				// Random latency between 100ms and 1000ms, doubled for non-GET requests.
-				randomInt(100, 1000) * (request.method.toUpperCase() === "GET" ? 1 : 2)
+				// Random latency between 20ms and 200ms, doubled for non-GET requests.
+				randomInt(20, 200) * (request.method.toUpperCase() === "GET" ? 1 : 2)
 			)
 		);
 

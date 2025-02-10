@@ -22,7 +22,9 @@ defmodule Uro.OpenAPI.Specification do
         version: "1"
       },
       servers: [
-        Server.from_endpoint(Endpoint) |> IO.inspect(label: "from_endpoint")
+        %Server{
+          url: Endpoint.public_url()
+        }
       ],
       paths: Paths.from_router(Router),
       components: %Components{

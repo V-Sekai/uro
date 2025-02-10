@@ -2,8 +2,9 @@ import { InlineLink } from "~/components/link";
 import { urls } from "~/environment";
 import { VSekaiMark } from "~/components/vsekai-mark";
 
-import { Section, SectionTitle } from "../section";
 import { Footer } from "../footer";
+
+import { Section, SectionTitle } from "./section";
 
 export default function LandingPage() {
 	return (

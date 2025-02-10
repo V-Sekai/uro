@@ -28,17 +28,17 @@ export const ChangeEmailButton: FC = () => {
 			<MutationForm
 				asChild
 				defaultVariables={{
-					email: user.email || "",
-					current_password: ""
+					current_password: "",
+					email: user.email || ""
 				}}
 				mutationFn={async ({ email, current_password }) => {
 					const { data, error } = await api.updateEmail({
-						path: {
-							user_id: "@me"
-						},
 						body: {
-							email,
-							current_password
+							current_password,
+							email
+						},
+						path: {
+							user_id: "me"
 						}
 					});
 

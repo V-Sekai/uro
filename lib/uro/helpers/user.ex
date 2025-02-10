@@ -1,25 +1,27 @@
 defmodule Uro.Helpers.User do
   @moduledoc """
-  User helper functions.
+  User helper functions, automatically imported by controllers.
   """
 
   import Uro.Helpers.UUID
 
+  alias Jason.Encoder.Uro.Session
   alias Uro.Accounts
   alias Uro.Accounts.User
-  alias Uro.Plug.Authentication
+  alias Uro.Session
+
+  def user_from_key(conn, "me") do
+    current_user(conn)
+  end
 
   def user_from_key(conn, key) do
-    current_user = Authentication.current_user(conn)
+    {:ok, self} = current_user(conn, optional: true)
 
     case key do
-      "@me" ->
-        current_user
-
       _
-      when key == current_user.id or
-             key == current_user.username ->
-        current_user
+      when key == self.id or
+             key == self.username ->
+        self
 
       _
       when is_uuid(key) ->
@@ -37,21 +39,43 @@ defmodule Uro.Helpers.User do
     end
   end
 
-  def current_user(conn, optional: false) do
-    case Authentication.current_user(conn) do
-      %User{} = user -> {:ok, user}
-      _ -> {:error, :invalid_credentials}
-    end
-  end
+  def current_user(conn, options \\ [])
 
-  def current_user(conn, optional: true) do
-    case Authentication.current_user(conn) do
-      %User{} = user -> {:ok, user}
-      _ -> {:ok, nil}
-    end
-  end
+  def current_user(%{assigns: %{current_user: nil}}, optional: true),
+    do: {:ok, nil}
 
-  def current_user(conn), do: current_user(conn, optional: false)
+  def current_user(%{assigns: %{current_user: nil}}, _),
+    do: {:error, :invalid_credentials}
+
+  def current_user(%{assigns: %{current_user: self}}, _),
+    do: {:ok, self}
+
+  def current_session(conn, options \\ [])
+
+  def current_session(%{assigns: %{current_user: nil}}, optional: true),
+    do: {:ok, nil}
+
+  def current_session(%{assigns: %{current_user: nil}}, _),
+    do: {:error, :invalid_credentials}
+
+  def current_session(
+        %{
+          assigns: %{
+            current_user: self,
+            access_token: access_token,
+            access_token_expires_in: expires_in
+          }
+        },
+        _
+      ),
+      do:
+        {:ok,
+         %Session{
+           access_token: access_token,
+           expires_in: expires_in,
+           token_type: "Bearer",
+           user: self
+         }}
 
   def user_confirmed_email(%User{email_confirmed_at: nil}),
     do: {:error, :forbidden, "Email not confirmed"}

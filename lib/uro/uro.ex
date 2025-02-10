@@ -30,10 +30,14 @@ defmodule Uro do
   def controller do
     quote do
       use Phoenix.Controller, namespace: Uro
+      use Uro.Helpers.API
+      use OpenApiSpex.ControllerSpecs
 
       import Plug.Conn
       import Uro.Gettext
-      alias Uro.Router.Helpers, as: Routes
+      import Uro.Helpers.User
+
+      # alias Uro.Router.Helpers, as: Routes
     end
   end
 
@@ -51,7 +55,7 @@ defmodule Uro do
 
       import Uro.ErrorHelpers
       import Uro.Gettext
-      alias Uro.Router.Helpers, as: Routes
+      # alias Uro.Router.Helpers, as: Routes
     end
   end
 
@@ -76,4 +80,15 @@ defmodule Uro do
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
   end
+
+  require Protocol
+
+  Protocol.derive(Inspect, Plug.Conn,
+    only: [
+      :method,
+      :params,
+      :request_path,
+      :assigns
+    ]
+  )
 end

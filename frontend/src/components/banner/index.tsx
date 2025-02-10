@@ -8,7 +8,7 @@ import { Link } from "../link";
 
 import type { FC, PropsWithChildren, ReactNode } from "react";
 
-export const unknownBannerState = { id: null, closedAt: null };
+export const unknownBannerState = { closedAt: null, id: null };
 
 export interface BannerState {
 	id: string | null;
@@ -41,7 +41,6 @@ export function Banner({
 
 	return (
 		<div
-			// eslint-disable-next-line tailwindcss/no-custom-classname
 			className={twMerge(
 				"dark:light dark block overflow-hidden bg-tertiary-100 text-secondary-100 lg:text-center",
 				hoverable && "transition-all hover:bg-tertiary-200",
@@ -51,7 +50,6 @@ export function Banner({
 			<form className="relative mx-auto w-full max-w-screen-xl p-4 lg:items-center">
 				<Component
 					className="before:absolute before:inset-0"
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					href={href!}
 					onClick={onClick}
 				>

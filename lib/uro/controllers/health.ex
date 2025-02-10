@@ -1,6 +1,5 @@
 defmodule Uro.HealthController do
   use Uro, :controller
-  use OpenApiSpex.ControllerSpecs
 
   alias OpenApiSpex.Schema
 
@@ -19,7 +18,10 @@ defmodule Uro.HealthController do
             services: %Schema{
               type: :object,
               properties: %{
-                uro: %Schema{type: :string}
+                uro: %Schema{
+                  type: :string,
+                  enum: ["healthy", "unhealthy"]
+                }
               }
             }
           }
@@ -29,6 +31,6 @@ defmodule Uro.HealthController do
   )
 
   def index(conn, _params) do
-    json(conn, %{services: %{uro: "ok"}})
+    json(conn, %{services: %{uro: "healthy"}})
   end
 end

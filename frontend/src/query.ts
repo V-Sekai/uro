@@ -14,12 +14,12 @@ export const getQueryClient = cache(() => {
 
 	return (_queryClient = new QueryClient({
 		defaultOptions: {
-			queries: {
-				staleTime: 60 * 1000
-			},
 			dehydrate: {
 				shouldDehydrateQuery: (query) =>
 					defaultShouldDehydrateQuery(query) || query.state.status === "pending"
+			},
+			queries: {
+				staleTime: 60 * 1000
 			}
 		}
 	}));
@@ -44,13 +44,6 @@ export function dehydrateAll(queryClient: QueryClient) {
 		shouldDehydrateQuery: () => true
 	});
 
-	console.log(
-		dehydratedState.queries.map(({ queryKey: key, state: { data } }) => ({
-			key,
-			value: data
-		}))
-	);
-
 	return dehydratedState;
 }
 
@@ -65,12 +58,6 @@ export function dehydrateMany(
 		shouldDehydrateQuery: (options) => queryHashs.has(options.queryHash)
 	});
 
-	console.log(
-		dehydratedState.queries.map(({ queryKey: key, state: { data } }) => ({
-			key,
-			value: data
-		}))
-	);
 	return dehydratedState;
 }
 

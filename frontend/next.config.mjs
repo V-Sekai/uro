@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	output: "standalone",
+	eslint: {
+		ignoreDuringBuilds: true
+	},
 	experimental: {
 		// reactCompiler: true,
 		// turbotrace: {}
@@ -8,12 +10,13 @@ const nextConfig = {
 	images: {
 		unoptimized: true
 	},
+	output: "standalone",
 	rewrites: async () => {
 		return {
 			afterFiles: [
 				{
-					source: "/@:username/:path*",
-					destination: "/user/:username/:path*"
+					destination: "/user/:username/:path*",
+					source: "/@:username/:path*"
 				}
 			]
 		};

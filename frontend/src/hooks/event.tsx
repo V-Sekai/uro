@@ -16,7 +16,7 @@ const EventContext = createContext(
 	}
 );
 
-export function useEvent(event: string, callback: () => void) {
+export function useEvent(event: string, _callback: () => void) {
 	const { listen } = use(EventContext);
 	const id = useId();
 
@@ -25,7 +25,7 @@ export function useEvent(event: string, callback: () => void) {
 
 export const EventProvider: FC<PropsWithChildren> = ({ children }) => {
 	const [subscribers, setSubscribers] = useState<Record<string, string>>({});
-	console.log(subscribers);
+	// console.log(subscribers);
 
 	const listen = useCallback((id: string, event: string) => {
 		setSubscribers((previous) => ({ ...previous, [id]: event }));
@@ -37,7 +37,7 @@ export const EventProvider: FC<PropsWithChildren> = ({ children }) => {
 	}, []);
 
 	return (
-		<EventContext.Provider value={{ subscribers, listen }}>
+		<EventContext.Provider value={{ listen, subscribers }}>
 			{children}
 		</EventContext.Provider>
 	);

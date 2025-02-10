@@ -1,7 +1,5 @@
 defmodule Uro.MapController do
   use Uro, :controller
-  use OpenApiSpex.ControllerSpecs
-  use Uro.Helpers.API
 
   alias OpenApiSpex.Schema
   alias Uro.UserContent
@@ -25,24 +23,12 @@ defmodule Uro.MapController do
 
   operation(:show,
     operation_id: "getMap",
-    summary: "Get a specific map.",
-    parameters: [
-      id: [
-        in: :path,
-        description: "The User ID. Use `@me` to get the current user.",
-        schema: %Schema{type: :string, default: "@me"}
-      ]
-    ],
+    summary: "Get Map",
     responses: [
       ok: {
         "",
         "application/json",
         %Schema{}
-      },
-      not_found: {
-        "User not found",
-        "application/json",
-        %Schema{type: :null}
       }
     ]
   )

@@ -1,57 +1,54 @@
 defmodule Uro.Accounts.UserPrivilegeRuleset do
-  @moduledoc false
-
-  alias Uro.Accounts.User
-  alias Uro.Repo
+  @moduledoc """
+  A user's privilege ruleset, defining what they can do.
+  """
 
   use Ecto.Schema
+
   import Ecto.Changeset
 
-  @derive {Jason.Encoder,
-           only: [
-             :is_admin,
-             :can_upload_avatars,
-             :can_upload_maps,
-             :can_upload_props
-           ]}
+  alias OpenApiSpex.Schema
 
   schema "user_privilege_rulesets" do
-    belongs_to :user, Uro.Accounts.User, foreign_key: :user_id, type: :binary_id
+    belongs_to(:user, Uro.Accounts.User, foreign_key: :user_id, type: :binary_id)
 
-    field :is_admin, :boolean, default: false
-    field :can_upload_avatars, :boolean, default: false
-    field :can_upload_maps, :boolean, default: false
-    field :can_upload_props, :boolean, default: false
+    field(:is_admin, :boolean, default: false)
+    field(:can_upload_avatars, :boolean, default: false)
+    field(:can_upload_maps, :boolean, default: false)
+    field(:can_upload_props, :boolean, default: false)
 
     timestamps()
   end
 
-  defmodule JSONSchema do
-    @moduledoc """
-      A user's privilege ruleset, defining what they can do.
-    """
+  @json_schema %Schema{
+    title: "UserPrivilegeRuleset",
+    description: @moduledoc,
+    type: :object,
+    required: [
+      :is_admin,
+      :can_upload_avatars,
+      :can_upload_maps,
+      :can_upload_props
+    ],
+    properties: %{
+      is_admin: %Schema{type: :boolean},
+      can_upload_avatars: %Schema{type: :boolean},
+      can_upload_maps: %Schema{type: :boolean},
+      can_upload_props: %Schema{type: :boolean}
+    }
+  }
 
-    use Uro.JSONSchema
-    alias OpenApiSpex.Schema
+  def json_schema(), do: @json_schema
 
-    OpenApiSpex.schema(%{
-      title: "UserPrivilegeRuleset",
-      description: @moduledoc,
-      type: :object,
-      required: [
-        :is_admin,
-        :can_upload_avatars,
-        :can_upload_maps,
-        :can_upload_props
-      ],
-      properties: %{
-        is_admin: %Schema{type: :boolean},
-        can_upload_avatars: %Schema{type: :boolean},
-        can_upload_maps: %Schema{type: :boolean},
-        can_upload_props: %Schema{type: :boolean}
-      }
-    })
-  end
+  def to_json_schema(%__MODULE__{} = user_privilege_ruleset),
+    do: %{
+      is_admin: user_privilege_ruleset.is_admin,
+      can_upload_avatars: user_privilege_ruleset.can_upload_avatars,
+      can_upload_maps: user_privilege_ruleset.can_upload_maps,
+      can_upload_props: user_privilege_ruleset.can_upload_props
+    }
+
+  def to_json_schema(_), do: nil
 
   def admin_changeset(user_privilege_ruleset_or_changeset, attrs) do
     cast(user_privilege_ruleset_or_changeset, attrs, [
@@ -61,9 +58,5 @@ defmodule Uro.Accounts.UserPrivilegeRuleset do
       :can_upload_maps,
       :can_upload_props
     ])
-  end
-
-  def associate(%User{} = user) do
-    Repo.preload(user, :user_privilege_ruleset)
   end
 end

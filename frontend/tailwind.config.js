@@ -7,26 +7,27 @@ export default {
 		"./src/app/**/*.{js,ts,jsx,tsx,mdx}"
 	],
 	darkMode: "class",
+	plugins: [require("tailwindcss-animate")],
 	theme: {
 		extend: {
 			colors: {
-				tertiary: {
-					0: "var(--tertiary-0)",
-					50: "var(--tertiary-50)",
-					100: "var(--tertiary-100)",
-					200: "var(--tertiary-200)",
-					300: "var(--tertiary-300)",
-					400: "var(--tertiary-400)",
-					500: "var(--tertiary-500)",
-					600: "var(--tertiary-600)",
-					700: "var(--tertiary-700)",
-					800: "var(--tertiary-800)",
-					900: "var(--tertiary-900)",
-					950: "var(--tertiary-950)"
-				},
 				secondary: {
-					0: "var(--secondary-0)",
-					100: "var(--secondary-100)"
+					0: "rgb(var(--secondary-0))",
+					100: "rgb(var(--secondary-100))"
+				},
+				tertiary: {
+					0: "rgb(var(--tertiary-0))",
+					100: "rgb(var(--tertiary-100))",
+					200: "rgb(var(--tertiary-200))",
+					300: "rgb(var(--tertiary-300))",
+					400: "rgb(var(--tertiary-400))",
+					50: "rgb(var(--tertiary-50))",
+					500: "rgb(var(--tertiary-500))",
+					600: "rgb(var(--tertiary-600))",
+					700: "rgb(var(--tertiary-700))",
+					800: "rgb(var(--tertiary-800))",
+					900: "rgb(var(--tertiary-900))",
+					950: "rgb(var(--tertiary-950))"
 				}
 			},
 			opacity: {
@@ -37,9 +38,8 @@ export default {
 			}
 		},
 		fontWeight: {
-			normal: "400",
-			medium: "500"
+			medium: "500",
+			normal: "400"
 		}
-	},
-	plugins: [require("tailwindcss-animate")]
+	}
 };
