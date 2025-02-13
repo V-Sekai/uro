@@ -77,8 +77,11 @@ config :uro, Uro.Endpoint,
       |> Helpers.get_env("4000")
       |> String.to_integer()
   ],
-  secret_key_base: Helpers.get_env("PHOENIX_KEY_BASE",
-      "bNDe+pg86uL938fQA8QGYCJ4V7fE5RAxoQ8grq9drPpO7mZ0oEMSNapKLiA48smR")
+  secret_key_base:
+    Helpers.get_env(
+      "PHOENIX_KEY_BASE",
+      "bNDe+pg86uL938fQA8QGYCJ4V7fE5RAxoQ8grq9drPpO7mZ0oEMSNapKLiA48smR"
+    )
 
 # pubsub_server: Uro.PubSub,
 # live_view: [signing_salt: "0dBPUwA2"]

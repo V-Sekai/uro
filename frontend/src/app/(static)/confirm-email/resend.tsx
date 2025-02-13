@@ -18,13 +18,16 @@ export const ResendButton: FC = () => {
 			if (error) throw error;
 		}
 	});
+	const handleClick = () => {
+		mutate();
+	};
 
 	return (
 		<Button
 			className="w-fit"
 			disabled={status === "success"}
 			pending={isPending}
-			onClick={mutate}
+			onClick={handleClick}
 		>
 			{status === "success" ? (
 				<>

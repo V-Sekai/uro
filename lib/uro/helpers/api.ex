@@ -42,7 +42,6 @@ defmodule Uro.Helpers.API do
     }
   }
 
-
   def success_json_schema, do: @success_json_schema
 
   @doc """

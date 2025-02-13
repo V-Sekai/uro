@@ -169,7 +169,7 @@ defmodule Uro.AuthenticationController do
     Endpoint.public_url("login/#{provider}/callback")
   end
 
-  operation(:get_session,
+  operation(:get_current_session,
     operation_id: "session",
     summary: "Current Session",
     description: "Get the current session.",
