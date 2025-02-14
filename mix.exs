@@ -89,6 +89,9 @@ defmodule Uro.MixProject do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
+      "uro.apigen": [
+        "openapi.spec.json --spec Uro.OpenAPI.Specification --pretty --vendor-extensions=false ./frontend/src/__generated/openapi.json"
+      ],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
