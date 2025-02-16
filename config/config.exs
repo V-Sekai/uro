@@ -103,12 +103,7 @@ config :uro, :stale_shard_cutoff,
 
 config :uro, :stale_shard_interval, 30 * 24 * 60 * 60 * 1000
 
-config :uro, Uro.Turnstile,
-  secret_key:
-    get_optional_env.("TURNSTILE_SECRET_KEY") ||
-      Logger.warning(
-        "Turnstile (a reCaptcha alternative) is disabled because the environment variable TURNSTILE_SECRET_KEY is not set. For more information, see https://developers.cloudflare.com/turnstile/get-started/."
-      )
+config :uro, Uro.Turnstile, secret_key: get_optional_env.("TURNSTILE_SECRET_KEY")
 
 config :uro, :pow,
   user: Uro.Accounts.User,
