@@ -11,6 +11,16 @@ services:
       - ./lib:/app/lib
       - ./config:/app/config
       - ./priv:/app/priv
+    links:
+      - database
+      - redis
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+      redis:
+        condition: service_healthy
+        restart: true
 
   nextjs:
     extends:
@@ -19,10 +29,9 @@ services:
     build:
       args:
         NODE_ENV: development
-    entrypoint: npm run dev
     user: "root"
-    volumes:
-      - ./frontend:/app
+    depends_on:
+      - uro
 
   database:
     extends:
@@ -38,6 +47,11 @@ services:
     extends:
       file: docker-compose.yml
       service: caddy
+    volumes:
+      - ./Caddyfile.development:/etc/caddy/Caddyfile
+    depends_on:
+      - uro
+      - nextjs
 
 networks:
   uro:

@@ -30,6 +30,8 @@ services:
   uro:
     build:
       context: .
+      args:
+        MIX_ENV: prod
       tags:
         - "uro:latest"
     restart: always
