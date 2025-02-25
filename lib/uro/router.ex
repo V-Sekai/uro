@@ -28,6 +28,23 @@ defmodule Uro.Router do
     plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
   end
 
+  pipeline :authenticated_admin do
+    plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
+    plug(Uro.Plug.RequireAdmin)
+  end
+
+  pipeline :dashboard_avatars do
+    plug(Uro.Plug.RequireAvatarUploadPermission)
+  end
+
+  pipeline :dashboard_maps do
+    plug(Uro.Plug.RequireMapUploadPermission)
+  end
+
+  pipeline :dashboard_props do
+    plug(Uro.Plug.RequirePropUploadPermission)
+  end
+
   if Mix.env() == :dev do
     pipeline :browser do
       plug(:accepts, ["html"])
@@ -67,10 +84,16 @@ defmodule Uro.Router do
     end
   end
 
-  # resources("/avatars", UserContent.AvatarController, only: [:show])
-  resources("/maps", Uro.MapController, only: [:show])
+  resources("/avatars", Uro.AvatarController, only: [:index, :show])
+  resources("/maps", Uro.MapController, only: [:index, :show])
 
   resources("/shards", Uro.ShardController, only: [:index, :create, :update, :delete])
+
+  scope "/admin" do
+    pipe_through([:authenticated_admin])
+
+    get("/", Uro.AdminController, :status)
+  end
 
   scope "/users" do
     post "/", Uro.UserController, :create
@@ -98,5 +121,37 @@ defmodule Uro.Router do
         )
       end
     end
+  end
+
+  scope "/dashboard" do
+    pipe_through([:authenticated])
+
+    get("/", Uro.AuthenticationController, :get_current_session)
+    delete("/", Uro.AuthenticationController, :logout)
+
+    scope "/avatars" do
+      pipe_through([:dashboard_avatars])
+
+      get "/", Uro.AvatarController, :indexUploads
+      get "/:id", Uro.AvatarController, :showUpload
+      post "/", Uro.AvatarController, :create
+      put "/:id", Uro.AvatarController, :update
+      delete "/:id", Uro.AvatarController, :delete
+    end
+
+    scope "/maps" do
+      pipe_through([:dashboard_maps])
+
+      get "/", Uro.MapController, :indexUploads
+      get "/:id", Uro.MapController, :showUpload
+      post "/", Uro.MapController, :create
+      put "/:id", Uro.MapController, :update
+      delete "/:id", Uro.MapController, :delete
+    end
+
+    # scope "/props" do
+    #  pipe_through([:dashboard_props])
+    #  get "/", Uro.PropController, :index
+    # end
   end
 end
