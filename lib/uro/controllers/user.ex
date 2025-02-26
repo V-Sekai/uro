@@ -52,6 +52,31 @@ defmodule Uro.UserController do
     end
   end
 
+  operation(:showCurrent,
+    operation_id: "getUserCurrent",
+    summary: "Get Current User",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        User.json_schema()
+      },
+      not_found: {
+        "User not found",
+        "application/json",
+        error_json_schema()
+      }
+    ]
+  )
+
+  def showCurrent(conn, _params) do
+    with {:ok, user} <- user_from_key(conn, "me") do
+      conn
+      |> put_status(:ok)
+      |> json(User.to_json_schema(user, conn))
+    end
+  end
+
   operation(:index,
     operation_id: "listUsers",
     summary: "List Users",
@@ -116,6 +141,61 @@ defmodule Uro.UserController do
     Repo.transaction(fn ->
       with {:ok, _} <- Turnstile.verify_captcha(conn),
            {:ok, user} <- Accounts.create(params),
+           :ok <- Accounts.send_confirmation_email(user),
+           conn <- Pow.Plug.create(conn, user) do
+        {user, conn}
+      else
+        any ->
+          Repo.rollback(any)
+      end
+    end)
+    |> case do
+      {:ok, {_, conn}} ->
+        {:ok, session} = current_session(conn)
+
+        json(
+          conn,
+          Session.to_json_schema(session)
+        )
+
+      {:error, conn} ->
+        conn
+    end
+  end
+
+  operation(:createClient,
+    operation_id: "signupClient",
+    summary: "Create an Account from Game client request",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        Session.json_schema()
+      },
+      unprocessable_entity: {
+        "",
+        "application/json",
+        error_json_schema()
+      }
+    ]
+  )
+
+  def createClient(conn, %{"user" => user_params, "apiKey" => api_key}) do
+    create_params = %{
+      "username" => Map.get(user_params, "username"),
+      "display_name" => Map.get(user_params, "username"),
+      "email" => Map.get(user_params, "email"),
+      "password" => Map.get(user_params, "password")
+    }
+
+    Repo.transaction(fn ->
+      with :ok <-
+             (fn ->
+                if api_key == System.get_env("SIGNUP_API_KEY") do
+                  :ok
+                end
+              end).(),
+           {:ok, user} <- Accounts.create(create_params),
            :ok <- Accounts.send_confirmation_email(user),
            conn <- Pow.Plug.create(conn, user) do
         {user, conn}
