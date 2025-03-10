@@ -87,4 +87,14 @@ defmodule Uro.Helpers.User do
       message: "must be yourself"
     )
   end
+
+  def is_session_user?(conn) do
+    user = user_from_key(conn, "me")
+
+    case user do
+      {:ok, _result} -> true
+      {:error, _reason} -> false
+      _ -> false
+    end
+  end
 end

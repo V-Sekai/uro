@@ -122,6 +122,9 @@ defmodule Uro.Plug.Authentication do
       ["Bearer" <> " " <> access_token | _] ->
         {:ok, access_token}
 
+      [access_token | _] ->
+        {:ok, access_token}
+
       _ ->
         case conn.cookies do
           %{"session" => access_token} when is_binary(access_token) ->

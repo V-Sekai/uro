@@ -8,7 +8,9 @@ defmodule Uro.AuthenticationController do
   alias PowAssent.Plug
   alias Uro.Accounts
   alias Uro.Accounts.User
+  alias Uro.Accounts.UserPrivilegeRuleset
   alias Uro.Endpoint
+  alias Uro.Helpers
   alias Uro.Session
 
   action_fallback(Uro.FallbackController)
@@ -291,6 +293,93 @@ defmodule Uro.AuthenticationController do
     end
   end
 
+  operation(:loginClient,
+    operation_id: "loginClient",
+    summary: "Login Game Client",
+    description: "Create a new session for game client.",
+    request_body: {
+      "",
+      "application/json",
+      %Schema{
+        title: "LoginRequestClient",
+        description: "Request payload for logging in.",
+        type: :object,
+        required: [:user],
+        properties: %{
+          user: %Schema{
+            title: "LoginCredentials",
+            description: "A set of credentials for logging in.",
+            oneOf: [
+              %Schema{
+                title: "UsernameAndPassword",
+                type: :object,
+                required: [:username, :password],
+                properties: %{
+                  username: User.sensitive_json_schema().properties.username,
+                  password: %Schema{type: :string}
+                }
+              },
+              %Schema{
+                title: "EmailAndPassword",
+                type: :object,
+                required: [:email, :password],
+                properties: %{
+                  email: User.sensitive_json_schema().properties.email,
+                  password: %Schema{type: :string}
+                }
+              },
+              %Schema{
+                title: "UsernameOrEmailAndPassword",
+                type: :object,
+                required: [:username_or_email, :password],
+                properties: %{
+                  username_or_email: %Schema{type: :string},
+                  password: %Schema{type: :string}
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        Session.json_schema()
+      },
+      unauthorized: {
+        "Invalid credentials",
+        "application/json",
+        error_json_schema()
+      }
+    ]
+  )
+
+  def loginClient(conn, %{"user" => credentials}) do
+    conn
+    |> validate_credentials(credentials)
+    |> case do
+      {:ok, conn} ->
+        user = Helpers.Auth.get_current_user(conn)
+        ruleset = UserPrivilegeRuleset.to_json_schema(user.user_privilege_ruleset)
+
+        conn
+        |> put_status(200)
+        |> json(%{
+          data: %{
+            access_token: conn.assigns[:access_token],
+            renewal_token: conn.assigns[:access_token],
+            user: User.to_json_schema(user, conn),
+            user_privilege_ruleset: ruleset
+          }
+        })
+
+      {:error, _} ->
+        {:error, :invalid_credentials}
+    end
+  end
+
   operation(:logout,
     operation_id: "logout",
     summary: "Logout",
@@ -307,6 +396,53 @@ defmodule Uro.AuthenticationController do
   def logout(conn, _) do
     conn
     |> Pow.Plug.delete()
-    |> json(nil)
+    |> json(%{data: %{}})
+
+    # TODO: Remove '{ data : {} }' response requirement from game client, use nil
+  end
+
+  operation(:renew,
+    operation_id: "renew",
+    summary: "Renew Session",
+    description: "Renew the current session token.",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        Session.json_schema()
+      },
+      unauthorized: {
+        "",
+        "application/json",
+        error_json_schema()
+      }
+    ]
+  )
+
+  # All tokens are in permanent cache storage and renewal is handled in fetch(),
+  # so this is only for game client compatibility
+  def renew(conn, _params) do
+    config = Pow.Plug.fetch_config(conn)
+
+    conn
+    |> Uro.Plug.Authentication.fetch(config)
+    |> case do
+      {conn, nil} ->
+        conn
+        |> put_status(401)
+        |> json(%{error: %{status: 401, message: "Invalid token"}})
+
+      {conn, user} ->
+        ruleset = UserPrivilegeRuleset.to_json_schema(user.user_privilege_ruleset)
+
+        json(conn, %{
+          data: %{
+            access_token: conn.assigns[:access_token],
+            renewal_token: conn.assigns[:access_token],
+            user: User.to_json_schema(user, conn),
+            user_privilege_ruleset: ruleset
+          }
+        })
+    end
   end
 end
