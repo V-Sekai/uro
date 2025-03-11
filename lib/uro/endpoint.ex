@@ -9,6 +9,12 @@ defmodule Uro.Endpoint do
     plug(Phoenix.CodeReloader)
   end
 
+  plug(Plug.Static,
+    at: "/uploads",
+    from: Path.expand("./uploads"),
+    gzip: false
+  )
+
   plug(Plug.RequestId, assign_as: :request_id)
   plug(Plug.Telemetry, event_prefix: [:phoenix, :endpoint])
 

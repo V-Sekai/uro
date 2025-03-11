@@ -34,10 +34,11 @@ Repo.transaction(fn ->
           password_confirmation: "userpassword",
           email_confirmed_at: current_time
         })
+        |> User.confirm_email_changeset()
         |> Repo.insert!()
       user ->
         user
-        |> User.admin_changeset(%{email_confirmed_at: current_time})
+        |> User.confirm_email_changeset()
         |> Repo.update!()
     end
 
@@ -67,10 +68,11 @@ Repo.transaction(fn ->
           password_confirmation: "adminpassword",
           email_confirmed_at: current_time
         })
+        |> User.confirm_email_changeset()
         |> Repo.insert!()
       user ->
         user
-        |> User.admin_changeset(%{email_confirmed_at: current_time})
+        |> User.confirm_email_changeset()
         |> Repo.update!()
     end
 

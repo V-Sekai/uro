@@ -56,10 +56,11 @@ defmodule Uro.ShardController do
 
   def index(conn, _params) do
     shards = VSekai.list_fresh_shards()
+    shards_json = Enum.map(shards, fn x -> Shard.to_json_schema(x) end)
 
     conn
     |> put_status(200)
-    |> json(shards)
+    |> json(%{data: %{shards: shards_json}})
   end
 
   operation(:create,
@@ -101,7 +102,7 @@ defmodule Uro.ShardController do
       {:ok, shard} ->
         conn
         |> put_status(200)
-        |> json(%{id: shard.id})
+        |> json(%{data: %{id: to_string(shard.id)}})
 
       {:error, %Ecto.Changeset{}} ->
         json_error(conn)
@@ -136,7 +137,7 @@ defmodule Uro.ShardController do
         {:ok, shard} ->
           conn
           |> put_status(200)
-          |> json(shard)
+          |> json(%{data: %{id: to_string(shard.id)}})
 
         {:error, %Ecto.Changeset{}} ->
           json_error(conn)
@@ -175,6 +176,7 @@ defmodule Uro.ShardController do
       Uro.VSekai.Shard
       |> Repo.get!(id)
       |> Repo.preload(:user)
+      |> Repo.preload(user: [:user_privilege_ruleset])
 
     if can_connection_modify_shard(conn, shard) do
       case VSekai.delete_shard(shard) do
