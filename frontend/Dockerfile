@@ -1,5 +1,6 @@
 # Get generated openapi.json
-FROM uro AS openapi
+ARG uro_image=uro
+FROM $uro_image AS openapi
 
 ARG NODE_ENV=production
 
