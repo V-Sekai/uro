@@ -1,20 +1,40 @@
-version: "3.9"
+version: "4.0"
 services:
   database:
-    image: postgres:16.6-alpine
+    image: cockroachdb/cockroach:v25.1.1
     restart: always
     shm_size: 128mb
+    command: start-single-node --accept-sql-without-tls
     environment:
-      POSTGRES_USER: vsekai
-      POSTGRES_PASSWORD: vsekai
+      COCKROACH_DATABASE: vsekai
+      COCKROACH_USER: vsekai
+      COCKROACH_PASSWORD: vsekai
     volumes:
-      - "./postgres:/var/lib/postgresql/data"
+      - "./cockroach:/cockroach/cockroach-data"
     ports:
-      - "5432:5432"
+      - "26257:26257"
+      - "8081:8080"  # Dashboard
     healthcheck:
-      test: pg_isready -U vsekai
-      interval: 5s
-      timeout: 5s
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health?ready=1"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+      
+  #database-postgres:
+  #  image: postgres:16.6-alpine
+  #  restart: always
+  #  shm_size: 128mb
+  #  environment:
+  #    POSTGRES_USER: vsekai
+  #    POSTGRES_PASSWORD: vsekai
+  #  volumes:
+  #    - "./postgres:/var/lib/postgresql/data"
+  #  ports:
+  #    - "5432:5432"
+  #  healthcheck:
+  #    test: pg_isready -U vsekai
+  #    interval: 5s
+  #    timeout: 5s
 
   redis:
     image: redis:7.4-alpine
