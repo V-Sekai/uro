@@ -10,7 +10,5 @@ defmodule Uro.Repo.Migrations.CreateUserIdentities do
 
       timestamps()
     end
-
-    create unique_index(:user_identities, [:uid, :provider])
   end
 end

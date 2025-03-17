@@ -10,7 +10,5 @@ defmodule Uro.Repo.Migrations.CreateIdentityProofs do
 
       timestamps()
     end
-
-    create index(:identity_proofs, [:user_from_id, :user_to_id])
   end
 end

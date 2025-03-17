@@ -50,7 +50,7 @@ config :uro,
   root_origin: root_origin
 
 config :uro, Uro.Repo,
-  adapter: Ecto.Adapaters.Postgres,
+  adapter: Ecto.Adapters.Postgres,
   url: Helpers.get_env("DATABASE_URL", "postgresql://vsekai:vsekai@database:5432/vsekai"),
   username: "postgres",
   password: "postgres",
@@ -58,7 +58,8 @@ config :uro, Uro.Repo,
   database: "uro-dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  pool_size: 10,
+  migration_lock: false
 
 config :uro, Redix, url: Helpers.get_env("REDIS_URL", "redis://redis:6379")
 
