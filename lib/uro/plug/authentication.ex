@@ -21,8 +21,7 @@ defmodule Uro.Plug.Authentication do
 
     with {:ok, signed_access_token} <- fetch_access_token(conn),
          {:ok, access_token} <- verify_token(conn, signed_access_token, config),
-         {user, metadata} <-
-           PersistentSessionCache.get(store_config, access_token) |> IO.inspect(),
+         {user, metadata} <- PersistentSessionCache.get(store_config, access_token),
          expires_in <- metadata[:expires_at] |> DateTime.diff(DateTime.utc_now(), :millisecond),
          conn <-
            conn
