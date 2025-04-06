@@ -33,6 +33,10 @@ defmodule Uro.Router do
     plug(Uro.Plug.RequireAdmin)
   end
 
+  pipeline :authenticated_shared_file do
+    plug(Uro.Plug.RequireSharedFileUploadPermission)
+  end
+
   pipeline :authenticated_user do
     plug(Uro.Plug.ChooseAuth)
   end
@@ -121,6 +125,22 @@ defmodule Uro.Router do
     get("/", Uro.AdminController, :status)
   end
 
+  scope "/storage" do
+    scope "/tag" do
+      get "/:tag", Uro.StorageController, :indexByTag
+    end
+
+    get "/:id", Uro.StorageController, :show
+
+    ################## Auth ##################
+    pipe_through([:authenticated_shared_file])
+
+    get "/", Uro.StorageController, :index
+    post "/", Uro.StorageController, :create
+    put "/:id", Uro.StorageController, :update
+    delete "/:id", Uro.StorageController, :delete
+  end
+
   scope "/users" do
     post "/", Uro.UserController, :create
 
@@ -175,9 +195,14 @@ defmodule Uro.Router do
       delete "/:id", Uro.MapController, :delete
     end
 
-    # scope "/props" do
-    #  pipe_through([:dashboard_props])
-    #  get "/", Uro.PropController, :index
-    # end
+    scope "/props" do
+      pipe_through([:dashboard_props])
+
+      get "/", Uro.PropController, :indexUploads
+      get "/:id", Uro.PropController, :showUpload
+      post "/", Uro.PropController, :create
+      put "/:id", Uro.PropController, :update
+      delete "/:id", Uro.PropController, :delete
+    end
   end
 end

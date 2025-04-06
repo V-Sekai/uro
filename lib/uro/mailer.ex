@@ -6,6 +6,25 @@ defmodule Uro.Mailer do
 
   alias Uro.Accounts.User
 
+  defp get_adapter() do
+    if Application.get_env(:uro, Uro.Mailer)[:adapter] == Swoosh.Adapters.Sendgrid do
+      case System.get_env("SENDGRID_API_KEY") do
+        nil ->
+          Logger.warning("SENDGRID_API_KEY not found. Falling back to mail Logger")
+          Swoosh.Adapters.Logger
+
+        "" ->
+          Logger.warning("SENDGRID_API_KEY is empty. Falling back to mail Logger")
+          Swoosh.Adapters.Logger
+
+        _ ->
+          Application.get_env(:uro, Uro.Mailer)[:adapter]
+      end
+    else
+      Application.get_env(:uro, Uro.Mailer)[:adapter]
+    end
+  end
+
   def create_email(subject: subject, text: text, html: html) do
     %Swoosh.Email{}
     |> from({"V-Sekai", "no-reply@vsekai.com"})
@@ -20,9 +39,16 @@ defmodule Uro.Mailer do
 
   def deliver_to(%Swoosh.Email{} = email, %User{display_name: display_name, email: email_address})
       when is_binary(email_address) do
-    email
-    |> to({display_name, email_address})
-    |> deliver()
+    adapter = get_adapter()
+
+    if adapter == Swoosh.Adapters.Logger do
+      Logger.warning("Emails are not sent when using Swoosh.Adapters.Logger.")
+      {:ok, %{}}
+    else
+      email
+      |> to({display_name, email_address})
+      |> deliver(adapter: adapter)
+    end
   end
 
   def confirmation_email(confirmation_token) when is_binary(confirmation_token) do

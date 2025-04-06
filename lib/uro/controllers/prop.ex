@@ -1,4 +1,4 @@
-defmodule Uro.AvatarController do
+defmodule Uro.PropController do
   use Uro, :controller
 
   alias OpenApiSpex.Schema
@@ -6,11 +6,11 @@ defmodule Uro.AvatarController do
 
   action_fallback Uro.FallbackController
 
-  tags(["avatars"])
+  tags(["props"])
 
   operation(:index,
-    operation_id: "listAvatars",
-    summary: "List Avatars",
+    operation_id: "listProps",
+    summary: "List Props",
     responses: [
       ok: {
         "",
@@ -21,14 +21,14 @@ defmodule Uro.AvatarController do
   )
 
   def index(conn, _params) do
-    avatars = UserContent.list_public_avatars()
+    props = UserContent.list_public_props()
 
     conn
     |> put_status(200)
     |> json(%{
       data: %{
-        avatars:
-          Uro.Helpers.UserContentHelper.get_api_user_content_list(avatars, %{
+        props:
+          Uro.Helpers.UserContentHelper.get_api_user_content_list(props, %{
             merge_uploader_id: true
           })
       }
@@ -36,8 +36,8 @@ defmodule Uro.AvatarController do
   end
 
   operation(:indexUploads,
-    operation_id: "listAvatarsUploads",
-    summary: "List Avatars uploaded by logged in user",
+    operation_id: "listPropsUploads",
+    summary: "List Props uploaded by logged in user",
     responses: [
       ok: {
         "",
@@ -49,14 +49,14 @@ defmodule Uro.AvatarController do
 
   def indexUploads(conn, _params) do
     user = Uro.Helpers.Auth.get_current_user(conn)
-    avatars = UserContent.list_avatars_uploaded_by(user)
+    props = UserContent.list_props_uploaded_by(user)
 
     conn
     |> put_status(200)
     |> json(%{
       data: %{
-        avatars:
-          Uro.Helpers.UserContentHelper.get_api_user_content_list(avatars, %{
+        props:
+          Uro.Helpers.UserContentHelper.get_api_user_content_list(props, %{
             merge_uploader_id: true
           })
       }
@@ -64,8 +64,8 @@ defmodule Uro.AvatarController do
   end
 
   operation(:show,
-    operation_id: "getAvatar",
-    summary: "Get Avatar",
+    operation_id: "getProp",
+    summary: "Get Prop",
     responses: [
       ok: {
         "",
@@ -77,16 +77,16 @@ defmodule Uro.AvatarController do
 
   def show(conn, %{"id" => id}) do
     id
-    |> UserContent.get_avatar!()
+    |> UserContent.get_prop!()
     |> case do
-      %Uro.UserContent.Avatar{} = avatar ->
+      %Uro.UserContent.Prop{} = prop ->
         conn
         |> put_status(200)
         |> json(%{
           data: %{
-            avatar:
+            prop:
               Uro.Helpers.UserContentHelper.get_api_user_content(
-                avatar,
+                prop,
                 %{merge_uploader_id: true, merge_is_public: true}
               )
           }
@@ -101,8 +101,8 @@ defmodule Uro.AvatarController do
   end
 
   operation(:showUpload,
-    operation_id: "getAvatarUpload",
-    summary: "Get uploaded Avatar",
+    operation_id: "getPropUpload",
+    summary: "Get uploaded Prop",
     responses: [
       ok: {
         "",
@@ -115,15 +115,15 @@ defmodule Uro.AvatarController do
   def showUpload(conn, %{"id" => id}) do
     user = Uro.Helpers.Auth.get_current_user(conn)
 
-    case UserContent.get_avatar_uploaded_by_user!(id, user) do
-      %Uro.UserContent.Avatar{} = avatar ->
+    case UserContent.get_prop_uploaded_by_user!(id, user) do
+      %Uro.UserContent.Prop{} = prop ->
         conn
         |> put_status(200)
         |> json(%{
           data: %{
-            avatar:
+            prop:
               Uro.Helpers.UserContentHelper.get_api_user_content(
-                avatar,
+                prop,
                 %{merge_uploader_id: true, merge_is_public: true}
               )
           }
@@ -138,8 +138,8 @@ defmodule Uro.AvatarController do
   end
 
   operation(:create,
-    operation_id: "createAvatar",
-    summary: "Create Avatar",
+    operation_id: "createProp",
+    summary: "Create Prop",
     responses: [
       ok: {
         "",
@@ -149,24 +149,24 @@ defmodule Uro.AvatarController do
     ]
   )
 
-  def create(conn, %{"avatar" => avatar_params}) do
-    case UserContent.create_avatar(
+  def create(conn, %{"prop" => prop_params}) do
+    case UserContent.create_prop(
            Uro.Helpers.UserContentHelper.get_correct_user_content_params(
              conn,
-             avatar_params,
+             prop_params,
              "user_content_data",
              "user_content_preview"
            )
          ) do
-      {:ok, avatar} ->
+      {:ok, prop} ->
         conn
         |> put_status(200)
         |> json(%{
           data: %{
-            id: to_string(avatar.id),
-            avatar:
+            id: to_string(prop.id),
+            prop:
               Uro.Helpers.UserContentHelper.get_api_user_content(
-                avatar,
+                prop,
                 %{merge_uploader_id: true}
               )
           }
@@ -178,8 +178,8 @@ defmodule Uro.AvatarController do
   end
 
   operation(:update,
-    operation_id: "updateAvatar",
-    summary: "Update Avatar",
+    operation_id: "updateProp",
+    summary: "Update Prop",
     responses: [
       ok: {
         "",
@@ -189,20 +189,20 @@ defmodule Uro.AvatarController do
     ]
   )
 
-  def update(conn, %{"id" => id, "avatar" => avatar_params}) do
+  def update(conn, %{"id" => id, "prop" => prop_params}) do
     user = Uro.Helpers.Auth.get_current_user(conn)
-    avatar = UserContent.get_avatar_uploaded_by_user!(id, user)
+    prop = UserContent.get_prop_uploaded_by_user!(id, user)
 
-    case UserContent.update_avatar(avatar, avatar_params) do
-      {:ok, avatar} ->
+    case UserContent.update_prop(prop, prop_params) do
+      {:ok, prop} ->
         conn
         |> put_status(200)
         |> json(%{
           data: %{
-            id: to_string(avatar.id),
-            avatar:
+            id: to_string(prop.id),
+            prop:
               Uro.Helpers.UserContentHelper.get_api_user_content(
-                avatar,
+                prop,
                 %{merge_uploader_id: true}
               )
           }
@@ -214,8 +214,8 @@ defmodule Uro.AvatarController do
   end
 
   operation(:delete,
-    operation_id: "deleteAvatar",
-    summary: "Delete Avatar",
+    operation_id: "deleteProp",
+    summary: "Delete Prop",
     responses: [
       ok: {
         "",
@@ -228,10 +228,10 @@ defmodule Uro.AvatarController do
   def delete(conn, %{"id" => id}) do
     user = Uro.Helpers.Auth.get_current_user(conn)
 
-    case UserContent.get_avatar_uploaded_by_user!(id, user) do
-      %Uro.UserContent.Avatar{} = avatar ->
-        case UserContent.delete_avatar(avatar) do
-          {:ok, _avatar} ->
+    case UserContent.get_prop_uploaded_by_user!(id, user) do
+      %Uro.UserContent.Prop{} = prop ->
+        case UserContent.delete_prop(prop) do
+          {:ok, _prop} ->
             conn
             |> put_status(200)
             |> json(%{data: %{}})

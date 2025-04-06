@@ -16,10 +16,12 @@ defmodule Uro.Accounts.UserPrivilegeRuleset do
     field(:can_upload_avatars, :boolean, default: false)
     field(:can_upload_maps, :boolean, default: false)
     field(:can_upload_props, :boolean, default: false)
+    field(:can_upload_shared_files, :boolean, default: false)
 
     timestamps()
   end
 
+  # Don't show 'can_upload_shared_files' privilege status to clients in json
   @json_schema %Schema{
     title: "UserPrivilegeRuleset",
     description: @moduledoc,
@@ -56,7 +58,8 @@ defmodule Uro.Accounts.UserPrivilegeRuleset do
       :is_admin,
       :can_upload_avatars,
       :can_upload_maps,
-      :can_upload_props
+      :can_upload_props,
+      :can_upload_shared_files
     ])
   end
 end
