@@ -5,4 +5,3 @@ defmodule Uro.Repo.Migrations.RenameUsersInsertedAt do
     rename table(:users), :inserted_at, to: :created_at
   end
 end
-

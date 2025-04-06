@@ -4,6 +4,8 @@ defmodule Uro.MapController do
   alias OpenApiSpex.Schema
   alias Uro.UserContent
 
+  action_fallback Uro.FallbackController
+
   tags(["maps"])
 
   operation(:index,
@@ -170,17 +172,8 @@ defmodule Uro.MapController do
           }
         })
 
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
-        conn
-        |> put_status(500)
-        |> (fn conn ->
-              if Mix.env() == "dev" do
-                json(
-                  conn,
-                  %{changes: changes, errors: errors}
-                )
-              end
-            end).()
+      {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
+        {:error, changeset}
     end
   end
 
@@ -215,17 +208,8 @@ defmodule Uro.MapController do
           }
         })
 
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
-        conn
-        |> put_status(500)
-        |> (fn conn ->
-              if Mix.env() == "dev" do
-                json(
-                  conn,
-                  %{changes: changes, errors: errors}
-                )
-              end
-            end).()
+      {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
+        {:error, changeset}
     end
   end
 
@@ -248,23 +232,18 @@ defmodule Uro.MapController do
       %Uro.UserContent.Map{} = map ->
         case UserContent.delete_map(map) do
           {:ok, _map} ->
-            put_status(
-              conn,
-              200
-            )
+            conn
+            |> put_status(200)
+            |> json(%{data: %{}})
 
-          {:error, %Ecto.Changeset{}} ->
-            put_status(
-              conn,
-              500
-            )
+          {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
+            {:error, changeset}
         end
 
       _ ->
-        put_status(
-          conn,
-          200
-        )
+        conn
+        |> put_status(200)
+        |> json(%{data: %{}})
     end
   end
 end

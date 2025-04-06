@@ -24,6 +24,7 @@
   "email_checker": {:hex, :email_checker, "0.1.4", "6c9914039277da0810107e229ffc28c09b09af7663bfa1f85268fdb4ddc8f174", [:mix], [{:socket, "~> 0.3.1", [hex: :socket, repo: "hexpm", optional: false]}], "hexpm", "5f35d5d4ee3c8a789e92c4dd7916e1c1744c4ceb9a9661ae1b17a7a71fe9e5aa"},
   "escape": {:hex, :escape, "0.1.0", "548edab75e6e6938b1e199ef59cb8e504bcfd3bcf83471d4ae9a3c7a7a3c7d45", [:mix], [], "hexpm", "a5d8e92db4677155df54bc1306d401b5233875d570d474201db03cb3047491cd"},
   "ex_json_schema": {:hex, :ex_json_schema, "0.7.4", "09eb5b0c8184e5702bc89625a9d0c05c7a0a845d382e9f6f406a0fc1c9a8cc3f", [:mix], [], "hexpm", "45c67fa840f0d719a2b5578126dc29bcdc1f92499c0f61bcb8a3bcb5935f9684"},
+  "ex_marcel": {:hex, :ex_marcel, "0.1.0", "61116a255ed51e8d9ec65cb0018442bf37cadb2228d3bb90e3bbb6d3d11dcd34", [:mix], [], "hexpm", "48dfc497435a9c52c0e90c1e07d8ce7316a095dcec0e04d182e8250e493b72fb"},
   "ex_phone_number": {:hex, :ex_phone_number, "0.4.4", "8e994abe583496a3308cf56af013dca9b47a0424b0a9940af41cb0d66b848dd3", [:mix], [{:sweet_xml, "~> 0.7", [hex: :sweet_xml, repo: "hexpm", optional: false]}], "hexpm", "a59875692ec57b3392959a7740f3e9a5cb08da88bcaee4efd480c770f5bb0f2c"},
   "expo": {:hex, :expo, "0.5.2", "beba786aab8e3c5431813d7a44b828e7b922bfa431d6bfbada0904535342efe2", [:mix], [], "hexpm", "8c9bfa06ca017c9cb4020fabe980bc7fdb1aaec059fd004c2ab3bff03b1c599c"},
   "exqlite": {:git, "https://github.com/V-Sekai/elixir-mvsqlite.git", "5bd2584b68440721d3fc482767c64f1c26b8f9b7", []},

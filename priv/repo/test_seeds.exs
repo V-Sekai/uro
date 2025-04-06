@@ -82,7 +82,8 @@ Repo.transaction(fn ->
     is_admin: true,
     can_upload_avatars: true,
     can_upload_maps: true,
-    can_upload_props: true
+    can_upload_props: true,
+    can_upload_shared_files: true
   }
   UserPrivilegeRuleset
   |> Repo.get_by(user_id: admin_user.id)
