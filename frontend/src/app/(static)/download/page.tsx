@@ -35,7 +35,9 @@ export default function AboutPage() {
           <p>
             <InlineLink href="/sign-up">Register now</InlineLink> to reserve
             your name and to receive updates on future major releases. You
-            can also follow us on{" "}
+            can also join{" "}
+            <InlineLink href={urls.discord}>V-Sekai Discord Server</InlineLink>
+            or follow us on{" "}
             <InlineLink href={urls.twitter}>Twitter</InlineLink> for updates on
             the project.
           </p>
