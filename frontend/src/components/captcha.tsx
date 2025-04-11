@@ -13,7 +13,7 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { turnstileSiteKey } from "~/environment";
+import { getServerEnv } from "~/environment";
 import { MutationFormContext } from "~/hooks/form";
 import { useTheme } from "~/hooks/theme";
 
@@ -25,6 +25,7 @@ const CaptchaContent: FC<
 	CaptchaProps & { promise: Promise<Turnstile.Turnstile> }
 > = ({ onChange: _onChange, promise }) => {
 	const turnstile = use(promise);
+	const turnstileSiteKey = getServerEnv()?.turnstileSiteKey || "";
 
 	const { theme } = useTheme();
 	const reference = useRef<HTMLDivElement>(null);
