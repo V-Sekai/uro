@@ -26,58 +26,25 @@ interface serverEnvType {
 
 let envCache: serverEnvType | null = null;
 
+
 export const getServerEnv = (): serverEnvType | null => {
   if (envCache) {
     // console.log("Using cached env:", envCache);
     return envCache;
   }
 
-  // Server-side
-  if (typeof window === "undefined") {
-    const serverEnv = {
-        origin: environment<string>(
-            process.env.ORIGIN || process.env.NEXT_PUBLIC_ORIGIN,
-            "NEXT_PUBLIC_ORIGIN"
-        ),
-        apiOrigin: environment<string>( // API_ORIGIN is only used server-side
-            process.env.API_ORIGIN || process.env.NEXT_PUBLIC_API_ORIGIN,
-            "API_ORIGIN and or NEXT_PUBLIC_API_ORIGIN"
-        ),
-        turnstileSiteKey: environment<string>(
-            process.env.TURNSTILE_SITEKEY || process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY,
-            "NEXT_PUBLIC_TURNSTILE_SITEKEY"
-        )
-    };
+  const isServer = typeof window === "undefined";
+  const apiOriginKey = isServer ? "API_ORIGIN" : "NEXT_PUBLIC_API_ORIGIN";
 
-    envCache = serverEnv;
-    // console.log("Fetched environment on server side.");
-    return serverEnv;
-  }
-
-  // Client-side
   try {
-    //const xhr = new XMLHttpRequest();
-    //let timeout = setTimeout(function () {
-    //    xhr.abort();
-    //    console.error("Request timed out");
-    //}, 5000);
-	  
-    //xhr.open("GET", "/api/env", false); // Synchronous XMLHttpRequest
-    //xhr.send();
-    //clearTimeout(timeout);
-    const clientEnv = {
+    const serverEnv = {
       origin: environment<string>(env("NEXT_PUBLIC_ORIGIN"), "NEXT_PUBLIC_ORIGIN"),
-      apiOrigin: environment<string>(env("NEXT_PUBLIC_API_ORIGIN"), "NEXT_PUBLIC_API_ORIGIN"),
+      apiOrigin: environment<string>(env(apiOriginKey), apiOriginKey),
       turnstileSiteKey: environment<string>(env("NEXT_PUBLIC_TURNSTILE_SITEKEY"), "NEXT_PUBLIC_TURNSTILE_SITEKEY"),
     };
-    //if (xhr.status === 200) {
-    //  envCache = JSON.parse(xhr.responseText);
-    //  // console.log("Fetched serverEnv:", envCache);
-    //  return envCache;
-    //} else {
-    //  console.error(`Failed to fetch server environment: ${xhr.status}`);
-    //}
-    return clientEnv;
+    envCache = serverEnv;
+    // console.log(`Fetched environment on ${isServer ? "server" : "client"} side.`, serverEnv);
+    return serverEnv;
   } catch (error) {
     console.error("Error fetching server environment:", String(error));
   }
