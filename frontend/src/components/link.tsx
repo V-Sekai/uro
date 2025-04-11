@@ -9,13 +9,15 @@ import {
 } from "react";
 
 import { dataAttribute } from "~/element";
-import { firstPartyOrigins, origin } from "~/environment";
+import { getFirstPartyOrigins, getServerEnv } from "~/environment";
 
 export const Link = forwardRef<
 	ComponentRef<typeof LinkPrimitive>,
 	ComponentProps<typeof LinkPrimitive>
 >(({ href: _href, children, className, ...props }, reference) => {
 	const { href, external } = useMemo(() => {
+		const origin = getServerEnv()?.origin || "";
+		const firstPartyOrigins = getFirstPartyOrigins();
 		const url = new URL(_href.toString(), origin);
 		const href =
 			url.origin === origin ? url.href.replace(origin, "") : url.href;
