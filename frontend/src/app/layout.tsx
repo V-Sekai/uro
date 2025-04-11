@@ -1,5 +1,6 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HydrationBoundary } from "@tanstack/react-query";
+import { PublicEnvScript } from 'next-runtime-env';
 
 import { getTheme } from "~/hooks/theme/server";
 import { dehydrateAll, getQueryClient } from "~/query";
@@ -34,6 +35,9 @@ export default async function RootLayout({
 
 	return (
 		<html lang="en">
+			<head>
+				<PublicEnvScript />
+			</head>
 			<QueryProvider>
 				<HydrationBoundary state={dehydrateAll(queryClient)}>
 					<Body>
