@@ -31,8 +31,8 @@ WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 
-ARG NODE_ENV
-COPY .env.$NODE_ENV* .env
+#ARG NODE_ENV
+#COPY .env.$NODE_ENV* .env
 
 COPY --from=openapi /app/frontend/src/__generated/openapi.json ./src/__generated/openapi.json
 # To run tests without 'uro' image, uncomment line below, remove 'COPY --from=openapi...' and 'FROM uro...' lines
@@ -42,11 +42,11 @@ COPY --from=openapi /app/frontend/src/__generated/openapi.json ./src/__generated
 RUN ./node_modules/.bin/openapi-ts
 
 ENV NODE_ENV=production
-RUN npm run build --no-lint
+RUN ORIGIN=http://testorigin API_ORIGIN=http://testorigin/api/v1 TURNSTILE_SITEKEY=0 npm run build --no-lint
 
 FROM base AS runner
 
-ARG NODE_ENV
+#ARG NODE_ENV
 WORKDIR /app
 
 RUN addgroup -g 1001 -S nodejs
