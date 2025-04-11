@@ -51,3 +51,5 @@ priv/waffle/private/uploads/
 config/local.exs
 result
 *.log
+.direnv
+.envrc

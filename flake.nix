@@ -17,6 +17,12 @@
     };
   in 
     {
+      devShells.x86_64-linux.default = pkgs.x86_64-linux.mkShell {
+        buildInputs = with pkgs.x86_64-linux; [erlang_26 elixir_1_17 elixir-ls tailwindcss-language-server inotify-tools];
+        shellHook = ''
+          export HEX_OFFLINE=0
+        '';
+      };
       packages = forAllSystems (system:
         let packages = packageFor pkgs.${system}; in
         packages // { default = packages.default; });

@@ -50,16 +50,14 @@ defmodule Uro.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3"},
       {:cors_plug, "~> 3.0"},
-      {:phoenix_live_reload, "~> 1.3", only: :dev},
+      {:phoenix_live_reload, "~> 1.5", only: :dev},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:recode, "~> 0.7", only: :dev},
       {:gettext, "~> 0.18"},
-      {:hackney, "~> 1.17"},
       {:httpoison, "~> 2.0"},
       {:jason, "~> 1.2"},
       {:joken, "~> 2.6"},
       {:bandit, "~> 1.0"},
-      {:plug_cowboy, "~> 2.5"},
       {:plug_static_index_html, "~> 1.0"},
       {:comeonin, "~> 5.3.2"},
       {:bcrypt_elixir, "~> 2.3"},
@@ -75,7 +73,8 @@ defmodule Uro.MixProject do
       {:ecto_commons, "~> 0.3.4"},
       {:swoosh, "~> 1.3"},
       {:hammer, "~> 6.0"},
-      {:scrivener_ecto, "~> 2.7"}
+      {:scrivener_ecto, "~> 2.7"},
+      {:igniter, ">= 0.0.0", only: :dev}
     ]
   end
 
