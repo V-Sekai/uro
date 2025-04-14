@@ -408,6 +408,33 @@ defmodule Uro.UserContent do
   end
 
   @doc """
+  Returns the list of props with pagination
+  """
+  def list_props_paginated(params) do
+    Prop
+    |> Repo.paginate(params)
+  end
+
+  @doc """
+  Returns the list of props marked as public
+  """
+  def list_public_props() do
+    Prop
+    |> where(is_public: true)
+    |> Repo.all()
+    |> Repo.preload([:uploader])
+  end
+
+  @doc """
+  Returns the list of props marked as public with pagination
+  """
+  def list_public_props_paginated(params) do
+    Prop
+    |> where(is_public: true)
+    |> Repo.paginate(params)
+  end
+
+  @doc """
   Returns the list of props uploaded by a user.
 
   ## Examples

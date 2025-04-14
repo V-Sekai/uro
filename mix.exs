@@ -75,7 +75,8 @@ defmodule Uro.MixProject do
       {:ecto_commons, "~> 0.3.4"},
       {:swoosh, "~> 1.3"},
       {:hammer, "~> 6.0"},
-      {:scrivener_ecto, "~> 2.7"}
+      {:scrivener_ecto, "~> 2.7"},
+      {:ex_marcel, "~> 0.1.0"}
     ]
   end
 
@@ -92,6 +93,21 @@ defmodule Uro.MixProject do
       "uro.apigen": [
         "openapi.spec.json --spec Uro.OpenAPI.Specification --pretty --vendor-extensions=false ./frontend/src/__generated/openapi.json"
       ],
+
+      # Not required, fixes warning https://github.com/chaskiq/ex-marcel/pull/2
+      "patch.exmarcel": fn _args ->
+        path = "deps/ex_marcel/lib/magic.ex"
+
+        patched =
+          String.replace(
+            File.read!(path),
+            "ext |> String.slice(1..-1)",
+            "ext |> String.slice(1..-1//1)"
+          )
+
+        File.write!(path, patched)
+        IO.puts("Module 'ex_marcel' patched successfully!")
+      end,
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end

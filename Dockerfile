@@ -25,7 +25,7 @@ RUN mix local.hex --force && \
 	mix local.rebar --force
 
 COPY mix.exs mix.lock ./
-RUN mix do deps.get, deps.compile
+RUN mix do deps.get, patch.exmarcel, deps.compile
 
 COPY config ./config
 COPY priv ./priv
