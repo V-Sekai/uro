@@ -39,7 +39,7 @@ COPY --from=openapi /app/frontend/src/__generated/openapi.json ./src/__generated
 RUN ./node_modules/.bin/openapi-ts
 
 ENV NODE_ENV=production
-RUN ORIGIN=http://testorigin API_ORIGIN=http://testorigin/api/v1 TURNSTILE_SITEKEY=0 npm run build --no-lint
+RUN NEXT_PUBLIC_ORIGIN=http://testorigin API_ORIGIN=http://testorigin/api/v1 NEXT_PUBLIC_API_ORIGIN=http://testorigin/api/v1 NEXT_PUBLIC_TURNSTILE_SITEKEY=0 npm run build --no-lint
 
 FROM base AS runner
 
