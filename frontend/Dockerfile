@@ -31,9 +31,6 @@ WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 
-ARG NODE_ENV
-COPY .env.$NODE_ENV* .env
-
 COPY --from=openapi /app/frontend/src/__generated/openapi.json ./src/__generated/openapi.json
 # To run tests without 'uro' image, uncomment line below, remove 'COPY --from=openapi...' and 'FROM uro...' lines
 # and generate an openapi.json specification
