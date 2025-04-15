@@ -1,9 +1,7 @@
 defmodule Uro.UserContent.Avatar do
   import Ecto.Changeset
 
-  use Uro.UserContent.UserContent,
-    join_table_name: "backpack_avatars",
-    schema_atom: :avatar
+  use Uro.UserContent.UserContent
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id

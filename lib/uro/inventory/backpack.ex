@@ -3,16 +3,25 @@ defmodule Uro.Inventory.Backpack do
   import Ecto.Changeset
   use Ecto.Schema
 
-  require Uro.UserContent.Avatar.BackpackEntry
-  require Uro.UserContent.Map.BackpackEntry
-  require Uro.UserContent.Prop.BackpackEntry
+  defmodule Join do
+    use Ecto.Schema
+    import Ecto.Query
+
+    schema "backpack_join" do
+      belongs_to :backpack, Uro.Inventory.Backpack
+
+      belongs_to :map, Uro.UserContent.Map
+      belongs_to :prop, Uro.UserContent.Prop
+      belongs_to :avatar, Uro.UserContent.Avatar
+    end
+  end
 
   schema "backpacks" do
     belongs_to :owner, User, foreign_key: :owner_id, type: :binary_id
 
-    Uro.UserContent.Avatar.BackpackEntry.backpack_entry_fields()
-    Uro.UserContent.Map.BackpackEntry.backpack_entry_fields()
-    Uro.UserContent.Prop.BackpackEntry.backpack_entry_fields()
+    many_to_many :maps, Uro.UserContent.Map, join_through: Join
+    many_to_many :avatars, Uro.UserContent.Avatar, join_through: Join
+    many_to_many :props, Uro.UserContent.Prop, join_through: Join
 
     timestamps()
   end

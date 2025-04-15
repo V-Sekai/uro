@@ -1,9 +1,7 @@
 defmodule Uro.UserContent.Prop do
   import Ecto.Changeset
 
-  use Uro.UserContent.UserContent,
-    join_table_name: "backpack_props",
-    schema_atom: :prop
+  use Uro.UserContent.UserContent
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
