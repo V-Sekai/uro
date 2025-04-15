@@ -70,6 +70,16 @@ defmodule Uro.Accounts.User do
     has_many(:uploaded_maps, Uro.UserContent.Map, foreign_key: :uploader_id)
     has_many(:uploaded_props, Uro.UserContent.Prop, foreign_key: :uploader_id)
 
+    # Inventory
+
+    has_many :backpacks, Uro.Inventory.Backpack, foreign_key: :owner_id
+
+    has_many :avatars, through: [:backpacks, :avatar]
+    has_many :maps, through: [:backpacks, :map]
+    has_many :props, through: [:backpacks, :prop]
+
+    ######
+
     many_to_many(:friendships, Uro.UserRelations.Friendship,
       join_through: "friendships",
       join_keys: [user_id: :id, friend_id: :id]
