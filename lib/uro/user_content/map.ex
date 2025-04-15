@@ -1,6 +1,8 @@
 defmodule Uro.UserContent.Map do
   import Ecto.Changeset
-  use Uro.UserContent.UserContent
+  use Uro.UserContent.UserContent,
+      join_table_name: "backpack_maps",
+      schema_atom: :map
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
