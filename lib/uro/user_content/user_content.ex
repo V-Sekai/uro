@@ -2,10 +2,11 @@ defmodule Uro.UserContent.UserContent do
   alias Ecto.Changeset
 
   @doc false
-  @spec __using__([join_table_name: String.t(), schema_atom: atom()]) :: any()
+  @spec __using__(join_table_name: String.t(), schema_atom: atom()) :: any()
   defmacro __using__(config) do
     join_table_name = Keyword.fetch!(config, :join_table_name)
     schema_atom = Keyword.fetch!(config, :schema_atom)
+
     quote do
       use Ecto.Schema
       use Waffle.Ecto.Schema
@@ -35,22 +36,23 @@ defmodule Uro.UserContent.UserContent do
       end
 
       defmodule BackpackEntry do
-	use Ecto.Schema
-	import Ecto.Changeset
+        use Ecto.Schema
+        import Ecto.Changeset
 
-	@join_table_name unquote(join_table_name)
-	@schema_atom unquote(schema_atom)
+        @join_table_name unquote(join_table_name)
+        @schema_atom unquote(schema_atom)
 
-	schema unquote(join_table_name) do
-	  belongs_to :backpack, Uro.Inventory.Backpack
-	  belongs_to unquote(schema_atom), __MODULE__
-	end
+        schema unquote(join_table_name) do
+          belongs_to :backpack, Uro.Inventory.Backpack
+          belongs_to unquote(schema_atom), __MODULE__
+        end
 
-	defmacro backpack_entry_fields() do
-	  quote do
-	    many_to_many unquote(@schema_atom), __MODULE__, join_through: unquote(@join_table_name)
-	  end
-	end
+        defmacro backpack_entry_fields() do
+          quote do
+            many_to_many unquote(@schema_atom), __MODULE__,
+              join_through: unquote(@join_table_name)
+          end
+        end
       end
     end
   end
@@ -64,7 +66,6 @@ defmodule Uro.UserContent.UserContent do
       field :user_content_preview, Uro.Uploaders.UserContentPreview.Type
       field :is_public, :boolean
 
-      many_to_many :owners, Uro.Accounts.User, join_through: Uro.Inventory.Backpack
       many_to_many :backpacks, Uro.Accounts.User, join_through: Uro.Inventory.Backpack
       belongs_to :uploader, Uro.Accounts.User, foreign_key: :uploader_id, type: :binary_id
     end
