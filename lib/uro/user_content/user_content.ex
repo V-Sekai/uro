@@ -65,6 +65,7 @@ defmodule Uro.UserContent.UserContent do
       field :is_public, :boolean
 
       many_to_many :owners, Uro.Accounts.User, join_through: Uro.Inventory.Backpack
+      many_to_many :backpacks, Uro.Accounts.User, join_through: Uro.Inventory.Backpack
       belongs_to :uploader, Uro.Accounts.User, foreign_key: :uploader_id, type: :binary_id
     end
   end
