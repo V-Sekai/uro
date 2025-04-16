@@ -27,6 +27,7 @@ defmodule Uro.Mailer do
 
   def create_email(subject: subject, text: text, html: html) do
     %Swoosh.Email{}
+    |> from({"V-Sekai", System.get_env("NOREPLY_SENDER") || "noreply@vsekai.com"})
     |> subject(subject)
     |> html_body(html)
     |> text_body(text)
