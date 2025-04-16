@@ -74,9 +74,9 @@ defmodule Uro.Accounts.User do
 
     has_many :backpacks, Uro.Inventory.Backpack, foreign_key: :owner_id
 
-    has_many :avatars, through: [:backpacks, :avatar]
-    has_many :maps, through: [:backpacks, :map]
-    has_many :props, through: [:backpacks, :prop]
+    has_many :avatars, through: [:backpacks, :avatars]
+    has_many :maps, through: [:backpacks, :maps]
+    has_many :props, through: [:backpacks, :props]
 
     ######
 

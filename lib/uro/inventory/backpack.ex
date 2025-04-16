@@ -7,15 +7,21 @@ defmodule Uro.Inventory.Backpack do
     use Ecto.Schema
     import Ecto.Query
 
+    @primary_key {:id, :binary_id, autogenerate: true}
+    @foreign_key_type :binary_id
     schema "backpack_join" do
       belongs_to :backpack, Uro.Inventory.Backpack
 
       belongs_to :map, Uro.UserContent.Map
       belongs_to :prop, Uro.UserContent.Prop
       belongs_to :avatar, Uro.UserContent.Avatar
+
+      timestamps()
     end
   end
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
   schema "backpacks" do
     belongs_to :owner, User, foreign_key: :owner_id, type: :binary_id
 

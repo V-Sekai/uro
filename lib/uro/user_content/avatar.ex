@@ -5,6 +5,7 @@ defmodule Uro.UserContent.Avatar do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
+
   @derive {Phoenix.Param, key: :id}
   schema "avatars" do
     user_content_fields()
