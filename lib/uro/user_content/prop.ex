@@ -1,5 +1,6 @@
 defmodule Uro.UserContent.Prop do
   import Ecto.Changeset
+
   use Uro.UserContent.UserContent
 
   @primary_key {:id, :binary_id, autogenerate: true}
