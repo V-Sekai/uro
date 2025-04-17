@@ -30,7 +30,8 @@ export const useOptionalSession = () => {
 	if (
 		session &&
 		!session.user.email_confirmed_at &&
-		pathname !== "/confirm-email"
+		pathname !== "/confirm-email" &&
+		!pathname.starts_with?("/confirm-email/")
 	)
 		redirect(withReturnIntent("/confirm-email").href);
 
