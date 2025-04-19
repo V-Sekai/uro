@@ -13,7 +13,7 @@ defmodule UroWeb.Components.Table do
   """
 
   use Phoenix.Component
-  use Gettext, backend: UroWeb.Gettext
+  use Gettext, backend: Uro.Gettext
 
   @doc """
   Renders a customizable `table` component that supports custom styling for rows, columns,

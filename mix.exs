@@ -120,12 +120,12 @@ defmodule Uro.MixProject do
       end,
       test: ["ecto.create --quiet", "ecto.migrate", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind oru", "esbuild oru"],
+      "assets.build": ["tailwind uro", "esbuild uro"],
       "assets.deploy": [
-        "tailwind oru --minify",
-        "esbuild oru --minify",
+        "tailwind uro --minify",
+        "esbuild uro --minify",
         "phx.digest"
-      ],
+      ]
     ]
   end
 end

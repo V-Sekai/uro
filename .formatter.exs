@@ -5,5 +5,5 @@
     "priv/*/seeds.exs",
     "{config,lib,test}/**/*.{ex,exs,eex}"
   ],
-  subdirectories: ["priv/*/migrations"],
+  subdirectories: ["priv/*/migrations"]
 ]

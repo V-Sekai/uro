@@ -1,11 +1,9 @@
 defmodule Uro.Inventory.Backpack do
   alias Uro.Accounts.User
-  import Ecto.Changeset
   use Ecto.Schema
 
   defmodule Join do
     use Ecto.Schema
-    import Ecto.Query
 
     @primary_key {:id, :binary_id, autogenerate: true}
     @foreign_key_type :binary_id

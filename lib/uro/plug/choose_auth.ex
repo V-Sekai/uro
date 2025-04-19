@@ -12,7 +12,7 @@ defmodule Uro.Plug.ChooseAuth do
         [] ->
           conn
 
-        [auth_header] ->
+        [_auth_header] ->
           assign(conn, :signed_access_token, token)
       end
 

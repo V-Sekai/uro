@@ -9,8 +9,8 @@ module.exports = {
   content: [
     "../deps/ash_authentication_phoenix/**/*.*ex",
     "./js/**/*.js",
-    "../lib/oru_web.ex",
-    "../lib/oru_web/**/*.*ex"
+    "../lib/uro_web.ex",
+    "../lib/uro_web/**/*.*ex"
   ],
   theme: {
     extend: {

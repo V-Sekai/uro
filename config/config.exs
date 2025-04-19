@@ -30,6 +30,26 @@ config :uro,
 config :hammer,
   backend: {Hammer.Backend.ETS, [expiry_ms: 60_000 * 60 * 4, cleanup_interval_ms: 60_000 * 10]}
 
+config :esbuild,
+       version: "0.25.0",
+       uro: [
+	 args:
+	   ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+	 cd: Path.expand("../assets", __DIR__),
+	 env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+       ]
+
+config :tailwind,
+       version: "4.0.9",
+       uro: [
+	    args: ~w(
+		--config=tailwind.config.js
+		--input=css/app.css
+		--output=../priv/static/assets/app.css
+	    ),
+	    cd: Path.expand("../assets", __DIR__)
+       ]
+
 url =
   "URL"
   |> get_env.("https://vsekai.local/api/v1/")
@@ -65,13 +85,7 @@ config :uro, Redix, url: Helpers.get_env("REDIS_URL", "redis://redis:6379")
 
 config :uro, Uro.Endpoint,
   adapter: Bandit.PhoenixAdapter,
-  url: Map.take(url, [:scheme, :host, :path]),
-  # url:
-  #   "URL"
-  #   |> Helpers.get_env("https://example.com/api/")
-  #   |> URI.new!()
-  #   |> Map.take([:scheme, :host, :path]),
-
+  url: System.get_env("PHX_HOST") || [host: "localhost"],
   http: [
     port:
       "PORT"
@@ -82,15 +96,13 @@ config :uro, Uro.Endpoint,
     Helpers.get_env(
       "PHOENIX_KEY_BASE",
       "bNDe+pg86uL938fQA8QGYCJ4V7fE5RAxoQ8grq9drPpO7mZ0oEMSNapKLiA48smR"
-    )
-
-# pubsub_server: Uro.PubSub,
-# live_view: [signing_salt: "0dBPUwA2"]
-
-root_origin =
-  "ROOT_ORIGIN"
-  |> Helpers.get_env("https://example.com")
-  |> URI.new!()
+    ),
+  pubsub_server: Uro.PubSub,
+  live_view: [signing_salt: "0dBPUwA2"],
+  watchers: [
+    esbuild: {Esbuild, :install_and_run, [:uro, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:uro, ~w(--watch)]}
+  ]
 
 config :cors_plug,
   origin: [URI.to_string(root_origin)],

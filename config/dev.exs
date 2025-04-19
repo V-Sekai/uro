@@ -6,7 +6,14 @@ alias Uro.Config.Helpers
 config :uro, Uro.Endpoint,
   debug_errors: true,
   code_reloader: true,
-  check_origin: false
+  check_origin: false,
+  live_reload: [
+    patterns: [
+      ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/gettext/.*(po)$",
+      ~r"lib/uro_web/(controllers|live|components)/.*(ex|heex)$"
+    ]
+  ]
 
 config :uro, Uro.Mailer, adapter: Swoosh.Adapters.Local
 
