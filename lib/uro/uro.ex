@@ -143,15 +143,4 @@ defmodule Uro do
   end
 
   def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
-
-  require Protocol
-
-  Protocol.derive(Inspect, Plug.Conn,
-    only: [
-      :method,
-      :params,
-      :request_path,
-      :assigns
-    ]
-  )
 end

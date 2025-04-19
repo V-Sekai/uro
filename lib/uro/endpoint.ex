@@ -47,8 +47,6 @@ defmodule Uro.Endpoint do
 
   plug(Plug.MethodOverride)
   plug(Plug.Head)
-
-  plug(CORSPlug)
   plug Plug.Session, @session_options
-  plug(Uro.Router)
+  plug Uro.Router
 end

@@ -1,4 +1,3 @@
-version: "4.0"
 services:
   database:
     image: cockroachdb/cockroach:v25.1.1
@@ -40,6 +39,8 @@ services:
     image: redis:7.4-alpine
     restart: always
     shm_size: 128mb
+    ports:
+      - "6379:6379"
     volumes:
       - "./redis:/data"
     healthcheck:
@@ -70,19 +71,6 @@ services:
     #   interval: 5s
     #   timeout: 5s
 
-  nextjs:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    env_file:
-      - frontend/.env
-    # healthcheck:
-    #   test: curl --fail http://nextjs:3000/health || exit 1
-    #   interval: 5s
-    #   timeout: 5s
-    depends_on:
-      - uro
-
   caddy:
     image: caddy:2.9.1-alpine
     restart: unless-stopped
@@ -98,13 +86,6 @@ services:
       - ./caddy/config:/config
     depends_on:
       - uro
-      - nextjs
-      # uro:
-      #   condition: service_healthy
-      #   restart: true
-      # nextjs:
-      #   condition: service_healthy
-      #   restart: true
 
 networks:
   uro:

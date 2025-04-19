@@ -15,7 +15,6 @@ defmodule Uro.Router do
   pipeline :api do
     plug(:accepts, ["json"])
     plug(:fetch_session)
-    plug(CORSPlug)
 
     plug(RemoteIp)
     plug(Uro.Plug.Authentication, otp_app: :uro)

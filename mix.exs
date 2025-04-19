@@ -62,7 +62,6 @@ defmodule Uro.MixProject do
       {:ecto_sql, "~> 3.11"},
       {:redix, "~> 0.9.2"},
       {:postgrex, ">= 0.0.0"},
-      {:cors_plug, "~> 3.0"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:gettext, "~> 0.18"},
       {:hackney, "~> 1.17"},
