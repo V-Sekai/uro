@@ -18,7 +18,7 @@
   in 
     {
       devShells.x86_64-linux.default = pkgs.x86_64-linux.mkShell {
-        buildInputs = with pkgs.x86_64-linux; [erlang_26 elixir_1_16 elixir-ls tailwindcss-language-server inotify-tools];
+        buildInputs = with pkgs.x86_64-linux; [elixir_1_17 elixir-ls tailwindcss-language-server inotify-tools];
         shellHook = ''
           export HEX_OFFLINE=0
         '';
