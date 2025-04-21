@@ -17,7 +17,8 @@ config :uro, Uro.Endpoint,
     patterns: [
       ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/uro_web/(controllers|live|components)/.*(ex|heex)$"
+      ~r"lib/uro_web/(controllers|live|components)/.*(ex|heex)$",
+      ~r"lib/uro/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
 
@@ -47,3 +48,9 @@ config :uro, Uro.Repo,
 
 redis_url = Helpers.get_env("REDIS_URL", nil)
 config :uro, Redix, url: if(redis_url, do: redis_url, else: "redis://localhost:6379")
+
+config :phoenix_live_view,
+  # Include HEEx debug annotations as HTML comments in rendered markup
+  debug_heex_annotations: true,
+  # Enable helpful, but potentially expensive runtime checks
+  enable_expensive_runtime_checks: true

@@ -17,7 +17,6 @@ config :tailwind,
        version: "4.0.9",
        uro: [
 	    args: ~w(
-		--config=tailwind.config.js
 		--input=css/app.css
 		--output=../priv/static/assets/app.css
 	    ),
@@ -46,7 +45,7 @@ config :uro, Uro.Endpoint,
   url: [host: "localhost"],
   pubsub_server: Uro.PubSub,
   render_errors: [
-    formats: [html: OruWeb.ErrorHTML, json: OruWeb.ErrorJSON],
+    formats: [html: UroWeb.ErrorHTML, json: UroWeb.ErrorJSON],
     layout: false
   ],
   live_view: [signing_salt: "0dBPUwA2"]

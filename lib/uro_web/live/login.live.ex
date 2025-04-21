@@ -3,7 +3,7 @@ defmodule UroWeb.LoginLive do
 
   def render(assigns) do
     ~H"""
-    Hello, world
+    <p class="text-orange orange bg-red">Hellop</p>
     """
   end
 

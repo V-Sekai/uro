@@ -7,10 +7,9 @@ const path = require("path")
 
 module.exports = {
   content: [
-    "../deps/ash_authentication_phoenix/**/*.*ex",
     "./js/**/*.js",
-    "../lib/uro_web.ex",
-    "../lib/uro_web/**/*.*ex"
+    "../lib/uro_web/**/*.*ex",
+    "../lib/uro/**/*.*ex",
   ],
   theme: {
     extend: {
@@ -20,7 +19,6 @@ module.exports = {
     },
   },
   plugins: [
-    require("@tailwindcss/forms"),
     // Allows prefixing tailwind classes with LiveView classes to add rules
     // only when LiveView classes are applied, for example:
     //

@@ -5,3 +5,5 @@
 /* This file is for your main application CSS */
 
 @import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@config "../tailwind.config.js";
