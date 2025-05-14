@@ -5,23 +5,23 @@ config :hammer,
   backend: {Hammer.Backend.ETS, [expiry_ms: 60_000 * 60 * 4, cleanup_interval_ms: 60_000 * 10]}
 
 config :esbuild,
-       version: "0.25.0",
-       uro: [
-	 args:
-	   ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
-	 cd: Path.expand("../assets", __DIR__),
-	 env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
-       ]
+  version: "0.25.0",
+  uro: [
+    args:
+      ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+    cd: Path.expand("../assets", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
 
 config :tailwind,
-       version: "4.0.9",
-       uro: [
-	    args: ~w(
+  version: "4.0.9",
+  uro: [
+    args: ~w(
 		--input=css/app.css
 		--output=../priv/static/assets/app.css
 	    ),
-	    cd: Path.expand("../assets", __DIR__)
-       ]
+    cd: Path.expand("../assets", __DIR__)
+  ]
 
 config :uro,
   ecto_repos: [Uro.Repo]

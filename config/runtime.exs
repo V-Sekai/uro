@@ -31,29 +31,30 @@ config :uro, Uro.Turnstile,
 config :uro, :pow_assent,
   user_identities_context: Uro.UserIdentities,
   providers:
-         System.get_env()
-         |> Map.filter(fn {k, _} -> String.match?(k, ~r/^OAUTH2_.+_STRATEGY/) end)
-         |> Enum.map(fn {key, module_name} ->
-           key =
-             key
-             |> String.replace("OAUTH2_", "")
-             |> String.replace("_STRATEGY", "")
+    System.get_env()
+    |> Map.filter(fn {k, _} -> String.match?(k, ~r/^OAUTH2_.+_STRATEGY/) end)
+    |> Enum.map(fn {key, module_name} ->
+      key =
+        key
+        |> String.replace("OAUTH2_", "")
+        |> String.replace("_STRATEGY", "")
 
-           {
-             key
-             |> String.downcase()
-             |> String.to_atom(),
-             [
-               client_id: System.get_env("OAUTH2_#{key}_CLIENT_ID") || Logger.error("OAUTH2_#{key}_CLIENT_ID missing"),
-               client_secret: System.get_env("OAUTH2_#{key}_SECRET") || Logger.error("OAUTH2_#{key}_SECRET missing"),
-               strategy: Module.concat([module_name])
-             ]
-           }
-         end)
-
+      {
+        key
+        |> String.downcase()
+        |> String.to_atom(),
+        [
+          client_id:
+            System.get_env("OAUTH2_#{key}_CLIENT_ID") ||
+              Logger.error("OAUTH2_#{key}_CLIENT_ID missing"),
+          client_secret:
+            System.get_env("OAUTH2_#{key}_SECRET") || Logger.error("OAUTH2_#{key}_SECRET missing"),
+          strategy: Module.concat([module_name])
+        ]
+      }
+    end)
 
 if config_env() == :prod do
-
   config :uro, Uro.Mailer,
     adapter: Swoosh.Adapters.Sendgrid,
     api_key: System.get_env("SENDGRID_API_KEY", "")
@@ -66,7 +67,10 @@ if config_env() == :prod do
       """
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
-  config :joken, default_signer: System.get_env("JOKEN_SIGNER") || raise "Joken Signer (JOKEN_SIGNER) must be set"
+
+  config :joken,
+    default_signer:
+      System.get_env("JOKEN_SIGNER") || raise("Joken Signer (JOKEN_SIGNER) must be set")
 
   config :uro, Uro.Repo,
     # ssl: true,

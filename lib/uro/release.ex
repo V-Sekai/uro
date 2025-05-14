@@ -9,13 +9,22 @@ defmodule Uro.Release do
     load_app()
 
     for repo <- repos() do
-      {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :up, all: true, migration_lock: false))
+      {:ok, _, _} =
+        Ecto.Migrator.with_repo(
+          repo,
+          &Ecto.Migrator.run(&1, :up, all: true, migration_lock: false)
+        )
     end
   end
 
   def rollback(repo, version) do
     load_app()
-    {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version, migration_lock: false))
+
+    {:ok, _, _} =
+      Ecto.Migrator.with_repo(
+        repo,
+        &Ecto.Migrator.run(&1, :down, to: version, migration_lock: false)
+      )
   end
 
   defp repos do

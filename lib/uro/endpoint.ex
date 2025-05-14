@@ -28,6 +28,7 @@ defmodule Uro.Endpoint do
     gzip: false,
     only: Uro.static_paths()
   )
+
   plug(Plug.Static,
     at: "/uploads",
     from: Path.expand("./uploads"),

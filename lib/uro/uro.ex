@@ -36,7 +36,7 @@ defmodule Uro do
       import Plug.Conn
       import Uro.Helpers.User
 
-      use Gettext, backend: Uro.Gettext 
+      use Gettext, backend: Uro.Gettext
 
       # alias Uro.Router.Helpers, as: Routes
     end
@@ -56,7 +56,7 @@ defmodule Uro do
 
       import Uro.ErrorHelpers
 
-      use Gettext, backend: Uro.Gettext 
+      use Gettext, backend: Uro.Gettext
 
       alias Uro.Router.Helpers, as: Routes
     end
