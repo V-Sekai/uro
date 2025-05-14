@@ -84,7 +84,7 @@ defmodule Uro.MixProject do
       {:ecto_commons, "~> 0.3.4"},
       {:hammer, "~> 6.0"},
       {:scrivener_ecto, "~> 2.7"},
-      {:mishka_chelekom, "~> 0.0.4", only: :dev},
+      {:mishka_chelekom, "~> 0.0.5", only: :dev},
       {:ex_marcel, "~> 0.1.0"}
     ]
   end
