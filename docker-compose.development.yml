@@ -12,18 +12,6 @@ services:
       - ./config:/app/config
       - ./priv:/app/priv
 
-  nextjs:
-    extends:
-      file: docker-compose.yml
-      service: nextjs
-    build:
-      args:
-        NODE_ENV: development
-    entrypoint: npm run dev
-    user: "root"
-    volumes:
-      - ./frontend:/app
-
   database:
     extends:
       file: docker-compose.yml

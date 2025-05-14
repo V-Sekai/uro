@@ -34,8 +34,9 @@ defmodule Uro do
       use OpenApiSpex.ControllerSpecs
 
       import Plug.Conn
-      import Uro.Gettext
       import Uro.Helpers.User
+
+      use Gettext, backend: Uro.Gettext
 
       # alias Uro.Router.Helpers, as: Routes
     end
@@ -54,8 +55,10 @@ defmodule Uro do
       use Phoenix.HTML
 
       import Uro.ErrorHelpers
-      import Uro.Gettext
-      # alias Uro.Router.Helpers, as: Routes
+
+      use Gettext, backend: Uro.Gettext
+
+      alias Uro.Router.Helpers, as: Routes
     end
   end
 
@@ -64,13 +67,71 @@ defmodule Uro do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
+    end
+  end
+
+  def html do
+    quote do
+      use Phoenix.Component
+
+      # Import convenience functions from controllers
+      import Phoenix.Controller,
+        only: [get_csrf_token: 0, view_module: 1, view_template: 1]
+
+      # Include general helpers for rendering HTML
+      unquote(html_helpers())
+    end
+  end
+
+  defp html_helpers do
+    quote do
+      # Translation
+      use Gettext, backend: Uro.Gettext
+
+      # HTML escaping functionality
+      import Phoenix.HTML
+      # Core UI components
+      use UroWeb.Components.MishkaComponents
+
+      # Shortcut for generating JS commands
+      alias Phoenix.LiveView.JS
+
+      # Routes generation with the ~p sigil
+      unquote(verified_routes())
+    end
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: Uro.Endpoint,
+        router: Uro.Router,
+        statics: Uro.static_paths()
+    end
+  end
+
+  def live_view do
+    quote do
+      use Phoenix.LiveView,
+        layout: {UroWeb.Layouts, :app}
+
+      unquote(html_helpers())
+    end
+  end
+
+  def live_component do
+    quote do
+      use Phoenix.LiveComponent
+
+      unquote(html_helpers())
     end
   end
 
   def channel do
     quote do
       use Phoenix.Channel
-      import Uro.Gettext
+      use Gettext, backend: Uro.Gettext
     end
   end
 
@@ -81,14 +142,5 @@ defmodule Uro do
     apply(__MODULE__, which, [])
   end
 
-  require Protocol
-
-  Protocol.derive(Inspect, Plug.Conn,
-    only: [
-      :method,
-      :params,
-      :request_path,
-      :assigns
-    ]
-  )
+  def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
 end

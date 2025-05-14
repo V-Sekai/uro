@@ -1,4 +1,4 @@
-ARG ELIXIR_VERSION=1.16
+ARG ELIXIR_VERSION=1.17
 
 # Elixir build environment.
 FROM elixir:${ELIXIR_VERSION}-alpine as elixir-base

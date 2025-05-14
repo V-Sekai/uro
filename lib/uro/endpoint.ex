@@ -9,11 +9,40 @@ defmodule Uro.Endpoint do
     plug(Phoenix.CodeReloader)
   end
 
+  # The session will be stored in the cookie and signed,
+  # this means its contents can be read but not tampered with.
+  # Set :encryption_salt if you would also like to encrypt it.
+  @session_options [
+    store: :cookie,
+    key: "_uro_key",
+    signing_salt: "JifcOOjX",
+    same_site: "Lax"
+  ]
+  socket "/live", Phoenix.LiveView.Socket,
+    websocket: [connect_info: [session: @session_options]],
+    longpoll: [connect_info: [session: @session_options]]
+
+  plug(Plug.Static,
+    at: "/",
+    from: :uro,
+    gzip: false,
+    only: Uro.static_paths()
+  )
+
   plug(Plug.Static,
     at: "/uploads",
     from: Path.expand("./uploads"),
     gzip: false
   )
+
+  # Code reloading can be explicitly enabled under the
+  # :code_reloader configuration of your endpoint.
+  if code_reloading? do
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
+    plug Phoenix.LiveReloader
+    plug Phoenix.CodeReloader
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :oru
+  end
 
   plug(Plug.RequestId, assign_as: :request_id)
   plug(Plug.Telemetry, event_prefix: [:phoenix, :endpoint])
@@ -28,13 +57,6 @@ defmodule Uro.Endpoint do
 
   plug(Plug.MethodOverride)
   plug(Plug.Head)
-
-  plug(Plug.Session,
-    store: :cookie,
-    key: "session",
-    signing_salt: "5DeFKvbM"
-  )
-
-  plug(CORSPlug)
-  plug(Uro.Router)
+  plug Plug.Session, @session_options
+  plug Uro.Router
 end

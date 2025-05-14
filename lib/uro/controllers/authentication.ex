@@ -5,7 +5,6 @@ defmodule Uro.AuthenticationController do
 
   alias OpenApiSpex.Schema
   alias Plug.Conn
-  alias PowAssent.Plug
   alias Uro.Accounts
   alias Uro.Accounts.User
   alias Uro.Accounts.UserPrivilegeRuleset
@@ -71,7 +70,7 @@ defmodule Uro.AuthenticationController do
 
   def login_with_provider(conn, %{"provider" => provider}) when is_binary(provider) do
     redirect_url = redirect_uri(conn)
-    {:ok, url, conn} = Plug.authorize_url(conn, provider, redirect_url)
+    {:ok, url, conn} = PowAssent.Plug.authorize_url(conn, provider, redirect_url)
 
     json(
       conn,
@@ -119,7 +118,7 @@ defmodule Uro.AuthenticationController do
 
     case conn
          |> Conn.put_private(:pow_assent_session_params, params)
-         |> Plug.callback_upsert(provider, params, redirect_uri(conn)) do
+         |> PowAssent.Plug.callback_upsert(provider, params, redirect_uri(conn)) do
       {:ok, conn} ->
         login_success(conn, params)
 
@@ -140,7 +139,7 @@ defmodule Uro.AuthenticationController do
         suffix = for(_ <- 1..4, into: "", do: <<Enum.random(~c"0123456789abcdef")>>)
         user_params = %{user_params | "username" => "#{user_params["username"]}_#{suffix}"}
 
-        {:ok, _, conn} = Plug.create_user(conn, user_identity_params, user_params)
+        {:ok, _, conn} = PowAssent.Plug.create_user(conn, user_identity_params, user_params)
         login_success(conn, params)
 
       {:error,
