@@ -2,7 +2,7 @@
   description = "A very basic flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=24.11";
   };
 
   outputs = { self, nixpkgs }:
@@ -17,6 +17,12 @@
     };
   in 
     {
+      devShells.x86_64-linux.default = pkgs.x86_64-linux.mkShell {
+        buildInputs = with pkgs.x86_64-linux; [erlang_26 elixir_1_16 elixir-ls tailwindcss-language-server inotify-tools];
+        shellHook = ''
+          export HEX_OFFLINE=0
+        '';
+      };
       packages = forAllSystems (system:
         let packages = packageFor pkgs.${system}; in
         packages // { default = packages.default; });
