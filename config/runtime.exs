@@ -24,25 +24,29 @@ end
 config :uro, :pow_assent,
   user_identities_context: Uro.UserIdentities,
   providers:
-         System.get_env()
-         |> Map.filter(fn {k, _} -> String.match?(k, ~r/^OAUTH2_.+_STRATEGY/) end)
-         |> Enum.map(fn {key, module_name} ->
-           key =
-             key
-             |> String.replace("OAUTH2_", "")
-             |> String.replace("_STRATEGY", "")
+    System.get_env()
+    |> Map.filter(fn {k, _} -> String.match?(k, ~r/^OAUTH2_.+_STRATEGY/) end)
+    |> Enum.map(fn {key, module_name} ->
+      key =
+        key
+        |> String.replace("OAUTH2_", "")
+        |> String.replace("_STRATEGY", "")
 
-           {
-             key
-             |> String.downcase()
-             |> String.to_atom(),
-             [
-               client_id: (System.get_env("OAUTH2_#{key}_CLIENT_ID") || raise "Missing client id for oauth strat #{key}"),
-               client_secret: (System.get_env("OAUTH2_#{key}_CLIENT_SECRET") || raise "Missing client secret for oauth strat #{key}"),
-               strategy: Module.concat([module_name])
-             ]
-           }
-         end)
+      {
+        key
+        |> String.downcase()
+        |> String.to_atom(),
+        [
+          client_id:
+            System.get_env("OAUTH2_#{key}_CLIENT_ID") ||
+              raise("Missing client id for oauth strat #{key}"),
+          client_secret:
+            System.get_env("OAUTH2_#{key}_CLIENT_SECRET") ||
+              raise("Missing client secret for oauth strat #{key}"),
+          strategy: Module.concat([module_name])
+        ]
+      }
+    end)
 
 config :uro, Uro.Turnstile,
   secret_key:
@@ -81,6 +85,7 @@ config :uro, :pow_assent,
     end)
 
 root_origin = URI.new!(System.get_env("ROOT_ORIGIN") || "https://vsekai.local")
+
 config :uro,
   ecto_repos: [Uro.Repo],
   url: System.get_env("URL") || "https://vsekai.local/api/v1/",
@@ -108,7 +113,6 @@ if config_env() == :prod do
   config :joken,
     default_signer:
       System.get_env("JOKEN_SIGNER") || raise("Joken Signer (JOKEN_SIGNER) must be set")
-  
 
   config :uro, Uro.Repo,
     # ssl: true,
