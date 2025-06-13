@@ -74,6 +74,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      additional_contexts:
+         # Enforce build-time dependency (openapi.json generation)
+         uro: "service:uro"
     env_file:
       - frontend/.env
     # healthcheck:
