@@ -1,7 +1,4 @@
 import Config
-Code.require_file("config/helpers.exs")
-Code.ensure_loaded!(Uro.Config.Helpers)
-alias Uro.Config.Helpers
 
 config :uro, Uro.Endpoint,
   debug_errors: true,
@@ -30,5 +27,12 @@ config :uro, Uro.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
-redis_url = Helpers.get_env("REDIS_URL", nil)
-config :uro, Redix, url: if(redis_url, do: redis_url, else: "redis://localhost:6379")
+config :joken, default_signer: "gqawCOER09ZZjaN8W2QM9XT9BeJSZ9qc"
+
+config :uro, Uro.Endpoint,
+  adapter: Bandit.PhoenixAdapter,
+  url: [host: "localhost"],
+  http: [port: "4000"],
+  check_origin: false,
+  debug_errors: true,
+  secret_key_base: "bNDe+pg86uL938fQA8QGYCJ4V7fE5RAxoQ8grq9drPpO7mZ0oEMSNapKLiA48smR"
