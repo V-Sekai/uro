@@ -13,7 +13,8 @@ if (development) {
 
 export const urls = {
 	discord: "https://discord.gg/7BQDHesck8",
-	github: "https://github.com/v-sekai",
+	github: "https://github.com/V-Sekai",
+	github_releases: "https://github.com/V-Sekai/v-sekai-game/releases",
 	twitter: "https://twitter.com/vsekaiofficial"
 };
 

@@ -64,6 +64,9 @@ defmodule Uro.MixProject do
       {:bcrypt_elixir, "~> 2.3"},
       {:pow, "~> 1.0"},
       {:email_checker, "~> 0.1.4"},
+
+      # Version locked to apply patch
+      {:assent, "0.2.13"},
       {:pow_assent, "~> 0.4.18"},
       {:ssl_verify_fun, "~> 1.1.6"},
       {:open_api_spex, "~> 3.18"},
@@ -75,7 +78,9 @@ defmodule Uro.MixProject do
       {:swoosh, "~> 1.3"},
       {:hammer, "~> 6.0"},
       {:scrivener_ecto, "~> 2.7"},
-      {:ex_marcel, "~> 0.1.0"}
+
+      # Version locked to apply patch
+      {:ex_marcel, "0.1.0"}
     ]
   end
 
@@ -93,19 +98,23 @@ defmodule Uro.MixProject do
         "openapi.spec.json --spec Uro.OpenAPI.Specification --pretty --vendor-extensions=false ./frontend/src/__generated/openapi.json"
       ],
 
-      # Not required, fixes warning https://github.com/chaskiq/ex-marcel/pull/2
-      "patch.exmarcel": fn _args ->
-        path = "deps/ex_marcel/lib/magic.ex"
+      # Requires 'patch' installed
+      "patch.all": fn _args ->
+        patches_path = "patches/*.patch"
 
-        patched =
-          String.replace(
-            File.read!(path),
-            "ext |> String.slice(1..-1)",
-            "ext |> String.slice(1..-1//1)"
-          )
+        Path.wildcard(patches_path)
+        |> Enum.each(fn file ->
+          case System.cmd("patch", ["-p1", "-i", file], stderr_to_stdout: true) do
+            {_out, 0} ->
+              IO.puts("Patch applied successfully: #{Path.basename(file)}")
 
-        File.write!(path, patched)
-        IO.puts("Module 'ex_marcel' patched successfully!")
+            {out, code} ->
+              raise """
+              Failed to apply #{Path.basename(file)} (exit #{code})
+              #{out}
+              """
+          end
+        end)
       end,
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]

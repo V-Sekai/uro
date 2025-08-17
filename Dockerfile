@@ -15,6 +15,7 @@ RUN apk add --no-cache \
 	npm \
 	inotify-tools \
 	git \
+	patch \
 	bash \
 	make \
 	gcc \
@@ -25,8 +26,13 @@ RUN mix local.hex --force && \
 	mix local.rebar --force
 
 COPY mix.exs mix.lock ./
-RUN mix do deps.get, patch.exmarcel, deps.compile
+RUN mix do deps.get
 
+# Apply patches and compile
+COPY patches ./patches
+RUN mix do patch.all, deps.compile
+
+RUN rm -rf ./patches
 COPY config ./config
 COPY priv ./priv
 COPY lib ./lib

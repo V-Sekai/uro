@@ -1,0 +1,13 @@
+diff --git a/deps/assent/lib/assent/strategy.ex b/deps/assent/lib/assent/strategy.ex
+index 1ca3f32..f976589 100644
+--- a/deps/assent/lib/assent/strategy.ex
++++ b/deps/assent/lib/assent/strategy.ex
+@@ -38,6 +38,8 @@ defmodule Assent.Strategy do
+   """
+   def http_request(method, url, body, headers, config) do
+     opts = Keyword.take(config, [:http_adapter, :json_library])
++    base_headers = Keyword.get(config, :base_headers, [])
++    headers = headers ++ base_headers
+ 
+     Assent.HTTPAdapter.request(method, url, body, headers, opts)
+   end

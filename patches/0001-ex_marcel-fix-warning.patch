@@ -1,0 +1,13 @@
+diff --git a/deps/ex_marcel/lib/magic.ex b/deps/ex_marcel/lib/magic.ex
+index e51cbe0..70819ae 100644
+--- a/deps/ex_marcel/lib/magic.ex
++++ b/deps/ex_marcel/lib/magic.ex
+@@ -112,7 +112,7 @@ defmodule ExMarcel.Magic do
+     mime =
+       case ext |> String.slice(0..0) do
+         "." ->
+-          ext = ext |> String.slice(1..-1)
++          ext = ext |> String.slice(1..-1//1)
+           TableWrapper.extensions() |> Map.get(ext)
+ 
+         _ ->

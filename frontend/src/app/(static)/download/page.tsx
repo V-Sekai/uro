@@ -20,8 +20,9 @@ export default function AboutPage() {
         <Section>
           <SectionTitle>Download</SectionTitle>
           <p>
-            <b>V-Sekai</b> is currently in open testing. Please check back here
-            later for more information.
+            <b>V-Sekai</b> is currently in open testing. You can find experimental
+            builds at <InlineLink href={urls.github_releases}>Github Releases</InlineLink>.
+            Please check back here later for more information.
           </p>
           <DownloadsTable data={file_list} />
         </Section>
