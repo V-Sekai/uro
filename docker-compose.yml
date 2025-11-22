@@ -13,13 +13,13 @@ services:
       - "./cockroach:/cockroach/cockroach-data"
     ports:
       - "26257:26257"
-      - "8081:8080"  # Dashboard
+      - "8081:8080" # Dashboard
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health?ready=1"]
       interval: 3s
       timeout: 3s
       retries: 5
-      
+
   #database-postgres:
   #  image: postgres:16.6-alpine
   #  restart: always
@@ -51,7 +51,7 @@ services:
     build:
       context: .
       tags:
-        - "uro:latest"
+        - "ghcr.io/v-sekai/uro:latest"
     restart: always
     links:
       - database
@@ -75,8 +75,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       additional_contexts:
-         # Enforce build-time dependency (openapi.json generation)
-         uro: "service:uro"
+        # Enforce build-time dependency (openapi.json generation)
+        uro: "service:uro"
     env_file:
       - frontend/.env
     # healthcheck:

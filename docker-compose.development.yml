@@ -19,7 +19,7 @@ services:
     build:
       args:
         NODE_ENV: development
-    entrypoint: npm run dev
+    entrypoint: ["npm", "run", "dev"]
     user: "root"
     volumes:
       - ./frontend:/app
@@ -42,7 +42,7 @@ services:
 networks:
   uro:
     name: "uro"
-    
+
 volumes:
   caddy_data:
   caddy_config:

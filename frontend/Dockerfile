@@ -1,5 +1,5 @@
 # Get generated openapi.json
-ARG uro_image=uro
+ARG uro_image=ghcr.io/v-sekai/uro:latest
 FROM $uro_image AS openapi
 
 ARG NODE_ENV=production
@@ -57,4 +57,4 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
 EXPOSE 3000
 
-CMD node server.js
+CMD ["node", "server.js"]

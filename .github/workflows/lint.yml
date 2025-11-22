@@ -1,0 +1,73 @@
+name: Lint (backend + frontend)
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: [master]
+
+jobs:
+  elixir-lint:
+    name: Elixir lint
+    runs-on: ubuntu-latest
+
+    container:
+      image: elixir:1.16.3-otp-26
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          apt update
+          apt install -y build-essential erlang-dev curl
+
+      - name: Set up Elixir helpers
+        run: |
+          mix local.hex --force
+          mix local.rebar --force
+
+      - name: Cache deps
+        uses: actions/cache@v4
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-deps-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-deps-
+
+      - name: Install dependencies
+        run: mix deps.get
+
+      - name: Check code formatting
+        run: mix format --check-formatted
+
+      - name: Run Credo (lint)
+        run: |
+          # credo is added as a dev dependency in mix.exs
+          mix credo --strict
+
+  frontend-lint:
+    name: Frontend lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Enable Corepack + pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Run lint
+        working-directory: ./frontend
+        run: pnpm run lint

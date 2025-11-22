@@ -107,7 +107,11 @@ defmodule Uro.MixProject do
         File.write!(path, patched)
         IO.puts("Module 'ex_marcel' patched successfully!")
       end,
-      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"],
+      # Run code formatting checks and credo linting
+      lint: ["format --check-formatted", "credo --strict"],
+      # Auto-fix (format) for local convenience
+      "lint.fix": ["format"]
     ]
   end
 end

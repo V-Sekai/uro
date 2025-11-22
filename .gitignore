@@ -55,3 +55,6 @@ result
 .envrc
 .elixir_ls
 .elixir-tools
+caddy/
+cockroach/
+.DS_Store

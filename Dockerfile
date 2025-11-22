@@ -1,7 +1,7 @@
 ARG ELIXIR_VERSION=1.16
 
 # Elixir build environment.
-FROM elixir:${ELIXIR_VERSION}-alpine as elixir-base
+FROM elixir:${ELIXIR_VERSION}-alpine AS elixir-base
 
 ARG MIX_ENV=prod
 
@@ -19,12 +19,17 @@ RUN apk add --no-cache \
 	make \
 	gcc \
 	curl \
-	libc-dev
+	libc-dev \
+	openssl \
+	ca-certificates
 
-RUN mix local.hex --force && \
+RUN update-ca-certificates || true && rm -rf /root/.mix/archives/* && \
+	mix local.hex --force && \
 	mix local.rebar --force
 
 COPY mix.exs mix.lock ./
+# Ensure no cached hex artifacts are present (avoids architecture mismatch when restoring cache)
+RUN rm -rf /root/.mix/archives/* || true
 RUN mix do deps.get, patch.exmarcel, deps.compile
 
 COPY config ./config
@@ -37,4 +42,4 @@ RUN mix uro.apigen
 EXPOSE ${PORT}
 
 ENV COMPILE_PHASE=false
-ENTRYPOINT iex -S mix do ecto.migrate, phx.server
+ENTRYPOINT ["sh", "-c", "iex -S mix do ecto.migrate, phx.server"]
