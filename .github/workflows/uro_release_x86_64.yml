@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: elixir:1.16.3-otp-26
+      image: elixir:1.17.3-otp-27
 
     steps:
       - uses: actions/checkout@v4
@@ -59,14 +59,8 @@ jobs:
         id: test_step
         run: |
           set -e
-          chmod +x elixir_mvsqlite/rust_src/target/release/mvstore
-          export RUST_LOG=error
-          elixir_mvsqlite/rust_src/target/release/mvstore --data-plane 127.0.0.1:7000 --admin-api 127.0.0.1:7001 --metadata-prefix mvstore-test --raw-data-prefix m --auto-create-namespace --cluster /etc/foundationdb/fdb.cluster &
-          sleep 1
-          curl http://localhost:7001/api/create_namespace -d '{"key":"uro_dev.sqlite3","metadata":""}'
-          sleep 1
           MIX_ENV=test mix ecto.setup
-          MIX_ENV=test mix run priv/repo/test_seeds.exs
+          MIX_ENV=test mix run apps/uro_api/priv/repo/test_seeds.exs
           mix test | tee test_output.txt; test ${PIPESTATUS[0]} -eq 0
 
       - name: Upload test results

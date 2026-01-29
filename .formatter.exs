@@ -5,6 +5,5 @@
     "priv/*/seeds.exs",
     "{config,lib,test}/**/*.{ex,exs,eex}"
   ],
-  subdirectories: ["priv/*/migrations"],
-  plugins: [Recode.FormatterPlugin]
+  subdirectories: ["priv/*/migrations"]
 ]

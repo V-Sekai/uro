@@ -1,5 +1,9 @@
 # The directory Mix will write compiled artifacts to.
 /_build/
+# Umbrella: ignore _build and deps in each app
+**/_build/
+apps/*/deps/
+apps/*/_build/
 
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
@@ -55,3 +59,26 @@ result
 .envrc
 .elixir_ls
 .elixir-tools
+cockroach
+caddy
+
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
+
+# macOS
+.DS_Store
+
+# Dialyzer PLT (if using priv/plts)
+/priv/plts/*.plt
+/priv/plts/*.plt.hash
+
+# CI test output
+test_output.txt
+

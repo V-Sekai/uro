@@ -1,4 +1,5 @@
 # Uro Server
+
 ## Docker Quick Setup
 
 To run the entire stack locally with Docker, use these commands:
@@ -6,17 +7,22 @@ To run the entire stack locally with Docker, use these commands:
 ### Windows/Mac
 
 Add these lines to your **hosts** file
+
 ```
 0.0.0.0 vsekai.local
 0.0.0.0 uro.v-sekai.cloud
 ```
+
 then
+
 ```
 mv frontend/.env.example frontend/.env
 mv .env.example .env
 docker compose up
 ```
+
 ### Linux
+
 ```
 # From repository root
 mv frontend/.env.example frontend/.env
@@ -43,6 +49,7 @@ Auto generated root CA will be in `./caddy/data/caddy/pki/authorities/local/root
 ### Setup
 
 To run the entire stack locally with Docker in **development** mode, use the command:
+
 ```
 docker compose -f docker-compose.development.yml up
 ```
@@ -52,18 +59,22 @@ By default, the stack uses [Caddy](https://caddyserver.com/) as a reverse proxy 
 If you want to configure **captcha** for registration, you need to set `TURNSTILE_SECRET_KEY` and `NEXT_PUBLIC_TURNSTILE_SITEKEY` ([Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/get-started/))
 
 Once configured, access the application at:
+
 - http://vsekai.local/
 - http://vsekai.local/api/v1/
 
 ### OpenAPI Specification
 
 When making changes to Uro, update the OpenAPI specification by running:
+
 ```
 mix uro.apigen
 ```
+
 This command generates the OpenAPI specification in `frontend/src/__generated/openapi.json`. The Uro API serves this specification at http://vsekai.local/api/v1/openapi, with documentation available at http://vsekai.local/api/v1/docs.
 
 Once you have updated the OpenAPI specification, to regenerate the client in the frontend (and your editor), run:
+
 ```
 docker compose -f docker-compose.development.yml up nextjs --build
 ```

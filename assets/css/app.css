@@ -1,0 +1,12 @@
+/*@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";*/
+
+/* This file is for your main application CSS */
+
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@config "../tailwind.config.js";
+
+
+--color-vred: oklch(58.626% 0.20644 27.117);--color-vred-50: oklch(88.313% 0.04647 19.717);--color-vred-100: oklch(84.532% 0.06487 19.705);--color-vred-200: oklch(76.823% 0.10256 20.436);--color-vred-300: oklch(69.801% 0.14042 22.376);--color-vred-400: oklch(63.496% 0.17764 24.4);--color-vred-500: oklch(58.626% 0.20644 27.117);--color-vred-600: oklch(50.127% 0.18362 27.764);--color-vred-700: oklch(40.212% 0.1443 27.404);--color-vred-800: oklch(29.472% 0.10059 26.57);--color-vred-900: oklch(18.142% 0.05038 25.904);--color-vred-950: oklch(11.121% 0.02684 22.437);
